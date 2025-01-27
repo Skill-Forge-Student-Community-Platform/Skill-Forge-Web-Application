@@ -9,17 +9,17 @@ function Section1(){
             <ul>
                 <li>
                     <Link to="/pages/events">
-                        <MdEmojiEvents/> Events
+                        <MdEmojiEvents className="achievement-icon"/> Events
                     </Link>
                 </li>
                 <li>
                     <Link to="/pages/friends">
-                        <FaUserFriends/>  Friends
+                        <FaUserFriends className="friends-icon"/>  Friends
                     </Link>
                 </li>
                 <li>
                     <Link to="/pages/save">
-                        <FaBookmark/> Save
+                        <FaBookmark className="save-icon" /> Save
                     </Link>
                 </li>
             </ul>
