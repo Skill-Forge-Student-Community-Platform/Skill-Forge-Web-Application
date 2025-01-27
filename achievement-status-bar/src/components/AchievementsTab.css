@@ -1,0 +1,70 @@
+.achievements-container {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 20rem;
+  }
+  
+  .section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .progress-section,
+  .best-score-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .progress-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  
+  .progress-text {
+    color: #4b5563;
+  }
+  
+  .progress-bar-bg {
+    background-color: #e5e7eb;
+    height: 0.5rem;
+    border-radius: 0.25rem;
+    position: relative;
+  }
+  
+  .progress-bar-fill {
+    background-color: #3b82f6;
+    height: 0.5rem;
+    border-radius: 0.25rem;
+  }
+  
+  .score-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .score-icon {
+    background-color: #bfdbfe;
+    padding: 1rem;
+    border-radius: 50%;
+  }
+  
+  .icon-svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #3b82f6;
+  }
+  
+  .score-text {
+    color: #4b5563;
+  }
+  
+  .score-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
