@@ -1,26 +1,26 @@
 import './Section-one-style.css';
 import { FaBookmark, FaUserFriends } from "react-icons/fa";
 import { MdEmojiEvents } from "react-icons/md";
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 function Section1(){
     return(
         <div className="box1">
             <ul>
                 <li>
-                    <Link to="/pages/events">
+                    <NavLink to="/pages/events">
                         <MdEmojiEvents className="achievement-icon"/> Events
-                    </Link>
+                    </NavLink>
                 </li>
                 <li>
-                    <Link to="/pages/friends">
+                    <NavLink to="/pages/friends">
                         <FaUserFriends className="friends-icon"/>  Friends
-                    </Link>
+                    </NavLink>
                 </li>
                 <li>
-                    <Link to="/pages/save">
+                    <NavLink to="/pages/save">
                         <FaBookmark className="save-icon" /> Save
-                    </Link>
+                    </NavLink>
                 </li>
             </ul>
         </div>

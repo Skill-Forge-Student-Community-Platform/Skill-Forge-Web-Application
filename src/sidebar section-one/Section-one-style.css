@@ -6,7 +6,7 @@
     border-radius: 12px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
     padding: 20px; /* Inner spacing */
-    max-width: 400px; /* Limit the width for a neat layout */
+    max-width: 180px; /* Limit the width for a neat layout */
     margin-top: 50px;
     margin-left: 15px;
     margin-right: 20px;
@@ -41,7 +41,10 @@
     border-radius: 8px; /* Rounded corners for hover effect */
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover transition */
 }
-
+.box1 ul li a.active{
+    background-color: #007bff; /* Blue background on hover */
+    color: #fff; /* White text on hover */
+}
 /* Icon styling */
 .box1 ul li a svg {
     margin-right: 10px; /* Space between icon and text */
@@ -54,7 +57,7 @@
 }
 
 .box1 ul li a .friends-icon {
-    color: #007bff; /* Blue for friends */
+    color: #6f42c1; /* Blue for friends */
 }
 
 .box1 ul li a .save-icon {
