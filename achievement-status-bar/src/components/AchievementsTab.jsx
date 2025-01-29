@@ -1,72 +1,69 @@
-import "../styles/TrendingSection.css";
-import React, { useState, useEffect } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import "./AchievementsTab.css";
 
-const TrendingSection = () => {
-  const [trendingData, setTrendingData] = useState(null);
+const AchievementsTab = () => {
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/trendingData.json");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setTrendingData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
+    fetch("/achievementsData.json")
+      .then((response) => response.json())
+      .then((data) => setData(data))
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  if (!trendingData) return <p>Loading...</p>;
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  const { progress, bestScore } = data;
 
   return (
-    <div className="trending-section">
-      {/* Leaderboard */}
-      <Card className="trending-card">
-        <h2 className="text-lg font-bold mb-2">🏆 Leaderboard</h2>
-        {trendingData.leaderboard.map((user, index) => (
-          <motion.div
-            key={index}
-            whileHover={{ scale: 1.02 }}
-            className="leaderboard-entry"
-          >
-            <p>{user.name}</p>
-            <p className="font-semibold">XP: {user.xp}</p>
-          </motion.div>
-        ))}
-      </Card>
+    <div className="achievements-container">
+      {/* Progress Section */}
+      <div className="progress-section">
+        <h3 className="section-title">Progress</h3>
+        <div className="progress-details">
+          <span className="progress-text">{progress.percentage}% Progress</span>
+          <span className="progress-text">
+            {progress.lessonsDone} of {progress.totalLessons} lessons done
+          </span>
+        </div>
+        <div className="progress-bar-bg">
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${progress.percentage}%` }}
+          ></div>
+        </div>
+      </div>
 
-      {/* Highlighted Competitions */}
-      <Card className="trending-card">
-        <h2 className="text-lg font-bold mb-2">🔥 Highlighted Competitions</h2>
-        {trendingData.competitions.map((comp, index) => (
-          <motion.div key={index} whileHover={{ scale: 1.02 }} className="competition-entry">
-            <p className="competition-title">{comp.title}</p>
-            <p className="text-sm text-gray-500">{comp.details}</p>
-            <Button className="competition-button">Join Now</Button>
-          </motion.div>
-        ))}
-      </Card>
-
-      {/* Suggested Communities */}
-      <Card className="trending-card">
-        <h2 className="text-lg font-bold mb-2">🌍 Suggested Communities</h2>
-        {trendingData.communities.map((comm, index) => (
-          <motion.div key={index} whileHover={{ scale: 1.02 }} className="community-entry">
-            <p className="community-title">{comm.name}</p>
-            <p className="community-description">{comm.description}</p>
-            <Button className="trending-button">Join</Button>
-          </motion.div>
-        ))}
-      </Card>
+      {/* Best Score Section */}
+      <div className="best-score-section">
+        <h3 className="section-title">Best Score</h3>
+        <div className="score-details">
+          <div className="score-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="icon-svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6v6l4 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <div>
+            <p className="score-text">Average score</p>
+            <p className="score-value">{bestScore.averageScore}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default TrendingSection;
+export default AchievementsTab;
