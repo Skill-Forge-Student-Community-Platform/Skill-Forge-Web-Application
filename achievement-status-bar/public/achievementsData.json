@@ -5,6 +5,11 @@
       "totalLessons": 8
     },
     "bestScore": {
-      "averageScore": 72
+      "averageScore": 72,
+      "highestScore": 95,
+      "recentScores": [
+        { "date": "2023-01-01", "value": 70 },
+        { "date": "2023-01-02", "value": 75 }
+      ]
     }
   }

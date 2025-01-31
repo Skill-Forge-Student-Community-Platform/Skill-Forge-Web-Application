@@ -58,3 +58,34 @@
   font-weight: bold;
   color: #333;
 }
+
+.recent-scores {
+  margin-top: 20px;
+}
+
+.subsection-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.scores-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.score-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.score-date {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.score-value {
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+}

@@ -56,9 +56,25 @@ const AchievementsTab = () => {
               />
             </svg>
           </div>
-          <div>
-            <p className="score-text">Average score</p>
+          <div className="score-info">
+            <p className="score-label">Average score</p>
             <p className="score-value">{bestScore.averageScore}</p>
+            <p className="highest-score">
+              Highest: {bestScore.highestScore}
+            </p>
+          </div>
+        </div>
+
+        {/* Recent Scores */}
+        <div className="recent-scores">
+          <h4 className="subsection-title">Recent Scores</h4>
+          <div className="scores-list">
+            {bestScore.recentScores.map((score, index) => (
+              <div key={index} className="score-item">
+                <span className="score-date">{score.date}</span>
+                <span className="score-value">{score.value}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
