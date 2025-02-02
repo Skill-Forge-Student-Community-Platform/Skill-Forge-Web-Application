@@ -1,0 +1,91 @@
+.SideBar {
+  padding: 1.5rem;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.SideBar .Application_Logo {
+  margin-top: -1.5rem;
+  font-size: 1.8rem;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.SideLink_container1,
+.SideLink_container2 {
+  background-color: var(--container-bg);
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin: 2rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.side-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0.4rem;
+  gap: 0.9rem;
+  padding: 0.7rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.side-link::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem; /* Aligns with container padding */
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: #1DA1F2; /* Twitter blue */
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.side-link.active {
+  background-color: rgba(29, 161, 242, 0.1); /* Light twitter blue background */
+  /* color: #1DA1F2; Twitter blue */
+}
+
+.side-link.active::before {
+  opacity: 1;
+}
+
+.side-link:hover svg,
+.side-link.active svg {
+  color: #1DA1F2; /* Twitter blue */
+}
+
+.side-link:hover {
+  background-color: var(--hover-bg, #f0f0f0);
+}
+
+/* Dark mode specific hover styles */
+[data-theme="dark"] .side-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+}
+
+.side-link svg {
+  font-size: 1.2rem;
+}
+
+.Quick_statistics {
+  background-color: var(--container-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.Quick_statistics h3 {
+  color: var(--text-color);
+  transition: color 0.3s ease;
+  margin-bottom: 1rem;
+}

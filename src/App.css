@@ -2,37 +2,30 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.Navigation__Container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 100%;
+  position: relative;
 }
 
-.App-link {
-  color: #61dafb;
+.SideBar__Container {
+  position: fixed; /* Fixes the sidebar on the screen */
+  width: 300px;
+  height: 100vh;
+  color: var(--text-color);
+  left: 0;
+  top: 0;
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  padding: 20px 0; /* Space for content */
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  z-index: 1000; /* Keeps sidebar on top */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.NavBar__Container {
+  margin-left: 300px; /* Same as sidebar width */
+  flex-grow: 1;
+  width: calc(100% - 300px);
 }
