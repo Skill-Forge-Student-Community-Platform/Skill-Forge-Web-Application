@@ -3,7 +3,7 @@
     position: fixed; /* Fixes the sidebar on the screen */
     top: 0;
     left: 0;
-    height: 100%; /* Full height */
+    height: fit-content; /* Full height */
     width: 220px; /* Fixed width for the sidebar */
     display: flex;
     flex-direction: column; /* Stack elements vertically */
@@ -11,3 +11,8 @@
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
     z-index: 1000; /* Keeps sidebar on top */
 }
+.logo{
+    margin: 0;
+    padding-bottom: 0;
+}
+

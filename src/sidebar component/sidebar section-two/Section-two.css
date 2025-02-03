@@ -1,20 +1,15 @@
-/* Section-one-style.css */
-
-/* Container box styling */
-
 .box2 {
     background-color: white;
     /* background-color: #f9f9f9; Light gray background */
-    border-radius: 12px; /* Rounded corners */
+    border-radius: 15px 0 15px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    padding: 20px; /* Inner spacing */
+    padding: 10px; /* Inner spacing */
     max-width: 150px; /* Limit the width for a neat layout */
-    margin-top: 50px;
-    margin-left: 15px;
+    margin-top: 10px;
+    margin-left: 20px;
     margin-right: 20px;
     font-family: 'Arial', sans-serif; /* Clean font */
 }
-
 /* Unordered list styling */
 .box2 ul {
     list-style-type: none; /* Remove default bullet points */
@@ -24,7 +19,7 @@
 
 /* List item styling */
 .box2 ul li {
-    margin-bottom: 10px; /* Space between list items */
+    margin-bottom: 5px; /* Space between list items */
 }
 
 .box2 ul li:last-child {
@@ -37,7 +32,7 @@
     align-items: center; /* Vertically center icon and text */
     text-decoration: none; /* Remove underline */
     color: #333; /* Dark text color */
-    font-size: 18px; /* Comfortable text size */
+    font-size: 16px; /* Comfortable text size */
     font-weight: 500; /* Slightly bold text */
     padding: 10px; /* Space inside the link area */
     border-radius: 8px; /* Rounded corners for hover effect */
@@ -70,21 +65,4 @@
 .box2 ul li a:hover {
     background-color: #007bff; /* Blue background on hover */
     color: #fff; /* White text on hover */
-}
-
-/* Adjust hover for icons */
-.box2 ul li a:hover svg {
-    color: #fff; /* Make icons white on hover for contrast */
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .box1 {
-        width: 200px; /* Reduce sidebar width on smaller screens */
-    }
-
-    .box1 ul li a {
-        font-size: 16px; /* Adjust font size */
-        padding: 10px 15px; /* Adjust padding */
-    }
 }

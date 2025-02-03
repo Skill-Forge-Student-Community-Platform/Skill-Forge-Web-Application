@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 function Section1(){
     return(
-            <div className="box2">
+            <div className="box1">
                 <ul>
                     <li>
                         <NavLink to="/pages/events">
