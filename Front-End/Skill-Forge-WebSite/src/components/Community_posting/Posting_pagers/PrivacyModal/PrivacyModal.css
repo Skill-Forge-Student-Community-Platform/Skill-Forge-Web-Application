@@ -1,0 +1,245 @@
+.privacy-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.privacy-option {
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--modal-bg);
+  color: var(--text-color);
+}
+
+.privacy-option:hover {
+  background-color: var(--hover-bg);
+}
+
+.privacy-option.selected {
+  background-color: rgba(29, 161, 242, 0.1);
+}
+
+.privacy-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.privacy-description {
+  margin-left: 2.7rem;
+  font-size: 0.8rem;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.back-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  color: var(--text-color);
+}
+
+.back-btn:hover {
+  background-color: var(--hover-bg);
+}
+
+.modal-content {
+  position: relative;
+  background-color: var(--modal-bg);
+  padding: 2.5rem;
+  border-radius: 20px;
+  max-width: 700px;
+  width: 95%;
+  box-shadow: 0 10px 30px var(--modal-shadow);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hover-bg) transparent;
+  color: var(--text-color);
+  border: 1px solid var(--modal-border);
+}
+
+.modal-content h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: var(--hover-bg);
+  border-radius: 3px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-color);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: var(--hover-bg);
+}
+
+.user-privacy-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hover-bg) transparent;
+}
+
+.user-privacy-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.user-privacy-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.user-privacy-container::-webkit-scrollbar-thumb {
+  background-color: var(--hover-bg);
+  border-radius: 3px;
+}
+
+.modal-content-scroll {
+  padding: 1rem;
+  position: relative;
+}
+
+.privacy-info {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--hover-bg);
+}
+
+.privacy-info h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+  text-align: center; /* Center align only the heading */
+}
+
+.privacy-info p {
+  font-size: 0.94rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  line-height: 2;
+  text-align: left; /* Explicitly align other text to left */
+}
+
+.privacy-note {
+  margin-top: 0.5rem;
+  font-style: inherit;
+  text-align: left;
+}
+
+.privacy-options {
+  margin-top: 1rem;
+}
+
+.privacy-option-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Remove the info tag styling since it's no longer needed */
+.privacy-info-tag {
+  display: none;
+}
+
+/* Adjust icon wrapper to remove the relative positioning needed for the tag */
+.privacy-icon-wrapper {
+  position: static;
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  color: rgb(29, 161, 242);
+}
+
+.privacy-text {
+  flex: 1;
+  text-align: left; /* Ensure privacy options text is left-aligned */
+}
+
+.privacy-text h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text-color);
+}
+
+.privacy-text p {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.radio-button {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgb(29, 161, 242);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.radio-inner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.selected .radio-inner {
+
+  background-color: rgb(29, 161, 242);
+}
+
+.done-btn {
+  padding: 0.5rem 2rem;
+  background-color: rgb(29, 161, 242);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.done-btn:hover {
+  background-color: rgb(26, 145, 218);
+}
