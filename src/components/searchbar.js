@@ -1,7 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import "./searchbar.css";
 
+const peopleList = [
+  { id: 1, name: "Shanika Hewage", avatar: "https://i.pravatar.cc/50?img=10" },
+  { id: 2, name: "Gayani Nimnaadi", avatar: "https://i.pravatar.cc/50?img=11" },
+  { id: 3, name: "Hafizh Abiyy", avatar: "https://i.pravatar.cc/50?img=12" },
+];
+
 const SearchBar = () => {
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredResults, setFilteredResults] = useState([]);
+
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchInput(value);
+
+    if (value.trim() === "") {
+      setFilteredResults([]);
+      return;
+    }
+
+    const filtered = peopleList.filter((person) =>
+      person.name.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setFilteredResults(filtered);
+  };
+
   return (
     <div className="search-container">
       <div className="search-wrapper">
@@ -12,10 +37,28 @@ const SearchBar = () => {
           type="text"
           placeholder="Search People"
           className="search-input"
+          value={searchInput}
+          onChange={handleSearch}
         />
+      </div>
+
+      {/* Search Results Panel */}
+      <div className="search-results">
+        {searchInput && (
+          filteredResults.length > 0 ? (
+            filteredResults.map((person) => (
+              <div key={person.id} className="search-result-item">
+                <img src={person.avatar} alt={person.name} className="search-avatar" />
+                <span className="search-name">{person.name}</span>
+              </div>
+            ))
+          ) : (
+            <p className="not-found">Not Found</p>
+          )
+        )}
       </div>
     </div>
   );
 };
 
-export default SearchBar;
+export default SearchBar;  
