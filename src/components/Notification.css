@@ -1,7 +1,7 @@
 .notification-bar {
   position: fixed;
   top: 40px;
-  right: 60px;
+  right: 500px;
   z-index: 1000;
 }
 
