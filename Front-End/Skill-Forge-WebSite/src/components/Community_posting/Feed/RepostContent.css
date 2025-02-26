@@ -1,0 +1,30 @@
+.repost-content {
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin: 0.5rem 1rem 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.repost-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.repost-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.repost-user-info {
+  font-size: 0.9rem;
+}
+
+.repost-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
