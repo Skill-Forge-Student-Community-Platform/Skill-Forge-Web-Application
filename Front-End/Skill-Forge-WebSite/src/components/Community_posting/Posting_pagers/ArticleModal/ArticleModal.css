@@ -1,0 +1,81 @@
+.modal-content[data-modal="article"] {
+  min-height: 350px !important;
+  max-height: 70vh !important;
+  overflow: hidden !important;
+}
+
+.modal-content[data-modal="article"] .modal-content-scroll {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.75rem;
+  height: calc(100% - 100px);
+  overflow: hidden !important;
+}
+
+.modal-content[data-modal="article"] input {
+  width: 98% !important;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.4rem; /* Reduced from 0.5rem */
+  border-radius: 8px;
+  border: none;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  outline: 1px solid var(--hover-bg);
+}
+
+.article-textarea {
+  width: 97% !important;
+  height: 120px !important;
+  /* min-height: auto !important;  */
+  margin: 0.5rem 0 1rem 0 !important;
+  padding: 0.5rem !important;
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  border-radius: 8px !important;
+  resize: none !important;
+  font-size: 0.9rem !important; /* Reduced from 1rem */
+  line-height: 1.5 !important;
+  outline: 1px solid var(--hover-bg) !important;
+  color: var(--text-color) !important;
+  transition: all 0.2s ease !important;
+}
+
+.article-textarea:focus {
+  outline: none !important;
+  background-color: var(--hover-bg) !important;
+}
+
+.modal-footer {
+  padding: 0.5rem 0.75rem; /* Reduced from 0.75rem 1rem */
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background-color: var(--modal-bg);
+  border-top: 1px solid var(--modal-border);
+}
+
+.modal-footer .cancel-btn {
+  background: none;
+  background-color: var(--button-secondary);
+  border: 1px solid var(--modal-border);
+  color: var(--button-secondary-text);
+}
+
+.modal-footer .primary-btn {
+  background: #1DA1F2;
+  background-color: var(--button-primary);
+  border: none;
+  color: var(--button-primary-text);
+}
+
+.modal-footer .primary-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.modal-footer button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
