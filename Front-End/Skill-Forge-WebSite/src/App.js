@@ -27,7 +27,7 @@ function App() {
         </div>
         <main className='Layout__Container'>
           <div className='SideBar__Container'>
-            <SideBar isDarkMode={isDarkMode} />
+            {/* <SideBar isDarkMode={isDarkMode} /> */}
           </div>
           <div className='Content__Container'>
             <div className="main-content">
