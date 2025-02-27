@@ -1,0 +1,271 @@
+/* Initial modal size (no files selected) */
+.modal-content[data-stage="upload"] {
+  width: 600px !important;
+  min-height: 450px !important;
+  max-height: 600px !important;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Modal and content size when files are selected */
+.modal-content[data-stage="upload"][data-has-files="true"] {
+  width: 1250px !important;
+  max-width: 1500px !important;
+  min-height: 500px !important;
+  max-height: 590px !important;
+}
+
+/* Different heights for dropzone and selected files views */
+.upload-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 98% !important;
+  height: 450px; /* Default height for dropzone view */
+  padding: 0.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Adjust height when files are not selected */
+.modal-content[data-stage="upload"][data-has-files="false"] .upload-stage {
+  height: auto; /* auto adjust height for not selected files view */
+}
+
+/* Adjust height when files are selected */
+.modal-content[data-stage="upload"][data-has-files="true"] .upload-stage{
+  min-height: 500px;
+  max-height: 650px;
+}
+
+/* Adjust scrollable content height when files are selected */
+.modal-content[data-stage="upload"][data-has-files="true"] .scrollable-content {
+  min-height: 402px;
+  max-height: 400px;
+  width: 100%;
+}
+
+.modal-content-scroll {
+  flex: 1;
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  padding: 0.1rem;
+  margin: 0.1rem;
+  width: auto;
+}
+
+.dropzone {
+  width: 95% !important;
+  min-height: 350px;
+  border: 2px dashed var(--hover-bg);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: var(--bg-color);
+}
+
+.dropzone.active {
+  border-color: #1DA1F2;
+  background-color: rgba(29, 161, 242, 0.1);
+}
+
+.upload-button {
+  padding: 10px 20px;
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 10px 0;
+}
+
+.upload-button:hover {
+  /* transform: translateY(-2px); */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropzone .primary-text {
+  font-size: 1.2rem;
+  margin: 15px 0;
+  color: var(--text-color);
+}
+
+.dropzone .secondary-text {
+  font-size: 1rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin: 5px 0;
+}
+
+.dropzone .helper-text {
+  font-size: 0.8rem;
+  color: var(--text-color);
+  opacity: 0.5;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.selected-files-container {
+  width: 96%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 220px); /* Account for header, footer, and padding */
+  gap: 1rem;
+}
+
+.scrollable-content {
+  flex: 1;
+  width: 100% !important;
+  min-height: 315px;
+  max-height: 315px; /* Fixed height for scrollable area */
+  overflow-y: scroll;
+  padding: 0.75rem;
+  margin: 0.25rem 0;
+  border: 1px solid var(--hover-bg);
+  border-radius: 8px;
+  background-color: var(--bg-color);
+}
+
+.scrollable-content::-webkit-scrollbar {
+  width: 6px ;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background-color: var(--hover);
+  border-radius: 3px;
+}
+
+
+.file-preview {
+  position: relative;
+  aspect-ratio: 2;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--hover-bg);
+}
+
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0.5rem;
+  padding: 0.25rem;
+  height: auto;
+  min-height: min-content;
+}
+
+.remove-file-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.file-preview:hover .remove-file-btn {
+  opacity: 1;
+}
+
+.add-more-btn {
+  aspect-ratio: 2;
+  border: 2px dashed var(--hover-bg);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 0.5rem;
+  color: var(--text-color);
+}
+
+.add-more-btn:hover {
+  background: var(--hover-bg);
+}
+
+.add-more-btn svg {
+  font-size: 1.5rem;
+}
+
+.add-more-btn span {
+  font-size: 0.9rem;
+}
+
+.file-preview-actions {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.file-preview:hover .file-preview-actions {
+  opacity: 1;
+}
+
+.edit-file-btn{
+  display: none !important;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  opacity: 1;
+  transition: all 0.2s;
+}
+
+.remove-file-btn {
+  margin-top: -0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.edit-file-btn:hover {
+  background: rgba(29, 161, 242, 0.8);
+  transform: scale(1.1);
+}
+
+.remove-file-btn:hover {
+  background: rgba(220, 53, 69, 0.8);
+  transform: scale(1.1);
+}
