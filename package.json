@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "Back-End/User-Authentication/index.js",
   "scripts": {
-    "dev": "nodemon Back-End/User-Authentication/index.js"
+    "dev": "nodemon Back-End/index.js"
   },
   "keywords": [],
   "author": "",

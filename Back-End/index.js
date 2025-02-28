@@ -3,7 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-import { connectDB } from "../User-Authentication/DataBase/DBconnector.js";
+import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
 import authRoutes from "./routes/Authentication.js";
 
