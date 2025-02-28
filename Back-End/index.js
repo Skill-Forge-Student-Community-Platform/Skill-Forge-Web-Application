@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
-import authRoutes from "./Features/User-Authentication/routes/Authentication.js";
+import authRoutes from "./routes/Authentication.js";
 
 dotenv.config();
 const app = express();

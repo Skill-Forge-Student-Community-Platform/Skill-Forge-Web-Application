@@ -1,7 +1,7 @@
 {
   "name": "skill-forge-web-application",
   "version": "1.0.0",
-  "main": "Back-End/index.js",
+  "main": "Back-End/User-Authentication/index.js",
   "scripts": {
     "dev": "nodemon Back-End/index.js"
   },
