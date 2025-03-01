@@ -2,6 +2,8 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom';
 import Login from './Login.page';
 import SignUp from './SignUp.page';
+import EmailVerificationPage from './EmailVerificationPage';
+import { Toaster } from 'react-hot-toast';
 
 function Authentications() {
   return (
@@ -9,7 +11,9 @@ function Authentications() {
       <Routes>
         <Route path='/signup' element={<SignUp/>} />
         <Route path='/login' element={<Login/>} />
+        <Route path='/verify-email' element={<EmailVerificationPage/>} />
       </Routes>
+      <Toaster />
     </div>
   )
 }
