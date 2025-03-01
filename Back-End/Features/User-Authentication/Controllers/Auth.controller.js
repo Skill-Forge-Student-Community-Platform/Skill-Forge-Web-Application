@@ -3,24 +3,33 @@ import crypto from "crypto";
 
 import { User } from "../models/User.js";
 import {generateTokenAndSetCookie} from "../utils/generateTokenAndSetCookie.js";
-import {sendVerificationEmail , sendWelcomeEmail , SendPasswordResetEmail ,SendResetSuccessEmail } from "../MailTrapEmails.js";
+import {sendVerificationEmail , sendWelcomeEmail , SendPasswordResetEmail ,SendResetSuccessEmail } from "../MailTrap/Emails.js";
 
 
 export const signup = async (req , res) => {
   const { FirstName, LastName, Username, email, password } = req.body;
 
   try {
-    if (!FirstName || !LastName || !Username || !email || !password) {
-       throw new Error("All fields are required");
+    if (!Username || !email || !password) {
+      throw new Error("All fields are required");
     }
 
-    const userAlreadyExists = await User.findOne({ email , Username });
-    if (userAlreadyExists) {
+    // Check for existing email separately
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
       return res.status(400).json({
-        // success: false,
-        message: "User already exists"
+        message: "Email is already registered with a SkillForge account"
       });
     }
+
+    // Check for existing username
+    const usernameExists = await User.findOne({ Username });
+    if (usernameExists) {
+      return res.status(400).json({
+        message: "Username is already taken"
+      });
+    }
+
     // hash the password , making the password not readable
     const hashedPassword = await bcryptjs.hash(password, 10);
     // generate random a verification token
@@ -37,12 +46,12 @@ export const signup = async (req , res) => {
     })
 
     await user.save();
-     // jwt
-     generateTokenAndSetCookie(res , user._id);
-     // send  verification email
+    // jwt
+    generateTokenAndSetCookie(res, user._id);
+    // send verification email
     await sendVerificationEmail(user.email, verificationToken);
 
-     res.status(201).json({
+    res.status(201).json({
       success: true,
       message: "User created successfully",
       user: {
@@ -51,10 +60,27 @@ export const signup = async (req , res) => {
       },
     });
   } catch (error) {
-      res.status(400).json({
-          // success: false,
-          message: error.message
+    // Handle MongoDB duplicate key error specifically
+    if (error.code === 11000) {
+      // Check which field caused the duplicate error
+      if (error.keyPattern?.email) {
+        return res.status(400).json({
+          message: "Email is already registered with a SkillForge account"
         });
+      } else if (error.keyPattern?.Username) {
+        return res.status(400).json({
+          message: "Username is already taken"
+        });
+      } else {
+        return res.status(400).json({
+          message: "User already exists"
+        });
+      }
+    }
+
+    res.status(400).json({
+      message: error.message
+    });
   }
 
 }
