@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import {motion} from 'framer-motion';
-import Input from './shared/input';
+import Input from '../shared/input';
 import {User, Mail, Lock, Loader} from "lucide-react";
 import { Link, useNavigate } from 'react-router-dom';
-import PasswordMeter from './PasswordMeter';
-import { useAuthStore } from '../../store/authStore';
+import PasswordMeter from '../shared/PasswordMeter';
+import { useAuthStore } from '../../../store/authStore';
 
 function SignUp() {
 
