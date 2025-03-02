@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import axios from "axios";
 
-// const API_URL = import.meta.env.MODE === "development" ? "http://localhost:5000/api/auth" : "/api/auth";
+// Use the environment variable or fall back to localhost
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/auth";
+
+console.log("API URL being used:", API_URL); // Debug logging
 
 axios.defaults.withCredentials = true;
 
@@ -25,7 +27,8 @@ export const useAuthStore = create((set) => ({
 
 			set({ user: response.data.user, isAuthenticated: true, isLoading: false });
 		} catch (error) {
-			set({ error: error.response.data.message || "Error signing up", isLoading: false });
+			const errorMessage = error.response?.data?.message || "Error signing up. Please check your network connection.";
+			set({ error: errorMessage, isLoading: false });
 			throw error;
 		}
 	},
@@ -40,7 +43,14 @@ export const useAuthStore = create((set) => ({
 				isLoading: false,
 			});
 		} catch (error) {
-			set({ error: error.response?.data?.message || "Error logging in", isLoading: false });
+			console.log('Login error details:', error);
+			// Extract error message with better fallbacks
+			const errorMessage =
+				error.response?.data?.message ||
+				(error.response?.status === 400 ? "Invalid login credentials" :
+				"Login failed. Please check your network connection and try again.");
+
+			set({ user: null, isLoading: false, error: errorMessage });
 			throw error;
 		}
 	},
@@ -51,7 +61,7 @@ export const useAuthStore = create((set) => ({
 			await axios.post(`${API_URL}/logout`);
 			set({ user: null, isAuthenticated: false, error: null, isLoading: false });
 		} catch (error) {
-			set({ error: "Error logging out", isLoading: false });
+			set({ error: "Error logging out. Please try again.", isLoading: false });
 			throw error;
 		}
 	},
@@ -62,7 +72,8 @@ export const useAuthStore = create((set) => ({
 			set({ user: response.data.user, isAuthenticated: true, isLoading: false });
 			return response.data;
 		} catch (error) {
-			set({ error: error.response.data.message || "Error verifying email", isLoading: false });
+			const errorMessage = error.response?.data?.message || "Error verifying email. Please check your network connection.";
+			set({ error: errorMessage, isLoading: false });
 			throw error;
 		}
 	},
@@ -76,16 +87,22 @@ export const useAuthStore = create((set) => ({
 		}
 	},
 	forgotPassword: async (email) => {
-		set({ isLoading: true, error: null });
+		set({ isLoading: true, error: null, message: null });
 		try {
 			const response = await axios.post(`${API_URL}/forgot-password`, { email });
 			set({ message: response.data.message, isLoading: false });
+			return response.data;
 		} catch (error) {
+			// Safely handle the error when server is unreachable
+			const errorMessage =
+				error.response?.data?.message ||
+				"Unable to connect to the server. Please check your internet connection or try again later.";
+
 			set({
 				isLoading: false,
-				error: error.response.data.message || "Error sending reset password email",
+				error: errorMessage,
 			});
-			throw error;
+			throw new Error(errorMessage);
 		}
 	},
 	resetPassword: async (token, password) => {
@@ -93,12 +110,17 @@ export const useAuthStore = create((set) => ({
 		try {
 			const response = await axios.post(`${API_URL}/reset-password/${token}`, { password });
 			set({ message: response.data.message, isLoading: false });
+			return response.data;
 		} catch (error) {
+			const errorMessage =
+				error.response?.data?.message ||
+				"Unable to reset password. Please check your connection or try again later.";
+
 			set({
 				isLoading: false,
-				error: error.response.data.message || "Error resetting password",
+				error: errorMessage,
 			});
-			throw error;
+			throw new Error(errorMessage);
 		}
 	},
 }));

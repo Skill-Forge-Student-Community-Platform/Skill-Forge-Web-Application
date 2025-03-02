@@ -85,20 +85,35 @@ export const signup = async (req , res) => {
 
 }
 
-export const Login = async (req , res) => {
-  const {email , password} = req.body;
+export const Login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const user = await User.findOne({email});
-    if (!user){
-        return res.status(400).json({ success : false , message: "No Email Found" });
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required"
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "No account found with this email"
+      });
     }
 
     const isPasswordValid = await bcryptjs.compare(password, user.password);
-    if (!isPasswordValid){
-      return res.status(400).json({ success : false , message: "Invalid Password" });
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid password"
+      });
     }
 
-    generateTokenAndSetCookie(res , user._id);
+    generateTokenAndSetCookie(res, user._id);
     user.lastLogin = new Date();
     await user.save();
 
@@ -112,7 +127,10 @@ export const Login = async (req , res) => {
     });
   } catch (error) {
     console.log("Error logging in: ", error);
-    res.status(500).json({success: false,message: error.message});
+    res.status(500).json({
+      success: false,
+      message: "An error occurred during login"
+    });
   }
 }
 
@@ -175,9 +193,11 @@ export const forgetPassword = async (req , res) => {
 
     await user.save();
 
-    // sent email for password Reset
-    await SendPasswordResetEmail( user.email ,`${process.env.CLIENT_URL}/reset-password/${resetToken}`);
-    res.status(200).json( {success : true, message: "Password reset Link send to your email" });
+    // Update to include the /auth prefix in the reset password URL
+    await SendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`);
+    console.log("Reset URL: ", `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`);
+
+    res.status(200).json({success : true, message: "Password reset Link send to your email" });
 
   } catch (error) {
     console.log("Error in resetting the  password: ", error);

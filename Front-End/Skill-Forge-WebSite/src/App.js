@@ -1,18 +1,23 @@
 import './App.css';
-import Navbar from './components/Home_page/NavBar';
-import { Routes, Route } from 'react-router-dom';
-import SideBar from './components/Home_page/SideBar';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { initializeTheme, lightTheme, darkTheme, applyTheme } from './utils/Theme';
-import Posting from './components/Community_posting/Posting';
 import Authentications from './components/Registration/Authentications.route';
+import Home from './components/Home_page/Home';
+import LoadingSpinner from '../src/components/Registration/shared/LoadingSpinner';
+import { ProtectedRoute } from './components/Registration/AuthGuard';
+
+import { useAuthStore } from './store/authStore';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isCheckingAuth, checkAuth } = useAuthStore();
 
   useEffect(() => {
     initializeTheme();
-  }, []);
+    checkAuth(); // Check authentication status on app load
+  }, [checkAuth]);
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -20,37 +25,31 @@ function App() {
     applyTheme(!isDarkMode ? darkTheme : lightTheme);
   };
 
+  if (isCheckingAuth) return <LoadingSpinner />;
+
   return (
     <div className="App">
       <Routes>
-        {/* Authentication routes without navigation and sidebar */}
+        {/* Redirect reset password routes to auth module */}
+        <Route path="/reset-password/:token" element={<Navigate to={(location) => {
+          const token = location.pathname.split('/').pop();
+          return `/auth/reset-password/${token}`;
+        }} replace />} />
+
+        {/* Authentication routes */}
         <Route path="/auth/*" element={<Authentications />} />
 
-        {/* Main layout routes with navigation and sidebar */}
-        <Route path="/*" element={
-          <>
-            <div className='Navigation__Container'>
-              <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-            </div>
-            <main className='Layout__Container'>
-              <div className='SideBar__Container'>
-                {/* <SideBar isDarkMode={isDarkMode} /> */}
-              </div>
-              <div className='Content__Container'>
-                <div className="main-content">
-                  <Routes>
-                    <Route path="/" element={<Posting />} />
-                    {/* Add other main content routes here */}
-                  </Routes>
-                </div>
-                <div className="right-section">
-                  <SideBar isDarkMode={isDarkMode} />
-                </div>
-              </div>
-            </main>
-          </>
-        } />
+        {/* Protected routes */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
+      <Toaster />
     </div>
   );
 }
