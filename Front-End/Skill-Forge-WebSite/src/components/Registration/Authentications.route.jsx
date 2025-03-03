@@ -19,7 +19,7 @@ function Authentications() {
 
     if (path.includes('/signup')) {
       return {
-        title: 'Create Account',
+        title: 'Join the Skill Forge Community',
         action: 'Sign up',
         subtitle: 'Start your professional development journey',
         quote: 'The best time to start learning was yesterday. The second best time is now.',
@@ -29,9 +29,9 @@ function Authentications() {
 
     if (path.includes('/forgot-password')) {
       return {
-        title: 'Forgot Password',
+        title: 'Recover Your Account',
         action: 'Reset',
-        subtitle: 'Recover access to your account',
+        subtitle: 'Regain access to your learning platform',
         quote: 'Everyone forgets sometimes. Let\'s get you back on track.',
         quoteAuthor: 'Skill Forge Team'
       };
@@ -39,9 +39,9 @@ function Authentications() {
 
     if (path.includes('/verify-email')) {
       return {
-        title: 'Verify Email',
+        title: 'Confirm Your Identity',
         action: 'Verify',
-        subtitle: 'Activate your Skill Forge account',
+        subtitle: 'Complete your registration process',
         quote: 'One small step for verification, one giant leap for your professional growth.',
         quoteAuthor: null
       };
@@ -49,9 +49,9 @@ function Authentications() {
 
     if (path.includes('/reset-password')) {
       return {
-        title: 'Reset Password',
+        title: 'Secure Your Account',
         action: 'Reset',
-        subtitle: 'Set a new password for your account',
+        subtitle: 'Create a new password for your profile',
         quote: 'A fresh start is just a new password away. Secure your journey to skill development.',
         quoteAuthor: null
       };
@@ -59,9 +59,9 @@ function Authentications() {
 
     // Default for login
     return {
-      title: 'Welcome Back',
+      title: 'Continue Your Learning Journey',
       action: 'Sign in',
-      subtitle: 'Access your Skill Forge dashboard',
+      subtitle: 'Access your personalized skill development dashboard',
       quote: 'Every expert was once a beginner. Welcome back to your skill development journey.',
       quoteAuthor: null
     };
