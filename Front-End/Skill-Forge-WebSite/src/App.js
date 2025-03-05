@@ -3,9 +3,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { initializeTheme, lightTheme, darkTheme, applyTheme } from './utils/Theme';
 import Authentications from './components/Registration/Authentications.route';
-import Home from './components/Home_page/Home';
+import ProfileSetupRoute from './components/Profile/ProfileSetup.route';
 import LoadingSpinner from '../src/components/Registration/shared/LoadingSpinner';
 import { ProtectedRoute } from './components/Registration/AuthGuard';
+import MainLayout from './components/Main_APP_Layout/MainLayout';
+import HomeRedirect from './components/Main_APP_Layout/HomeRedirect';
 
 import { useAuthStore } from './store/authStore';
 import { Toaster } from 'react-hot-toast';
@@ -39,15 +41,36 @@ function App() {
         {/* Authentication routes */}
         <Route path="/auth/*" element={<Authentications />} />
 
-        {/* Protected routes */}
-        <Route
-          path="/*"
-          element={
-            <ProtectedRoute>
-              <Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-            </ProtectedRoute>
-          }
-        />
+        {/* Profile setup routes - protected */}
+        <Route path="/profile/setup/*" element={
+          <ProtectedRoute>
+            <ProfileSetupRoute />
+          </ProtectedRoute>
+        } />
+
+        {/* Student routes - using MainLayout */}
+        <Route path="/Student/:userId/*" element={
+          <ProtectedRoute>
+            <MainLayout isDarkMode={isDarkMode} toggleTheme={toggleTheme} roleType="student" />
+          </ProtectedRoute>
+        } />
+
+        {/* Organizer routes - using MainLayout */}
+        <Route path="/Organizer/:userId/*" element={
+          <ProtectedRoute>
+            <MainLayout isDarkMode={isDarkMode} toggleTheme={toggleTheme} roleType="organizer" />
+          </ProtectedRoute>
+        } />
+
+        {/* Root redirect */}
+        <Route path="/" element={
+          <ProtectedRoute>
+            <HomeRedirect />
+          </ProtectedRoute>
+        } />
+
+        {/* Catch all - redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Toaster />
     </div>

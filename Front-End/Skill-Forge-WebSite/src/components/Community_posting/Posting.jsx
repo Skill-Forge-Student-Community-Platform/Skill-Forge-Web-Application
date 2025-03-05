@@ -7,19 +7,34 @@ import ArticleModal from "./Posting_pagers/ArticleModal/ArticleModal";
 import PrivacyModal from "./Posting_pagers/PrivacyModal/PrivacyModal";
 import MediaUploadModal from './Posting_pagers/MediaUploadModal/MediaUploadModal';
 import Feed from './Feed/Feed';
+import Profile_pic from "../../Assets/test-profile-pic.jpg";
 
-function Posting() {
+// Add user as a prop to your component
+function Posting({ user }) {
   const [activeModal, setActiveModal] = useState(null);
-  const [user, setUser] = useState(null);
   const [eventDetails, setEventDetails] = useState(null);
   const [text, setText] = useState("");
   const [media, setMedia] = useState([]);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [privacy, setPrivacy] = useState("Friends"); // Changed default from "Public" to "Friends"
+  const [privacy, setPrivacy] = useState("Friends");
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [tempMedia, setTempMedia] = useState([]);
   const [posts, setPosts] = useState([]);
 
+  // Default profile picture as fallback
+  const defaultProfilePic = Profile_pic;
+
+  // Use authenticated user data or fall back to default values
+  const userData = {
+    name: user?.Username || user?.name || "User",
+    profilePicture: user?.profilePicture || defaultProfilePic
+  };
+
+  // Example of using user data in your component:
+  const userName = user?.Username || user?.name || "User";
+  const userAvatar = user?.profilePicture || defaultProfilePic;
+
+  // Rest of the component remains largely unchanged
   useEffect(() => {
     if (activeModal) {
       document.body.classList.add("modal-open");
@@ -105,8 +120,8 @@ function Posting() {
 
     const newPost = {
       id: Date.now(),
-      userName: user?.name || "Guest",
-      userImage: user?.profilePicture || "default-avatar.png",
+      userName: userData.name,
+      userImage: userData.profilePicture,
       timestamp: new Date(),
       privacyIcon: getPrivacyIcon(privacy),
       text,
@@ -134,7 +149,7 @@ function Posting() {
     <div className="community-posting">
       <div className="post-input-container">
         <div className="input-row">
-          <img src={user ? user.profilePicture : "default-avatar.png"} alt="Profile" className="user-icon" />
+          <img src={userData.profilePicture} alt="Profile" className="user-icon" />
           <input
             type="text"
             placeholder="What do you want to talk about?"
@@ -185,7 +200,7 @@ function Posting() {
               privacy={privacy}
               setShowPrivacyModal={setShowPrivacyModal}
               isDisabled={isDisabled}
-              user={user}
+              user={userData}
               media={{ ...media, onClear: handleClearMedia }}
               openMediaModal={openMediaModal}
               onPost={() => createPost(text, media, privacy)}
