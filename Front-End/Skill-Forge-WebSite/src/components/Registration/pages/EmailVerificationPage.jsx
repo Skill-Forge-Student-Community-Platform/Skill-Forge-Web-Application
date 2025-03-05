@@ -48,7 +48,7 @@ const EmailVerificationPage = () => {
 		const verificationCode = code.join("");
 		try {
 			await verifyEmail(verificationCode);
-			navigate("/");
+			navigate("/profile/setup/type");  // Redirect to profile setup route
 			toast.success("Email verified successfully");
 		} catch (error) {
 			console.log(error);

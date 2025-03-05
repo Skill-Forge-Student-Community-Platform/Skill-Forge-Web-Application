@@ -70,13 +70,13 @@ function Authentications() {
   const { title, action, subtitle, quote, quoteAuthor } = getPageContent();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 border-l-cyan-800 to-sky-600">
-      <div className="h-screen grid lg:grid-cols-2">
+    <div className="h-screen overflow-hidden bg-gradient-to-br from-gray-900 border-l-cyan-800 to-sky-600">
+      <div className="h-full w-full grid lg:grid-cols-2">
         {/* Left Side - Form Container */}
-        <div className="flex flex-col justify-center items-center p-6 sm:p-12 backdrop-filter backdrop-blur-xl">
-          <div className="w-full max-w-md space-y-8">
+        <div className="flex flex-col justify-center items-center p-6 sm:p-10 backdrop-filter backdrop-blur-xl overflow-hidden">
+          <div className="w-full max-w-md">
             {/* Logo & Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <div className="flex flex-col items-center gap-2 group">
                 <div
                   className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30
@@ -90,7 +90,7 @@ function Authentications() {
             </div>
 
             {/* Auth Forms Container */}
-            <div className="bg-gray-800/40 rounded-xl">
+            <div className="bg-gray-800/40 rounded-xl overflow-hidden">
               <Routes>
                 <Route path='/signup' element={
                   <RedirectAuthenticatedUser>

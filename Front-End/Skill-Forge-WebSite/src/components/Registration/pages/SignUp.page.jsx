@@ -36,26 +36,12 @@ function SignUp() {
     className='max-w-md w-full backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden'
     >
 
-      <div className='p-8'>
-          <h2 className='!text-3xl !font-bold mb-6 text-center bg-white text-transparent bg-clip-text'>
+      <div className='p-6 overflow-hidden'>
+          <h2 className='!text-2xl !font-bold mb-4 text-center bg-white text-transparent bg-clip-text'>
               Create Account
           </h2>
-          <form onSubmit={handleSignup}>
+          <form onSubmit={handleSignup} className="space-y-2 overflow-hidden">
 
-            {/* <Input
-              icon={User}
-              type='text'
-              placeholder='First Name'
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <Input
-              icon={User}
-              type='text'
-              placeholder='Last Name'
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            /> */}
             <Input
               icon={User}
               type='text'
@@ -82,7 +68,7 @@ function SignUp() {
             {/* password meter */}
             <PasswordMeter password={password} />
 
-             <motion.button className='mt-5 w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-bold shadow-lg
+             <motion.button className='mt-3 w-full py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-bold shadow-lg
              hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200'
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -92,8 +78,8 @@ function SignUp() {
              </motion.button>
           </form>
       </div>
-        <div className='px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
-              <p>
+        <div className='px-6 py-3 bg-gray-900 bg-opacity-50 flex justify-center'>
+              <p className="text-sm">
                 Already have an account? {" "}
                 <Link to ="/auth/login" className='text-green-400 hover:underline'
                 >Login</Link>
