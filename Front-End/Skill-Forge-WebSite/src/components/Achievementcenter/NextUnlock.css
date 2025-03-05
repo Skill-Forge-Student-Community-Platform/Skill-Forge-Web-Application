@@ -1,0 +1,94 @@
+.next-unlock-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+}
+
+.next-unlock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.next-unlock-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.unlock-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.unlock-card:hover {
+  transform: scale(1.02);
+}
+
+.icon-container {
+  font-size: 26px;
+  color: #6366f1;
+  background: #eef2ff;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.details {
+  flex-grow: 1;
+}
+
+.badge-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.badge-description {
+  font-size: 14px;
+  color: gray;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  margin-top: 10px;
+  position: relative;
+}
+
+.progress {
+  height: 6px;
+  border-radius: 3px;
+  background: #6366f1;
+}
+
+.remaining {
+  font-size: 13px;
+  color: #6366f1;
+  font-weight: bold;
+  margin-top: 5px;
+}
