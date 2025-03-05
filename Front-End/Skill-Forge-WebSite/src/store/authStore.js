@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from "zustand"; // Make sure you're importing from zustand, not "zustand/vanilla"
 import axios from "axios";
 
 // Use the environment variable or fall back to localhost
@@ -8,7 +8,15 @@ console.log("API URL being used:", API_URL); // Debug logging
 
 axios.defaults.withCredentials = true;
 
-export const useAuthStore = create((set) => ({
+// Helper function to set common headers
+const getAuthHeaders = (contentType = 'application/json') => {
+  return {
+    'Content-Type': contentType,
+  };
+};
+
+// Fix how we export the store
+const useAuthStore = create((set, get) => ({
 	user: null,
 	isAuthenticated: false,
 	error: null,
@@ -16,7 +24,125 @@ export const useAuthStore = create((set) => ({
 	isCheckingAuth: true,
 	message: null,
 
-	signup: async ( username, email, password) => {
+	updateUserRole: async (role) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axios.post(
+        `${API_URL}/update-role`,
+        { role },
+        { headers: getAuthHeaders() }
+      );
+
+			set({
+				user: {
+					...response.data.user
+				},
+				isLoading: false
+			});
+			return response.data;
+		} catch (error) {
+			const errorMessage =
+				error.response?.data?.message ||
+				"Unable to update user role. Please try again later.";
+			set({ error: errorMessage, isLoading: false });
+			throw new Error(errorMessage);
+		}
+	},
+
+	updateProfile: async (profileData) => {
+		set({ isLoading: true, error: null });
+		try {
+      // Determine content type
+      const contentType = profileData instanceof FormData ? 'multipart/form-data' : 'application/json';
+
+			const response = await axios.put(
+        `${API_URL}/profile`,
+        profileData,
+        { headers: getAuthHeaders(contentType) }
+      );
+
+      // Make sure profile is marked as complete in user object
+      const userData = response.data.user || { ...get().user };
+
+      // Explicitly set profileComplete flag to true
+      userData.profileComplete = true;
+      console.log("Setting profileComplete flag to true after successful profile update");
+
+      // Store updated user data
+			set({
+				user: userData,
+				isLoading: false,
+				message: "Profile updated successfully"
+			});
+
+			console.log("Updated user in auth store:", userData);
+			return response.data;
+		} catch (error) {
+			console.error('Profile update error:', error);
+			const errorMessage =
+				error.response?.data?.message ||
+				"Unable to update profile. Please try again.";
+			set({ error: errorMessage, isLoading: false });
+			throw new Error(errorMessage);
+		}
+	},
+
+	// Get the current user's profile
+	getProfile: async () => {
+	  set({ isLoading: true, error: null });
+	  try {
+	    const response = await axios.get(
+	      `${API_URL}/profile`,
+	      { headers: getAuthHeaders() }
+	    );
+
+	    return response.data;
+	  } catch (error) {
+	    console.error('Get profile error:', error);
+	    const errorMessage =
+	      error.response?.data?.message ||
+	      "Unable to fetch profile. Please try again.";
+	    set({ error: errorMessage, isLoading: false });
+	    throw new Error(errorMessage);
+	  } finally {
+	    set({ isLoading: false });
+	  }
+	},
+
+	// Separate function for uploading just the profile picture
+	uploadProfilePicture: async (file) => {
+	  set({ isLoading: true, error: null });
+	  try {
+	    const formData = new FormData();
+	    formData.append('profilePicture', file);
+
+	    const response = await axios.post(
+	      `${API_URL}/profile/upload-picture`,
+	      formData,
+	      { headers: getAuthHeaders('multipart/form-data') }
+	    );
+
+	    // Update the user object with the new profile picture
+	    set(state => ({
+	      user: state.user ? {
+	        ...state.user,
+	        profilePicture: response.data.profilePicture
+	      } : null,
+	      isLoading: false
+	    }));
+
+	    return response.data;
+	  } catch (error) {
+	    console.error('Profile picture upload error:', error);
+	    const errorMessage =
+	      error.response?.data?.message ||
+	      "Unable to upload profile picture. Please try again.";
+	    set({ error: errorMessage, isLoading: false });
+	    throw new Error(errorMessage);
+	  }
+	},
+
+	signup: async (username, email, password) => {
 		set({ isLoading: true, error: null });
 		try {
 			const response = await axios.post(`${API_URL}/signup`,{
@@ -124,3 +250,6 @@ export const useAuthStore = create((set) => ({
 		}
 	},
 }));
+
+export { useAuthStore };
+// Alternatively, you can use: export default useAuthStore;

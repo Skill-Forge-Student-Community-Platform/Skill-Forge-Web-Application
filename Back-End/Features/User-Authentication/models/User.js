@@ -21,11 +21,24 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['student', 'organizer'],
+    default: null
+  },
+  profile: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: 'role'
+  },
   lastLogin: {
     type: Date,
     default: Date.now,
   },
   isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  profileComplete: {
     type: Boolean,
     default: false,
   },
