@@ -1,0 +1,57 @@
+.sidebar-container {
+  position: fixed;
+  top: 70px; /* This matches the navbar height */
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  overflow-y: auto;
+  background-color: var(--sidebar-bg, #f5f5f5);
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.05);
+  transition: width 0.3s ease, transform 0.3s ease;
+  z-index: 90; /* Lower than navbar */
+}
+
+.sidebar-container.collapsed {
+  width: 70px;
+}
+
+/* Add padding to the main content area to accommodate the sidebar */
+.main-content {
+  margin-left: 250px;
+  padding-top: 85px; /* Navbar height (70px) + extra padding */
+  padding-right: 20px;
+  padding-bottom: 20px;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+  box-sizing: border-box;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: 70px;
+}
+
+/* App layout container */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .sidebar-container {
+    transform: translateX(-100%);
+  }
+
+  .sidebar-container.mobile-open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-left: 20px;
+  }
+
+  .main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+}
