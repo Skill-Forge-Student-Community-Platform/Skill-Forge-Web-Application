@@ -1,0 +1,84 @@
+/* Search Loader Animation - with namespaced classes to prevent conflicts */
+.loading-spinner-wrapper {
+  /* Ensures this component doesn't affect other UI elements */
+  isolation: isolate;
+  z-index: 9999;
+}
+
+/* Renamed all classes with sf- prefix to avoid conflicts */
+.sf-search-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.sf-search-loader-container {
+  position: relative;
+  width: 160px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sf-bars-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sf-progress-bar {
+  height: 8px;
+  width: 100%;
+  background: linear-gradient(90deg, #3B82F6, #93C5FD, #3B82F6);
+  background-size: 200% 100%;
+  border-radius: 6px;
+}
+
+.sf-short-bar {
+  width: 60%;
+}
+
+.sf-search-icon {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+  left: 0;
+  top: 8px;
+}
+
+.sf-search-icon circle {
+  fill: rgba(59, 130, 246, 0.15);
+}
+
+.sf-loading-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #2563EB;
+  margin-top: 10px;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .sf-progress-bar {
+    background: linear-gradient(90deg, #60A5FA, #BFDBFE, #60A5FA);
+  }
+
+  .sf-search-icon circle {
+    fill: rgba(96, 165, 250, 0.2);
+  }
+
+  .sf-search-icon circle,
+  .sf-search-icon line {
+    stroke: #60A5FA;
+  }
+
+  .sf-loading-text {
+    color: #60A5FA;
+  }
+}
