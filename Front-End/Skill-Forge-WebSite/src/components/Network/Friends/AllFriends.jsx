@@ -17,7 +17,14 @@ const AllFriends = () => {
 
   const [activeDropdown, setActiveDropdown] = useState(null);
 
-  // Function to add confirmed friends to "All Friends" and remove from "Friend Requests"
+  // Function to navigate to profile (Replace with React Router if needed)
+  const goToProfile = (id) => {
+    alert(`Navigating to ${friends.find((friend) => friend.id === id).name}'s profile...`);
+    // Replace with actual routing logic
+    window.location.href = `/profile/${id}`;
+  };
+
+  // Function to add confirmed friends to "All Friends"
   const addToFriends = (newFriend) => {
     setFriends((prevFriends) => {
       if (!prevFriends.some((friend) => friend.id === newFriend.id)) {
@@ -26,7 +33,7 @@ const AllFriends = () => {
       return prevFriends;
     });
 
-    setConfirmedFriends((prevConfirmed) => [...prevConfirmed, newFriend.id]); // Track confirmed users
+    setConfirmedFriends((prevConfirmed) => [...prevConfirmed, newFriend.id]);
   };
 
   // Function to remove a request when "Delete" is clicked
@@ -67,7 +74,7 @@ const AllFriends = () => {
               <p className="no-friends">No friends yet</p>
             ) : (
               friends.map((friend) => (
-                <div key={friend.id} className="friend-card">
+                <div key={friend.id} className="friend-card" onClick={() => goToProfile(friend.id)}>
                   <img src={friend.avatar} alt={friend.name} className="friend-avatar" />
                   <div className="friend-info">
                     <p className="friend-name">{friend.name}</p>
@@ -75,10 +82,16 @@ const AllFriends = () => {
                   </div>
                   <button className="message-btn">Message</button>
                   <div className="dropdown-container">
-                    <button className="more-options" onClick={() => toggleDropdown(friend.id)}>⋮</button>
+                    <button className="more-options" onClick={(e) => {
+                      e.stopPropagation(); // Prevent profile navigation when clicking ⋮
+                      toggleDropdown(friend.id);
+                    }}>⋮</button>
                     {activeDropdown === friend.id && (
                       <div className="dropdown-menu">
-                        <button onClick={() => removeFriend(friend.id)} className="remove-btn">Remove Connection</button>
+                        <button onClick={(e) => {
+                          e.stopPropagation(); // Prevent profile navigation when clicking remove
+                          removeFriend(friend.id);
+                        }} className="remove-btn">Remove Connection</button>
                       </div>
                     )}
                   </div>
