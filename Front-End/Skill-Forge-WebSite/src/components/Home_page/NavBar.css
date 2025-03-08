@@ -143,13 +143,78 @@
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
-
   transition: all 0.2s ease;
 }
 
 .notification-icon:hover {
   background-color: var(--hover-bg);
   color: var(--text-color);
+}
+
+.notification-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-right: 20px;
+}
+
+.notification-container .notification-bar {
+  display: flex;
+  align-items: center;
+}
+
+.notification-container .notification-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-container .notification-icon:hover {
+  background-color: var(--hover-bg);
+  color: var(--text-color);
+}
+
+.notification-container .notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #ff4d4f;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.notification-container .notifications-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-top: 10px;
+  z-index: 1000;
+}
+
+/* Optional: Add a small arrow at the top of the dropdown */
+.notification-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 15px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
 }
 
 .profile {
