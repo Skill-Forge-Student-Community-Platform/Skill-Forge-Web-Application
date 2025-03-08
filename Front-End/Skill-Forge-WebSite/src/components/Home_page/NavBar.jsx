@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaMoon } from "react-icons/fa";
 import { IoSunnyOutline } from "react-icons/io5";
-import { HiOutlineBell } from "react-icons/hi2";
 import Profile_pic from "../../Assets/test-profile-pic.jpg";
+import Notification from "../Notifications/Notification dropdown/Notification";
 import "./NavBar.css";
 
 const Navbar = ({ isDarkMode, toggleTheme }) => {
@@ -37,8 +37,8 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
             <div className="toggle-circle"></div>
           </div>
 
-          <div className="notification-icon">
-            <HiOutlineBell />
+          <div className="notification-container">
+            <Notification />
           </div>
 
           <div className="profile">
