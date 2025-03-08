@@ -1,25 +1,39 @@
-import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X, User, ChevronDown, LogOut, Settings } from 'lucide-react';
-import { FaMoon } from "react-icons/fa";
-import { IoSunnyOutline } from "react-icons/io5";
-import { HiOutlineBell } from "react-icons/hi2";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, Bell } from 'lucide-react';
+import { getMenus } from './MenuList';
+import Theme from './shared/Theme';
+import DesktopMenu from './shared/DesktopMenu';
+import MobileMenu from './shared/MobileMenu';
+import SearchBar from './shared/SearchBar';
+import ProfileDropDown from './shared/ProfiledropDown';
 import './NavBar.css';
 
 const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, roleType }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
   // Base URL for role-based navigation
   const baseUrl = `/${roleType.charAt(0).toUpperCase() + roleType.slice(1)}/${userId}`;
 
+  // Get menus based on current role and userId
+  const Menus = getMenus(roleType, userId);
+
+  // Track scroll position for navbar styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleToggleSidebar = () => {
     toggleSidebar();
     setIsSidebarOpen(!isSidebarOpen);
   };
-
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const handleLogout = async () => {
     try {
@@ -31,143 +45,66 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
   };
 
   return (
-    <nav className="navbar">
-      <button
-          onClick={handleToggleSidebar}
-          className="sidebar-toggle"
-          aria-label="Toggle sidebar"
-        >
-          {isSidebarOpen ? (
-            <X size={24} />
-          ) : (
-            <Menu size={24} />
-          )}
-        </button>
+    <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
-        {/* Sidebar Toggle Button positioned absolutely */}
+        {/* Left Section - Logo and Toggle */}
+        <div className="navbar-left">
+          <button
+            onClick={handleToggleSidebar}
+            className="sidebar-toggle"
+            aria-label="Toggle sidebar"
+          >
+            {isSidebarOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
 
-
-        {/* Left Section - Logo */}
-        <div className="navbar-logo">
-          <Link to={`${baseUrl}/home`}>
+          <Link to={`${baseUrl}/home`} className="navbar-logo">
             <h1>SkillForge</h1>
           </Link>
         </div>
 
-        {/* Middle Section - Navigation Links */}
+        {/* Middle Section - Nav Links and Search */}
         <div className="navbar-middle">
-          <ul className="nav-links">
-            <NavLink
-              to={`${baseUrl}/home`}
-              className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}
-            >
-              <span>Home</span>
-            </NavLink>
+          {/* Main navigation */}
+          <div className="nav-menu-container">
+            <ul className="nav-links">
+              {Menus.map((menu) => (
+                <DesktopMenu key={menu.name} menu={menu} />
+              ))}
+            </ul>
+          </div>
 
-            <NavLink
-              to={`${baseUrl}/view-events`}
-              className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}
-            >
-              <span>Events</span>
-            </NavLink>
-
-            <NavLink
-              to={`${baseUrl}/teams`}
-              className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}
-            >
-              <span>Teams</span>
-            </NavLink>
-
-            {roleType === 'organizer' && (
-              <>
-                <NavLink
-                  to={`${baseUrl}/add-events`}
-                  className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}
-                >
-                  <span>Add Event</span>
-                </NavLink>
-              </>
-            )}
-          </ul>
+          {/* Search Bar */}
+          <div className="search-wrapper">
+            <SearchBar placeholder="Search courses, events, teams..." />
+          </div>
         </div>
 
-        {/* Right Section - Theme Toggle, Notifications, Profile */}
+        {/* Right Section */}
         <div className="navbar-right">
-          {/* Custom Theme Toggle */}
-          <div
-            className={`toggle-icon ${isDarkMode ? "dark" : ""}`}
-            onClick={toggleTheme}
-          >
-            <div className="icon-light">
-              <IoSunnyOutline />
-            </div>
-            <div className="icon-dark">
-              <FaMoon />
-            </div>
-            <div className="toggle-circle"></div>
+          {/* Theme Toggle */}
+          <div className="theme-toggle-wrapper" title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+            <Theme isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
           </div>
 
           {/* Notification Icon */}
-          <div className="notification-icon">
-            <HiOutlineBell />
+          <div className="notification-wrapper">
+            <button className="notification-button" aria-label="Notifications">
+              <Bell size={20} />
+              <span className="notification-indicator"></span>
+            </button>
           </div>
 
-          {/* Profile with Dropdown */}
-          <div className="profile" onClick={toggleDropdown}>
-            <p className="profile-name">Hey {user?.Username || 'User'}</p>
-            <div className="profile-image-container">
-              {user?.profilePicture ? (
-                <img
-                  src={user.profilePicture}
-                  alt="Profile"
-                  className="profile-image"
-                />
-              ) : (
-                <div className="profile-image profile-placeholder">
-                  <User size={18} />
-                </div>
-              )}
-            </div>
-            <ChevronDown size={16} className="dropdown-icon" />
+          {/* Profile Dropdown Component */}
+          <ProfileDropDown
+            user={user}
+            baseUrl={baseUrl}
+            onLogout={handleLogout}
+            roleType={roleType}
+          />
 
-            {/* Dropdown Menu */}
-            {dropdownOpen && (
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <p className="dropdown-user">{user?.Username || 'User'}</p>
-                  <p className="dropdown-email">{user?.email || 'user@example.com'}</p>
-                </div>
-
-                <Link
-                  to={`${baseUrl}/profile`}
-                  className="dropdown-item"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  <User size={16} />
-                  <span>View Profile</span>
-                </Link>
-
-                <Link
-                  to={`${baseUrl}/settings`}
-                  className="dropdown-item"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  <Settings size={16} />
-                  <span>Account Settings</span>
-                </Link>
-
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setDropdownOpen(false);
-                  }}
-                  className="dropdown-item logout"
-                >
-                  <LogOut size={16} />
-                  <span>Logout</span>
-                </button>
-              </div>
-            )}
+          {/* Mobile Menu Button - visible on smaller screens */}
+          <div className="mobile-menu">
+            <MobileMenu Menus={Menus} />
           </div>
         </div>
       </div>

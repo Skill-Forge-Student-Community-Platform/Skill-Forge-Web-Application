@@ -3,9 +3,6 @@ import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-do
 import { useAuthStore } from '../../store/authStore';
 
 import NavBar from '../Navigation/NavBar';
-import HomeSidebar from '../Navigation/Sidebar/HomeSidebar';
-import EventsSidebar from '../Navigation/Sidebar/EventsSidebar';
-import TeamSidebar from '../Navigation/Sidebar/TeamSidebar';
 
 // Page components
 import Home from '../Home_page/Home';
@@ -68,6 +65,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const { user, logout } = useAuthStore();
   const { userId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const location = useLocation();
 
   // Extract the current section from the URL path
@@ -94,29 +92,11 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
-  };
-
-  // Determine which sidebar to show based on the current main section
-  const renderSidebar = () => {
-    const isStudent = roleType === 'student';
-
-    switch (currentSection) {
-      case 'home':
-      case 'dashboard':
-        return <HomeSidebar isStudent={isStudent} collapsed={sidebarCollapsed} userId={userId} />;
-      case 'view-events':
-      case 'add-events':
-      case 'manage-events':
-        return <EventsSidebar isStudent={isStudent} collapsed={sidebarCollapsed} userId={userId} />;
-      case 'teams':
-        return <TeamSidebar isStudent={isStudent} collapsed={sidebarCollapsed} userId={userId} />;
-      default:
-        return <HomeSidebar isStudent={isStudent} collapsed={sidebarCollapsed} userId={userId} />;
-    }
+    setShowBackdrop(!sidebarCollapsed && window.innerWidth > 768);
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex h-screen ">
       {/* Top Navigation Bar */}
       <NavBar
         isDarkMode={isDarkMode}
@@ -128,50 +108,44 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
         roleType={roleType}
       />
 
-      <div className="flex flex-1 overflow-hidden ml-1.5 ">
-        {/* Collapsible Sidebar */}
-        <div
-          className={`${
-            sidebarCollapsed ? 'w-16' : 'w-64'
-          } transition-all duration-300 ease-in-out -ml-0.5 `}
-        >
-          {renderSidebar()}
-        </div>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-auto p-1 pt-2.5 mt-16">
-          <Routes>
-            <Route path="home" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
-            {/* Dashboard routes based on role */}
-            <Route path="dashboard" element={
-              roleType === 'student'
-                ? <StudentDashboard userId={userId} />
-                : <OrganizerDashboard userId={userId} />
-            } />
+      {/* Sidebar - rendered outside content flow for overlay */}
+      {/* {renderSidebar()} */}
 
-            {/* Event routes */}
-            <Route path="view-events/*" element={<ViewEvent userId={userId} isStudent={roleType === 'student'} />} />
+      {/* Main Content - full width */}
+      <main className="w-full overflow-auto p-4 pt-20">
+        <Routes>
+          <Route path="home" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
-            {/* Organizer-specific routes */}
-            {roleType === 'organizer' && (
-              <>
-                <Route path="add-events/*" element={<AddEvent userId={userId} />} />
-                <Route path="manage-events/*" element={<ManageEvents userId={userId} />} />
-              </>
-            )}
+          {/* Dashboard routes based on role */}
+          <Route path="dashboard" element={
+            roleType === 'student'
+              ? <StudentDashboard userId={userId} />
+              : <OrganizerDashboard userId={userId} />
+          } />
 
-            {/* Team routes */}
-            <Route path="teams" element={<TeamPage userId={userId} />} />
-            <Route path="teams/management" element={<TeamManagement userId={userId} />} />
-            <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
-            <Route path="teams/inbox" element={<Inbox userId={userId} />} />
+          {/* Event routes */}
+          <Route path="view-events/*" element={<ViewEvent userId={userId} isStudent={roleType === 'student'} />} />
 
-            {/* Default route */}
-            <Route path="*" element={<Navigate to="home" replace />} />
-          </Routes>
-        </main>
-      </div>
+          {/* Organizer-specific routes */}
+          {roleType === 'organizer' && (
+            <>
+              <Route path="add-events/*" element={<AddEvent userId={userId} />} />
+              <Route path="manage-events/*" element={<ManageEvents userId={userId} />} />
+            </>
+          )}
+
+          {/* Team routes */}
+          <Route path="teams" element={<TeamPage userId={userId} />} />
+          <Route path="teams/management" element={<TeamManagement userId={userId} />} />
+          <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
+          <Route path="teams/inbox" element={<Inbox userId={userId} />} />
+
+          {/* Default route */}
+          <Route path="*" element={<Navigate to="home" replace />} />
+        </Routes>
+      </main>
     </div>
   );
 };
