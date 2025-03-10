@@ -30,6 +30,30 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     refPath: 'role'
   },
+  // New social networking fields
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: [],
+  }],
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: [],
+  }],
+  coverImg: {
+    type: String,
+    default: "",
+  },
+  likedPosts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post",
+    default: [],
+  }],
+  link: {
+    type: String,
+    default: "",
+  },
   lastLogin: {
     type: Date,
     default: Date.now,
