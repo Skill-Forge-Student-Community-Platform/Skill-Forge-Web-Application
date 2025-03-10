@@ -10,7 +10,7 @@ router.get("/test", (req, res) => {
   res.send("testing the authentication route");
 });
 
-router.post("/check-auth", verifyToken, checkAuth);
+router.get("/check-auth", verifyToken, checkAuth);
 
 router.post("/signup", signup);
 router.post("/login", Login);
@@ -19,9 +19,9 @@ router.post("/logout", Logout);
 // verify email
 router.post("/verify-email", verifyEmail);
 // forget password
-router.post("/forget-Password", forgetPassword);
+router.post("/forgot-password", forgetPassword);
 // reset password
-router.post("/reset-Password/:token", resetPassword);
+router.post("/reset-password/:token", resetPassword);
 
 
 export default router;

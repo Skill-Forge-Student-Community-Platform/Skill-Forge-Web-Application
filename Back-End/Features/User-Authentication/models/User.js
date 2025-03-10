@@ -4,11 +4,9 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   FirstName: {
     type: String,
-    required: true,
   },
   LastName: {
     type: String,
-    required: true,
   },
   Username: {
     type: String,
@@ -23,11 +21,48 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['student', 'organizer'],
+    default: null
+  },
+  profile: {
+    type: mongoose.Schema.Types.ObjectId,
+    refPath: 'role'
+  },
+  // New social networking fields
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: [],
+  }],
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: [],
+  }],
+  coverImg: {
+    type: String,
+    default: "",
+  },
+  likedPosts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post",
+    default: [],
+  }],
+  link: {
+    type: String,
+    default: "",
+  },
   lastLogin: {
     type: Date,
     default: Date.now,
   },
   isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  profileComplete: {
     type: Boolean,
     default: false,
   },
