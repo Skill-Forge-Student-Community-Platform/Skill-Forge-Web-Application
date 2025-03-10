@@ -8,7 +8,11 @@ import fs from 'fs';
 import {v2 as cloudinary } from 'cloudinary';
 import http from 'http'; // Import HTTP
 import { Server } from 'socket.io'; // Import Socket.IO
+
+import fileUpload from 'express-fileupload';
+
 import fileUpload from 'express-fileupload'; // Add this import
+
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
@@ -110,7 +114,6 @@ app.use(cookieParser()); // to allow us parse incoming cookies
 
 
 
-// Comment out file upload middleware until package is installed
 
 app.use(fileUpload({
   createParentPath: true,

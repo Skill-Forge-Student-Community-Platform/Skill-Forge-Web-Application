@@ -1,5 +1,5 @@
 import Team from "../models/team.model.js";
-import User from "../models/user.model.js";
+import { User } from "../../User-Authentication/models/User.js";
 import mongoose from "mongoose";
 
 // Create a team
@@ -13,7 +13,7 @@ export const createTeam = async (req, res) => {
 
         const updatedUser = await User.findByIdAndUpdate(
             creatorId,
-            { 
+            {
                 $addToSet: { teams: team._id },  // Ensure unique team IDs in the array
                 $set: { creator: creatorId }    // Set creator ID directly
             },
@@ -38,7 +38,7 @@ export const getTeamsByUser = async (req, res) => {
 
     try {
         const teams = await Team.find({ creator: creatorId }).populate('members');
-        
+
         if (!teams.length) {
             return res.status(404).json({ error: "No teams found for this user" });
         }
@@ -116,7 +116,7 @@ export const acceptInvite = async (req, res) => {
 
         // Add team to the user's teams array
         const updatedUser = await User.findByIdAndUpdate(
-            userId, 
+            userId,
             { $addToSet: { teams: team._id } }, // Prevents duplicate team entries
             { new: true }
         );
