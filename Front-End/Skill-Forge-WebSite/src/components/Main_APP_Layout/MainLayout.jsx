@@ -6,9 +6,9 @@ import NavBar from '../Navigation/NavBar';
 
 // Page components
 import Home from '../Home_page/Home';
-
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
+
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -137,6 +137,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
           {/* Organizer-specific routes */}
           {roleType === 'organizer' && (
             <>
+
 
               <Route path="add-events/*" element={<OrgnizerEventAddingForm userId={userId} />} />
 
