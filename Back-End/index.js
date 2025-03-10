@@ -8,8 +8,7 @@ import fs from 'fs';
 import {v2 as cloudinary } from 'cloudinary';
 import http from 'http'; // Import HTTP
 import { Server } from 'socket.io'; // Import Socket.IO
-
- import fileUpload from 'express-fileupload'; // Add this import
+import fileUpload from 'express-fileupload'; // Add this import
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
@@ -17,6 +16,8 @@ import authRoutes from "./Features/User-Authentication/routes/Authentication.js"
 import profileRoutes from "./Features/User-Authentication/routes/profileRoutes.js";
 import userSocialRoutes from "./Features/User-Data_flow/routes/user.route.js";
 import postRoutes from "./Features/Posting-Feed/routes/Post.route.js";
+
+
 import eventRoutes from "./Features/EventListing/routes/eventRoutes.js";
 
 
@@ -24,6 +25,7 @@ import eventRoutes from "./Features/EventListing/routes/eventRoutes.js";
 import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
 
 import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
+
 
 // Environment configuration
 dotenv.config();
@@ -106,6 +108,8 @@ app.use(express.json({ limit: '5mb' })); // Increased payload limit
 app.use(express.urlencoded({ limit: '5mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
 
+
+
 // Comment out file upload middleware until package is installed
 
 app.use(fileUpload({
@@ -119,6 +123,7 @@ app.use(fileUpload({
 const uploadMiddleware = express.static(path.join(process.cwd(), 'uploads'));
 app.use('/uploads', uploadMiddleware);
 
+
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -130,11 +135,13 @@ app.use("/api/posts", postRoutes);
 
 
 
+
 app.use("/Details", eventRoutes);
 
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
+
 
 
 app.get("/api", (req, res) => {
