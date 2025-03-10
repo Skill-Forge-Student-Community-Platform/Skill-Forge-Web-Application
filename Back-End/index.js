@@ -8,8 +8,7 @@ import fs from 'fs';
 import {v2 as cloudinary } from 'cloudinary';
 import http from 'http'; // Import HTTP
 import { Server } from 'socket.io'; // Import Socket.IO
-// Remove this import until package is installed
-// import fileUpload from 'express-fileupload'; // Add this import
+import fileUpload from 'express-fileupload';
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
@@ -106,13 +105,12 @@ app.use(express.json({ limit: '5mb' })); // Increased payload limit
 app.use(express.urlencoded({ limit: '5mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
 
-// Comment out file upload middleware until package is installed
-/* 
+
 app.use(fileUpload({
   createParentPath: true,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 }));
-*/
+
 
 // Alternative approach for file uploads using built-in middleware
 // This is a temporary solution until express-fileupload is installed
