@@ -16,6 +16,12 @@ import profileRoutes from "./Features/User-Authentication/routes/profileRoutes.j
 import userSocialRoutes from "./Features/User-Data_flow/routes/user.route.js";
 import postRoutes from "./Features/Posting-Feed/routes/Post.route.js";
 
+
+
+import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
+
+import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
+
 // Environment configuration
 dotenv.config();
 
@@ -105,6 +111,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
+
+
+
+app.use("/api/messages", messageRoutes);
+app.use("/api/teams", teamRoutes);
 
 app.get("/api", (req, res) => {
   res.send("Hello World");
