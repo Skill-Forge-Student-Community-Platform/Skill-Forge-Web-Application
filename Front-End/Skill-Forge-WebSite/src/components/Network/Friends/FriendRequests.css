@@ -1,0 +1,93 @@
+.friend-requests-container {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual friend request */
+.friend-request-card {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Header section with profile picture & details (Clickable) */
+.friend-request-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.friend-request-header:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+/* Profile picture */
+.request-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+/* Request details */
+.request-info {
+  flex-grow: 1;
+}
+
+/* Name styling */
+.request-name {
+  font-size: 14px;
+  margin: 0;
+  color: #333;
+}
+
+/* Mutual friends & time */
+.request-time {
+  font-size: 12px;
+  color: gray;
+  margin: 2px 0 0;
+}
+
+/* Action buttons */
+.request-actions {
+  display: flex;
+  gap: 18px;
+}
+
+.confirm-btn, .delete-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.confirm-btn {
+  background: #007bff;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background: #0056b3;
+}
+
+.delete-btn {
+  background: #e4e6eb;
+  color: black;
+}
+
+.delete-btn:hover {
+  background: #cfd2d7;
+}
