@@ -7,10 +7,10 @@ import NavBar from '../Navigation/NavBar';
 
 // Page components
 import Home from '../Home_page/Home';
-
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
+
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -119,6 +119,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
       {/* Main Content - full width */}
       <main className="w-full overflow-auto p-4 pt-20">
+
         <EventProvider>
           <Routes>
             <Route path="home" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
@@ -151,6 +152,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="*" element={<Navigate to="home" replace />} />
           </Routes>
         </EventProvider>
+
       </main>
     </div>
   );
