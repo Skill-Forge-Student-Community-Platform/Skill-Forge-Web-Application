@@ -6,7 +6,7 @@ const RegisteredUsers = ({ eventId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchRegisteredUsers = async () => {
       try {
         const response = await fetch(`http://localhost:3000/registered-users/${eventId}`);
@@ -31,7 +31,7 @@ const RegisteredUsers = ({ eventId }) => {
    // const interval = setInterval(fetchRegisteredUsers, 5000);
   
     //return () => clearInterval(interval); // Cleanup on unmount
-  }, [eventId]); 
+  }, [eventId]);  */ 
   
   const deleteEvent = async (registrationId) => {
     alert(registrationId);
