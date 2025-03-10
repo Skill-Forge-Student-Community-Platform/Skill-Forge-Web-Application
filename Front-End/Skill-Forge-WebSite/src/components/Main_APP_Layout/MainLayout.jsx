@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
+
 import { EventProvider } from '../../context/EventContext';
+
 
 import NavBar from '../Navigation/NavBar';
 
 // Page components
 import Home from '../Home_page/Home';
+
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
@@ -39,18 +42,19 @@ const OrganizerDashboard = ({ userId }) => (
   <PlaceholderPage title={`Organizer Dashboard for user ${userId}`} />
 );
 
-// Commented out unused placeholder components
-// const ViewEvent = ({ userId, isStudent }) => (
-//   <PlaceholderPage title={`Event Viewer (${isStudent ? 'Student' : 'Organizer'} View)`} />
-// );
-// 
-// const AddEvent = ({ userId }) => (
-//   <PlaceholderPage title={`Add Event Page for user ${userId}`} />
-// );
-// 
-// const ManageEvents = ({ userId }) => (
-//   <PlaceholderPage title={`Manage Events for user ${userId}`} />
-// );
+
+const ViewEvent = ({ userId, isStudent }) => (
+  <PlaceholderPage title={`Event Viewer (${isStudent ? 'Student' : 'Organizer'} View)`} />
+);
+
+const AddEvent = ({ userId }) => (
+  <PlaceholderPage title={`Add Event Page for user ${userId}`} />
+);
+
+const ManageEvents = ({ userId }) => (
+  <PlaceholderPage title={`Manage Events for user ${userId}`} />
+);
+
 
 const TeamPage = ({ userId }) => (
   <PlaceholderPage title={`Teams Page for user ${userId}`} />
@@ -72,13 +76,15 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const { user, logout } = useAuthStore();
   const { userId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  // Commented out unused state
-  // const [showBackdrop, setShowBackdrop] = useState(false);
+
+  
   const location = useLocation();
 
-  // Extract the current section from the URL path (commented out as unused)
-  // const pathParts = location.pathname.split('/');
-  // const currentSection = pathParts[3] || 'home'; // [0]=empty, [1]=role, [2]=userId, [3]=section
+  // Extract the current section from the URL path
+  const pathParts = location.pathname.split('/');
+  const currentSection = pathParts[3] || 'home'; // [0]=empty, [1]=role, [2]=userId, [3]=section
+
+
 
   // Validate user matches URL parameters
   useEffect(() => {
@@ -100,8 +106,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
-    // Update this to avoid the unused variable warning
-    // setShowBackdrop(!sidebarCollapsed && window.innerWidth > 768);
+
   };
 
   return (
@@ -116,6 +121,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
         userId={userId}
         roleType={roleType}
       />
+
 
       {/* Main Content - full width */}
       <main className="w-full overflow-auto p-4 pt-20">
@@ -152,6 +158,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="*" element={<Navigate to="home" replace />} />
           </Routes>
         </EventProvider>
+
 
       </main>
     </div>
