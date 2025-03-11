@@ -23,8 +23,7 @@ export default function EditLanguage() {
   const languages = [
     'English',
     'Español',
-    'Français',
-    'Deutsch',
+    'Français', 
     '中文',
     '日本語',
     'Português'
