@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+// EditPush component
+
 export default function EditPush() {
   const navigate = useNavigate()
   const [pushSettings, setPushSettings] = useState({
@@ -22,7 +24,7 @@ export default function EditPush() {
       <div className="settings-section">
         <h2 className="section-title">Push notifications</h2>
         <p className="section-description">
-          Choose which notifications you'd like to receive on your device
+          Choose what types of push notifications you'd like to receive
         </p>
 
         <div className="edit-form">
