@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+// Edit profile information
+
 export default function EditProfileInfo() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -47,7 +49,7 @@ export default function EditProfileInfo() {
               type="text"
               id="location"
               name="location"
-              value={formData.location}
+              value={formData.location} // The ID of the test user we just created
               onChange={handleChange}
               className="form-input"
             />
@@ -59,7 +61,7 @@ export default function EditProfileInfo() {
               type="text"
               id="industry"
               name="industry"
-              value={formData.industry}
+              value={formData.industry} // The ID of the test user we just created
               onChange={handleChange}
               className="form-input"
             />
