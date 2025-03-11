@@ -1,0 +1,20 @@
+.profile-stats-container {
+    display: flex;
+    justify-content: space-between; /* Align components side by side */
+    align-items: flex-start; /* Align them at the top */
+    gap: 20px; /* Space between components */
+    width: 100%;
+    padding: 20px;
+  }
+  
+  /* Ensure both components take equal height */
+  .profile-intro {
+    flex: 1;
+    max-width: 350px; /* Adjust width */
+  }
+  
+  .organizer-stats {
+    flex: 2;
+    width: 100%;
+  }
+  
