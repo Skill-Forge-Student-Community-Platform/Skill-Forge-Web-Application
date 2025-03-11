@@ -6,7 +6,7 @@ export default function VisibilitySettings() {
     title: "Visibility settings",
     items: [
       {
-        title: "Profile viewing options",
+        title: "Profile view",
         path: "/settings/visibility/profile-viewing",
         description: "Choose how others see your profile"
       },
