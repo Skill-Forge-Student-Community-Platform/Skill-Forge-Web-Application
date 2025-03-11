@@ -1,0 +1,72 @@
+/* Main layout styles */
+.bg-gray-100.dark\:bg-gray-900 {
+  min-height: 100vh;
+}
+
+/* feed styling */
+main.overflow-y-auto {
+  min-height: calc(100vh - 80px); /* Account for navbar height */
+}
+
+/* Add spacing to ensure content doesn't butt up against navbar */
+.sticky.top-0 {
+  padding-top: 2px;
+}
+
+/* Add margin to prevent overlap with sidebar */
+.sidebar-margin {
+  margin-left: 80px; /* Collapsed sidebar width (70px) + extra space */
+}
+
+/* Responsive styling for different screen sizes */
+@media (max-width: 768px) {
+  /* For small screens, give the feed more breathing room */
+  main.overflow-y-auto {
+    margin: 0 auto;
+  }
+
+  /* Adjust top padding when only feed is visible */
+  .sticky.top-0 {
+    padding-top: 16px;
+  }
+}
+
+/* Medium screen specific styling - row layout adjustment */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .flex.flex-col.md\:flex-row.gap-6 {
+    gap: 1rem;
+  }
+
+  /* Ensure proper spacing between profile and feed */
+  main.overflow-y-auto {
+    margin-left: 0;
+    max-width: calc(100% - 290px); /* Adjusted to be smaller: ProfileOverview width + margin + gap */
+  }
+
+  /* Ensure profile section has enough margin from sidebar */
+  .sidebar-margin {
+    margin-left: 80px;
+  }
+}
+
+/* Large screen and up - no sidebar margin needed */
+@media (min-width: 1024px) {
+  .sidebar-margin {
+    margin-left: 0;
+  }
+}
+
+/* Center the feed on small screens */
+@media (max-width: 640px) {
+  .bg-gray-100.dark\:bg-gray-900 > div {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* For extra large screens, add some max-width constraint */
+@media (min-width: 1280px) {
+  .bg-gray-100.dark\:bg-gray-900 > div {
+    max-width: 1128px;
+  }
+}
