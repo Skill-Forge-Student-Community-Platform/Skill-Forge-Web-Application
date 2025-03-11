@@ -2,10 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 
+import { EventProvider } from '../../context/EventContext';
+
+
 import NavBar from '../Navigation/NavBar';
 
 // Page components
 import Home from '../Home_page/Home';
+
+import ExplorePage from '../Events/Student/ExplorePage';
+import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
+import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
+
+
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
 // import OrganizerDashboard from '../Dashboard/OrganizerDashboard';
@@ -33,6 +42,7 @@ const OrganizerDashboard = ({ userId }) => (
   <PlaceholderPage title={`Organizer Dashboard for user ${userId}`} />
 );
 
+
 const ViewEvent = ({ userId, isStudent }) => (
   <PlaceholderPage title={`Event Viewer (${isStudent ? 'Student' : 'Organizer'} View)`} />
 );
@@ -44,6 +54,7 @@ const AddEvent = ({ userId }) => (
 const ManageEvents = ({ userId }) => (
   <PlaceholderPage title={`Manage Events for user ${userId}`} />
 );
+
 
 const TeamPage = ({ userId }) => (
   <PlaceholderPage title={`Teams Page for user ${userId}`} />
@@ -65,12 +76,15 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const { user, logout } = useAuthStore();
   const { userId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [showBackdrop, setShowBackdrop] = useState(false);
+
+  
   const location = useLocation();
 
   // Extract the current section from the URL path
   const pathParts = location.pathname.split('/');
   const currentSection = pathParts[3] || 'home'; // [0]=empty, [1]=role, [2]=userId, [3]=section
+
+
 
   // Validate user matches URL parameters
   useEffect(() => {
@@ -92,7 +106,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
-    setShowBackdrop(!sidebarCollapsed && window.innerWidth > 768);
+
   };
 
   return (
@@ -109,42 +123,43 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
       />
 
 
-
-      {/* Sidebar - rendered outside content flow for overlay */}
-      {/* {renderSidebar()} */}
-
       {/* Main Content - full width */}
       <main className="w-full overflow-auto p-4 pt-20">
-        <Routes>
-          <Route path="home" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
-          {/* Dashboard routes based on role */}
-          <Route path="dashboard" element={
-            roleType === 'student'
-              ? <StudentDashboard userId={userId} />
-              : <OrganizerDashboard userId={userId} />
-          } />
+        <EventProvider>
+          <Routes>
+            <Route path="home" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
-          {/* Event routes */}
-          <Route path="view-events/*" element={<ViewEvent userId={userId} isStudent={roleType === 'student'} />} />
+            {/* Dashboard routes based on role */}
+            <Route path="dashboard" element={
+              roleType === 'student'
+                ? <StudentDashboard userId={userId} />
+                : <OrganizerDashboard userId={userId} />
+            } />
 
-          {/* Organizer-specific routes */}
-          {roleType === 'organizer' && (
-            <>
-              <Route path="add-events/*" element={<AddEvent userId={userId} />} />
-              <Route path="manage-events/*" element={<ManageEvents userId={userId} />} />
-            </>
-          )}
+            {/* Event routes */}
+            <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
 
-          {/* Team routes */}
-          <Route path="teams" element={<TeamPage userId={userId} />} />
-          <Route path="teams/management" element={<TeamManagement userId={userId} />} />
-          <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
-          <Route path="teams/inbox" element={<Inbox userId={userId} />} />
+            {/* Organizer-specific routes */}
+            {roleType === 'organizer' && (
+              <>
+                <Route path="add-events/*" element={<OrgnizerEventAddingForm userId={userId} />} />
+                <Route path="manage-events/*" element={<OrganizerEventList userId={userId} />} />
+              </>
+            )}
 
-          {/* Default route */}
-          <Route path="*" element={<Navigate to="home" replace />} />
-        </Routes>
+            {/* Team routes */}
+            <Route path="teams" element={<TeamPage userId={userId} />} />
+            <Route path="teams/management" element={<TeamManagement userId={userId} />} />
+            <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
+            <Route path="teams/inbox" element={<Inbox userId={userId} />} />
+
+            {/* Default route */}
+            <Route path="*" element={<Navigate to="home" replace />} />
+          </Routes>
+        </EventProvider>
+
+
       </main>
     </div>
   );
