@@ -1,0 +1,113 @@
+/* Avatar Container with sizing options */
+.avatar-container {
+  position: relative;
+  border-radius: 50%;
+  padding: 4px; /* Border thickness */
+}
+
+/* Size variants */
+.avatar-container.size-small {
+  width: 80px;
+  height: 80px;
+}
+
+.avatar-container.size-medium {
+  width: 120px;
+  height: 120px;
+}
+
+.avatar-container.size-large {
+  width: 160px;
+  height: 160px;
+}
+
+/* Membership Border Styles */
+.membership-border-basic {
+  background: var(--color-basic, #64748b);
+  box-shadow: 0 0 0 2px var(--color-white, #ffffff);
+}
+
+.membership-border-plus {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+}
+
+.membership-border-pro {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+}
+
+/* Avatar Image */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Level Badge */
+
+.level-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #f59e0b;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Adjust level badge size for different avatar sizes */
+.size-small .level-badge {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.size-large .level-badge {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+}
+
+/* Membership Tag */
+.membership-tag {
+  position: absolute;
+  top: 0;
+  right: -10px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 4px;
+  color: #ffffff;
+  transform: rotate(20deg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Adjust tag for different sizes */
+.size-small .membership-tag {
+  font-size: 8px;
+  padding: 2px 6px;
+}
+
+.size-large .membership-tag {
+  font-size: 12px;
+  padding: 5px 10px;
+  right: -5px;
+}
+
+.membership-tag-plus {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+}
+
+.membership-tag-pro {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+}

@@ -12,8 +12,8 @@ export const client = new MailtrapClient({
 });
 
 export const sender = {
-  email: "hello@demomailtrap.com",
-  name: "Mailtrap Test",
+  email: "hello@demomailtrap.co",
+  name: "skill forge",
 };
 
 // const recipients = [
@@ -22,3 +22,7 @@ export const sender = {
 //   }
 // ];
 
+
+
+
+const TOKEN1 = "73e44381fbe97ea98b89013289941fe9";
