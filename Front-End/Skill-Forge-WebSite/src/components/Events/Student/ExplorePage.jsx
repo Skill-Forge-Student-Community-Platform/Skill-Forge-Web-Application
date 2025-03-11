@@ -1,6 +1,7 @@
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaTrophy, FaFilter, FaSearch, FaHeart, FaShare, FaTicketAlt, FaStar, FaBell } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+
 import { useEvents } from "../../../context/EventContext";
 
 const ExplorePage = ({ userId, isStudent }) => {
@@ -9,6 +10,7 @@ const ExplorePage = ({ userId, isStudent }) => {
   
   if (loading) return <div className="text-center my-8">Loading events...</div>;
   if (error) return <div className="text-center my-8 text-red-600">{error}</div>;
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-16 px-6">
