@@ -17,6 +17,8 @@ export default function EditEmail() {
     }))
   }
 
+  // Save the settings to the backend
+
   return (
     <div className="settings-content">
       <div className="settings-section">
