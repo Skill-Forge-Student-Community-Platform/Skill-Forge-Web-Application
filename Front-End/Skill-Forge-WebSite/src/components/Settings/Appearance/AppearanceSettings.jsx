@@ -10,7 +10,7 @@ const AppearanceSettings = () => {
         
         <div className="setting-option">
           <h3>Theme</h3>
-          <p>Choose between light, dark, or system theme</p>
+          <p>change the theme colour</p>
           <select defaultValue="system">
             <option value="light">Light</option>
             <option value="dark">Dark</option>
