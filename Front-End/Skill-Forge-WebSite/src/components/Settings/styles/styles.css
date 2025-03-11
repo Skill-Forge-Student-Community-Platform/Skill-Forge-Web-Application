@@ -45,6 +45,7 @@
   display: flex;
   flex-direction: column;
 }
+/* Update the SettingsSidebar-nav styles */
 
 .SettingsSidebar-item {
   display: flex;
