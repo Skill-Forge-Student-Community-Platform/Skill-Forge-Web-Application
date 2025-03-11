@@ -11,7 +11,9 @@ import { Server } from 'socket.io'; // Import Socket.IO
 
 
 
+
 import fileUpload from 'express-fileupload'; // Add this import
+
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
@@ -108,9 +110,10 @@ if (!fs.existsSync(uploadDir)) {
 
 // Middleware setup
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-app.use(express.json({ limit: '5mb' })); // Increased payload limit
-app.use(express.urlencoded({ limit: '5mb', extended: true })); // Increased payload limit
+app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
+
 
 
 
@@ -126,6 +129,7 @@ app.use(fileUpload({
 // This is a temporary solution until express-fileupload is installed
 const uploadMiddleware = express.static(path.join(process.cwd(), 'uploads'));
 app.use('/uploads', uploadMiddleware);
+
 
 
 
