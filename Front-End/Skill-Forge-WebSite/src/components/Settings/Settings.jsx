@@ -11,7 +11,7 @@ import AdvertisingSettings from '../SettingsPages/Advertising data/AdvertisingSe
 import GeneralSettings from '../SettingsPages/Account preferances/General preferances/GeneralSettings'
 import ProfileInfo from '../SettingsPages/Account preferances/Name, location and industry/ProfileInfo'
 import Demographics from '../SettingsPages/Account preferances/Personal demographic information/Demographics'
-import EditProfileInfo from '../SettingsPages/Account preferances/Profile information/EditProfileInfo'
+//import EditProfileInfo from '../SettingsPages/Account preferances/Profile information/EditProfileInfo'
 import EditName from '../SettingsPages/Account preferances/Name, location and industry/Edits/EditName'
 import EditLocation from '../SettingsPages/Account preferances/Name, location and industry/Edits/EditLocation'
 import EditIndustry from '../SettingsPages/Account preferances/Name, location and industry/Edits/EditIndustry'
