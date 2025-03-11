@@ -1,0 +1,177 @@
+/* OrganizerStatistics.css */
+
+.dashboard-container {
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    min-height: 100vh;
+  }
+  
+  .dashboard-content {
+    max-width: 72rem;
+    margin: 0 auto;
+  }
+  
+  .header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+  
+  .timeframe-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .timeframe-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .timeframe-button.active {
+    background-color: #2563eb;
+    color: white;
+    border-color: #2563eb;
+  }
+  
+  .filter-section {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: none;
+  }
+  
+  .filter-buttons::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .filter-button {
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    background-color: #e5e7eb;
+    color: #4b5563;
+    border: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  
+  .filter-button.active {
+    background-color: #2563eb;
+    color: white;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16rem;
+  }
+  
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+    border-radius: 9999px;
+    height: 3rem;
+    width: 3rem;
+    border-top: 2px solid #3b82f6;
+    border-bottom: 2px solid #3b82f6;
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .charts-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .chart-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+  }
+  
+  .chart-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .pie-chart-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .pie-chart {
+    width: 50%;
+  }
+  
+  .chart-legend {
+    width: 50%;
+  }
+  
+  .total-value {
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+  }
+  
+  .legend-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  
+  .legend-color-indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-right: 0.5rem;
+  }
+  
+  .legend-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    flex-grow: 1;
+  }
+  
+  .legend-value {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }

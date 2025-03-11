@@ -1,0 +1,116 @@
+/* Main container */
+.people-container {
+  width: 100%;
+  margin: 20px auto;
+  background: #6e6b6b49;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Title aligned to the left */
+.people-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: left;
+  padding-left: 10px;
+}
+
+/* Container for all people cards - Horizontal Scroll */
+.people-you-may-know {
+  display: flex;
+  gap: 20px; 
+  overflow-x: auto; 
+  white-space: nowrap; 
+  padding: 10px;
+  scroll-behavior: smooth; 
+}
+
+/* Individual person card */
+.person-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  width: 200px; 
+  flex: 0 0 auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.person-card:hover {
+  background: #ececec;
+}
+
+/* Avatar styling */
+.person-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+/* Name, role, and location */
+.person-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.person-role,
+.person-location {
+  font-size: 13px;
+  color: gray;
+  margin: 4px 0;
+}
+
+/* Friend Request Buttons */
+.add-btn, .cancel-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 12px;
+}
+
+/* Add Friend Button */
+.add-btn {
+  background: #2b66aa;
+  color: white;
+}
+
+.add-btn:hover {
+  background: #086bdd;
+}
+
+/* Cancel Request Button */
+.cancel-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #c0392b;
+}
+
+/* Hide Scrollbar for Cleaner UI */
+.people-you-may-know::-webkit-scrollbar {
+  height: 8px;
+}
+
+.people-you-may-know::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.people-you-may-know::-webkit-scrollbar-track {
+  background: transparent;
+}
