@@ -237,6 +237,7 @@
   border-radius: 4px;
   color: var(--text-primary);
   transition: border-color 0.2s ease;
+  top: 0;
 }
 
 .form-input:focus {
