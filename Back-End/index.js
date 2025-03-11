@@ -8,7 +8,7 @@ import fs from 'fs';
 import {v2 as cloudinary } from 'cloudinary';
 import http from 'http'; // Import HTTP
 import { Server } from 'socket.io'; // Import Socket.IO
-import fileUpload from 'express-fileupload'; // Add this import
+// import fileUpload from 'express-fileupload';
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
@@ -107,22 +107,6 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
 app.use(express.urlencoded({ limit: '50mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
-
-
-
-// Comment out file upload middleware until package is installed
-
-app.use(fileUpload({
-  createParentPath: true,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-}));
-
-
-// Alternative approach for file uploads using built-in middleware
-// This is a temporary solution until express-fileupload is installed
-const uploadMiddleware = express.static(path.join(process.cwd(), 'uploads'));
-app.use('/uploads', uploadMiddleware);
-
 
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
