@@ -1,6 +1,8 @@
 import React from 'react'
 import SettingsSection from '../../components/SettingsSection'
 
+// Advertising settings page
+
 export default function AdvertisingSettings() {
   const advertisingSection = {
     title: "Advertising preferences",
@@ -8,7 +10,7 @@ export default function AdvertisingSettings() {
       {
         title: "Ad preferences",
         path: "/settings/advertising/preferences",
-        description: "Manage how your data is used for advertising"
+        description: "Control the ads you see"
       },
       {
         title: "Data preferences",
