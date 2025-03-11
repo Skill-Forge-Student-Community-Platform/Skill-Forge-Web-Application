@@ -93,8 +93,8 @@ if (!fs.existsSync(uploadDir)) {
 
 // Middleware setup
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-app.use(express.json({ limit: '5mb' })); // Increased payload limit
-app.use(express.urlencoded({ limit: '5mb', extended: true })); // Increased payload limit
+app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
 
 // Serve static files for uploads

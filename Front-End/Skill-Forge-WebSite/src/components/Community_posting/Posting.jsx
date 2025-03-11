@@ -229,77 +229,60 @@ function Posting({ user }) {
     try {
       setIsLoading(true);
 
-      // Validate if we have any media to process
-      if (!media || !media.media || media.media.length === 0) {
-        // Create post with just text
-        const postData = {
-          text: text.trim(),
-          privacy,
-          postType: eventDetails ? "event" : "post",
-          eventDetails: eventDetails || undefined
-        };
+      // Format media data properly if it exists
+      const mediaData = media && media.media?.length > 0 ? {
+        layout: media.layout || "single",
+        files: await Promise.all(media.media.map(async (item) => {
+          // Properly process each file to match backend schema
+          let fileUrl = item.url;
+          let fileType = item.type;
 
-        // Check for empty content
-        if (!postData.text && !postData.eventDetails) {
-          toast.error("Please add some text, media, or event details");
-          setIsLoading(false);
-          return;
-        }
+          // Handle File objects by converting to data URLs
+          if (item.file && typeof item.file !== 'string') {
+            if (!fileUrl) {
+              // Convert File object to data URL
+              fileUrl = await convertFileToDataURL(item.file);
+            }
 
-        const response = await postServices.createPost(postData);
-        setPosts(prevPosts => [response.post, ...prevPosts]);
-        toast.success("Post created successfully!");
-        closeWindow();
+            // Extract proper file type from MIME type
+            if (item.file.type) {
+              fileType = item.file.type.startsWith('image/') ? 'image' : 'video';
+            }
+          }
+          // Handle string URLs without a type
+          else if (typeof item.file === 'string') {
+            fileUrl = item.file;
+            if (!fileType) {
+              // Try to guess type from URL extension
+              fileType = guessFileTypeFromURL(fileUrl);
+            }
+          }
+
+          // Convert MIME types to simplified types required by schema
+          if (fileType && (fileType.startsWith('image/') || fileType.startsWith('video/'))) {
+            fileType = fileType.startsWith('image/') ? 'image' : 'video';
+          }
+
+          // Ensure we have required fields with proper values
+          return {
+            url: fileUrl,
+            type: fileType === 'image' || fileType === 'video' ? fileType : 'image', // Default to image if type is invalid
+            altText: item.altText || ""
+          };
+        }))
+      } : undefined;
+
+      // Log processed data
+      console.log("Creating post with processed media:", mediaData);
+
+      // Validate media data before sending
+      if (mediaData && (!validateMediaData(mediaData))) {
+        toast.error("Invalid media format. Please try again.");
+        setIsLoading(false);
         return;
       }
 
-      // Process media files if present
-      const processedFiles = await Promise.all(media.media.map(async (item) => {
-        // Start with default values
-        let fileUrl = item.url || null;
-        let fileType = item.type || "image"; // Default to image
-
-        // Handle File objects
-        if (item instanceof File) {
-          fileUrl = await convertFileToDataURL(item);
-          fileType = item.type.startsWith('image/') ? 'image' : 'video';
-        }
-        // Handle objects with File property
-        else if (item.file && item.file instanceof File) {
-          fileUrl = await convertFileToDataURL(item.file);
-          fileType = item.file.type.startsWith('image/') ? 'image' : 'video';
-        }
-        // Handle objects with file property that has a URL
-        else if (item.file && item.file.url) {
-          fileUrl = item.file.url;
-        }
-
-        // Always verify we have a URL before proceeding
-        if (!fileUrl) {
-          throw new Error("Failed to process media file: No URL available");
-        }
-
-        // Ensure type is simplified to match schema requirements
-        if (fileType.includes('/')) {
-          fileType = fileType.startsWith('image/') ? 'image' : 'video';
-        }
-
-        return {
-          url: fileUrl,
-          type: fileType,
-          altText: item.altText || ""
-        };
-      }));
-
-      // Create the media data with processed files
-      const mediaData = {
-        layout: media.layout || "single",
-        files: processedFiles
-      };
-
-      console.log("Final media data for submission:", JSON.stringify(mediaData));
-
-      // Create post with media
+      // Prepare post data
       const postData = {
         text: text.trim(),
         privacy,
@@ -308,21 +291,40 @@ function Posting({ user }) {
         eventDetails: eventDetails || undefined
       };
 
+      // Check for empty content
+      if (!postData.text && !postData.media && !postData.eventDetails) {
+        toast.error("Please add some text, media, or event details");
+        setIsLoading(false);
+        return;
+      }
+
+      // Submit post to API
       const response = await postServices.createPost(postData);
+
+      // Add new post to state
       setPosts(prevPosts => [response.post, ...prevPosts]);
+
+      // Emit socket event if available
+      if (socket && socket.connected) {
+        socket.emit('createPost', response.post);
+      }
+
+      // Show success message
       toast.success("Post created successfully!");
+
+      // Close modal and reset form
       closeWindow();
 
-    } catch (error) {
-      const errorMessage = typeof error === 'object' ? error.message || 'Post creation failed' : String(error);
+    } catch (err) {
+      const errorMessage = typeof err === 'object' ? err.message || 'Post creation failed' : String(err);
       toast.error(errorMessage);
-      console.error("Post creation error:", error);
+      console.error("Post creation error:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Enhanced function to convert and compress files to data URLs
+  // Helper function to convert File object to data URL
   const convertFileToDataURL = (file) => {
     return new Promise((resolve, reject) => {
       if (!file) {
@@ -330,65 +332,10 @@ function Posting({ user }) {
         return;
       }
 
-      // For images, compress before converting to data URL
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            // Create canvas for compression
-            const canvas = document.createElement('canvas');
-
-            // Calculate new dimensions (max 1200px width/height)
-            let width = img.width;
-            let height = img.height;
-            const maxSize = 1200;
-
-            if (width > height && width > maxSize) {
-              height = Math.round((height * maxSize) / width);
-              width = maxSize;
-            } else if (height > maxSize) {
-              width = Math.round((width * maxSize) / height);
-              height = maxSize;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-
-            // Draw and compress
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Get compressed data URL (0.7 quality for JPEG)
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-            console.log(`Image compressed from ${file.size} to approximately ${Math.round(dataUrl.length * 0.75)} bytes`);
-
-            resolve(dataUrl);
-          };
-          img.onerror = () => {
-            reject(new Error("Failed to load image for compression"));
-          };
-          img.src = event.target.result;
-        };
-        reader.onerror = (error) => {
-          console.error("Error reading file for compression:", error);
-          reject(error);
-        };
-        reader.readAsDataURL(file);
-      }
-      // For videos and other files, use standard conversion
-      else {
-        const reader = new FileReader();
-        reader.onload = () => {
-          console.log(`File conversion completed, size: ${reader.result.length}`);
-          resolve(reader.result);
-        };
-        reader.onerror = (error) => {
-          console.error("Error converting file to data URL:", error);
-          reject(error);
-        };
-        reader.readAsDataURL(file);
-      }
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
     });
   };
 

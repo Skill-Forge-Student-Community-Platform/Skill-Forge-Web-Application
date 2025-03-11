@@ -8,7 +8,6 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     text: {
-
       type: String,
       trim: true,
     },
@@ -35,9 +34,18 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
           },
+          // UPDATED: More flexible type validation
           type: {
             type: String,
-            enum: ["image", "video"],
+            validate: {
+              validator: function(v) {
+                // Accept either simple types or MIME types
+                return v === "image" ||
+                       v === "video" ||
+                       (typeof v === 'string' && (v.startsWith("image/") || v.startsWith("video/")));
+              },
+              message: props => `${props.value} is not a valid media type!`
+            },
             required: true,
           },
           altText: String,
