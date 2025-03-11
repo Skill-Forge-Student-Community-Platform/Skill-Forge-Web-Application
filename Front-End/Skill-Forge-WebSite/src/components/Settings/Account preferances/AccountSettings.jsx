@@ -63,6 +63,7 @@ export default function AccountSettings() {
       <SettingsSection {...profileSection} />
       <SettingsSection {...displaySection} />
       <SettingsSection {...preferencesSection} />
+      
     </div>
   )
 }
