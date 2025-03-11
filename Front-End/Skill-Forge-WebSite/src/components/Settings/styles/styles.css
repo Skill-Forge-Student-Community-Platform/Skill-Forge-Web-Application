@@ -60,6 +60,7 @@
 .SettingsSidebar-item:hover {
   background-color: var(--hover-bg);
 }
+/* Update the SettingsSidebar-item.active styles */
 
 .SettingsSidebar-item.active {
   color: var(--primary-color);
