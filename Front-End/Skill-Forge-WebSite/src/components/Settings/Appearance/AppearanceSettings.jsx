@@ -6,7 +6,7 @@ const AppearanceSettings = () => {
       <h1>Appearance Settings</h1>
       <div className="settings-section">
         <h2>Visual Preferences</h2>
-        <p>Customize how LinkedIn appears to you.</p>
+        <p>Customize how SkillForge appears to you.</p>
         
         <div className="setting-option">
           <h3>Theme</h3>
