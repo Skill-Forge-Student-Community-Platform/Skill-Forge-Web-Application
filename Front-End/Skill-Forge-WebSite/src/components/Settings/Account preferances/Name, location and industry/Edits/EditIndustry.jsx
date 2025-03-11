@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function EditIndustry() {
+export default function EditIndustry() { // The ID of the test user we just created
   const navigate = useNavigate()
   const [industry, setIndustry] = useState('Computer Software')
 
