@@ -7,7 +7,7 @@ import { useSettings } from '/src/contexts/SettingsContext'
 export default function EditAutoplay() {
   // Use the actual test user ID
   const testUserId = '67ce9172036a01b787b76c29' // The ID of the test user we just created
-  const { userId } = useParams()
+  const { userId } = useParams() // The ID of the user whose settings we are editing
   const navigate = useNavigate()
   const { settings } = useSettings()
   const { mutate, loading } = useSettingsMutation(updateAccountSettings)
