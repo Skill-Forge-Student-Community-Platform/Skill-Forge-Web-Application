@@ -4,6 +4,8 @@ import SettingsSection from '../../../components/SettingsSection'
 
 export default function ProfileInfo() {
   const navigate = useNavigate()
+
+  // Profile details section
   
   const profileDetailsSection = {
     title: "Profile details",
