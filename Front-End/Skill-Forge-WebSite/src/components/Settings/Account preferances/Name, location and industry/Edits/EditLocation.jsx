@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function EditLocation() {
+export default function EditLocation() { // The ID of the test user we just created
   const navigate = useNavigate()
   const [location, setLocation] = useState('New York, United States')
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Saving location:', location)
+    console.log('Saving location:', location) // Save the location to the database
     navigate(-1)
   }
 
