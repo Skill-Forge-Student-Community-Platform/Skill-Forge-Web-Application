@@ -1,22 +1,17 @@
-// components/ProfileCard.js
-import React from 'react';
-import './ProfileCard.css';
+import React from "react";
+import "./ProfileCard.css";
 
-const ProfileCard = ({ user }) => {
+const ProfileCard = () => {
   return (
     <div className="profile-card">
-      <div className="profile-avatar">
-        <img src={user.avatar} alt={user.name} />
-        <div className="profile-badge">👑</div>
-      </div>
-      <div className="profile-info">
-        <h2 className="profile-name">{user.name}</h2>
-        <p className="profile-title">{user.title}</p>
-        {user.isPro && <div className="pro-badge">Pro Member</div>}
-      </div>
-      <button className="share-button">
-        <span className="share-icon">🔗</span> Share Profile
-      </button>
+      <img
+        src="https://via.placeholder.com/150" // Larger image placeholder or your actual image URL
+        alt="Profile"
+        className="profile-photo"
+      />
+      <h3>Alex Thompson</h3>
+      <p>Full Stack Developer</p>
+      <button className="share-profile">Share Profile</button>
     </div>
   );
 };
