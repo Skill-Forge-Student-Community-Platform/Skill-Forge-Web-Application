@@ -2,6 +2,8 @@ import React from 'react'
 import SettingsSection from '/src/components/SettingsSection'
 import { useSettings } from '/src/contexts/SettingsContext'
 
+// Account settings page
+
 export default function AccountSettings() {
   const { settings, loading } = useSettings();
 
