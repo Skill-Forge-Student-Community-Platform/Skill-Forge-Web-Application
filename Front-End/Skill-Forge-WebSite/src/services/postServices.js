@@ -30,6 +30,7 @@ console.log("API Base URL Configuration:", { original: API_URL, modified: BASE_U
  */
 const postServices = {
   /**
+
    * Upload media files to Cloudinary via the backend
    */
   uploadMediaFiles: async (files) => {
@@ -64,6 +65,7 @@ const postServices = {
   },
 
   /**
+
    * Fetch user feed posts with pagination
    */
   getFeedPosts: async (page = 1, limit = 10) => {
@@ -100,6 +102,7 @@ const postServices = {
     try {
       const url = `${BASE_URL}/posts/create`;
       console.log("Creating post at:", url);
+
 
       // Handle file uploads first if there are any
       let processedPostData = { ...postData };
@@ -138,6 +141,7 @@ const postServices = {
       // Extra validation before sending to server
       if (processedPostData.media && processedPostData.media.files) {
         const invalidFiles = processedPostData.media.files.filter(
+
           file => !file.url || !(file.type === 'image' || file.type === 'video')
         );
 
@@ -147,7 +151,9 @@ const postServices = {
         }
       }
 
+
       const response = await axios.post(url, processedPostData);
+
       return response.data;
     } catch (error) {
       console.error('Error creating post:', error);

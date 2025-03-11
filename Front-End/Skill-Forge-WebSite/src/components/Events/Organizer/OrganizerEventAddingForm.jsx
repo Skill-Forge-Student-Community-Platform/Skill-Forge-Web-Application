@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useEvents } from "../../../context/EventContext";
 
 const EventAddingForm = ({ userId }) => {
@@ -9,13 +10,16 @@ const EventAddingForm = ({ userId }) => {
   const [error, setError] = useState(null);
   
   const [formData, setFormData] = useState({
+
     title: "",
     date: "",
     location: "",
     description: "",
     time: "",
     win_price: "",
+
     max_participants: "", // Fixed the inconsistent field name (was max_participation)
+
     rules: "",
     image: null,
   });
@@ -32,6 +36,7 @@ const EventAddingForm = ({ userId }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     setError(null);
     
@@ -77,10 +82,12 @@ const EventAddingForm = ({ userId }) => {
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+
       <div className="bg-white max-w-2xl w-full p-8 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">Add New Event</h2>
         
@@ -216,6 +223,7 @@ const EventAddingForm = ({ userId }) => {
         </form>
       </div>
     </div>
+
   );
 };
 
