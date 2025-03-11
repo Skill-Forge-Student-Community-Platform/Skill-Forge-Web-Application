@@ -28,6 +28,7 @@ export default function EditName() {
       setError('Name cannot be empty')
       return
     }
+    // Reset error and success messages    
     
     setIsSubmitting(true)
     setError(null)
