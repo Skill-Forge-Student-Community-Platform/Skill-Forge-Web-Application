@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate,Link } from "react-router-dom";
 import axios from "axios";
 //import RegisteredUsers from "./RegisteredUsers";
+import { useEvents } from "../../../context/EventContext";
 
 
 import { 
@@ -19,6 +20,9 @@ import {
 } from "react-icons/fa";
 
 const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
+  const { addEvent, deleteEvent, updateEvent } = useEvents();
+
+
   const { id } = useParams();
   const navigate = useNavigate(); 
   
@@ -80,8 +84,9 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
-        await onDeleteEvent(event._id);
-        navigate("/organize"); // Redirect to home page after deletion
+        await deleteEvent(event._id);
+        navigate("../manage-events"); // Redirect to home page after deletion
+        alert("Succsfully Deleted event");
       } catch (error) {
         console.error("Error deleting event:", error);
         alert("Failed to delete event");
@@ -105,9 +110,10 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
     });
   
     try {
-      await onUpdateEvent(id, formData);
+      await updateEvent(id, formData);
       const updatedResponse = await axios.get(`http://localhost:5000/Details/${id}`); // Re-fetch latest data
       setEvent(updatedResponse.data);
+      alert("Succsfully Updated event");
       
       // Update map URL if location changed
       if (updatedData.location) {
@@ -138,7 +144,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
 
-        <Link to="/organize" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium mb-6 group transition-colors duration-200">
+        <Link to="../manage-events"  className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium mb-6 group transition-colors duration-200">
           <FaArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
           Back to Events
         </Link>
