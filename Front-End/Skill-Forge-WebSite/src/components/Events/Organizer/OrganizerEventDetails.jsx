@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate,Link } from "react-router-dom";
 import axios from "axios";
-import RegisteredUsers from "./RegisteredUsers";
+//import RegisteredUsers from "./RegisteredUsers";
 
 
 import { 
@@ -42,8 +42,10 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/Details/${id}`);
+        
+        const response = await axios.get(`http://localhost:5000/Details/${id}`);
         setEvent(response.data);
+        
   
         // Format date before setting it in the state
         const formattedDate = response.data.date
@@ -104,7 +106,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
   
     try {
       await onUpdateEvent(id, formData);
-      const updatedResponse = await axios.get(`http://localhost:3000/Details/${id}`); // Re-fetch latest data
+      const updatedResponse = await axios.get(`http://localhost:5000/Details/${id}`); // Re-fetch latest data
       setEvent(updatedResponse.data);
       
       // Update map URL if location changed
@@ -280,7 +282,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
               {event.image && (
                 <div className="relative h-64 sm:h-80 md:h-96 w-full">
                   <img
-                    src={`http://localhost:3000/${event.image}`}
+                    src={`http://localhost:5000/${event.image}`}
                     alt={event.title}
                     className="w-full h-full object-cover"
                   />
@@ -405,7 +407,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                 </div>
               </div>
               <div className="p-6">
-                <RegisteredUsers eventId={id} />
+               {/*   <RegisteredUsers eventId={id} />    poddak testing               */} 
               </div>
 
             </div>
