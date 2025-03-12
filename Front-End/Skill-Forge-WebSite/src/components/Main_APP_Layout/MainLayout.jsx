@@ -14,6 +14,7 @@ import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
+import ExploreDetails from '../Events/Student/ExploreDetails';
 
 
 // TODO: Uncomment these imports when the components are implemented
@@ -140,7 +141,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
-            <Route path="" element={<OrgnizerEventAddingForm userId={userId} />} />
+            <Route path="explore-event/:id" element={<ExploreDetails userId={userId} />} />
 
 
             {/* Organizer-specific routes */}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEvents } from "../../../context/EventContext";
 
-const ExplorePage = ({ userId, isStudent }) => {
+const ExplorePage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const { events, loading, error } = useEvents();
   
@@ -121,7 +121,7 @@ const ExplorePage = ({ userId, isStudent }) => {
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/2 relative">
                 <img 
-                  src={`http://localhost:3000/${events.find(e => e.is_featured)?.image || "default.jpg"}`} 
+                  src={`http://localhost:5000/${events.find(e => e.is_featured)?.image || "default.jpg"}`} 
                   alt="Featured Event" 
                   className="w-full h-64 md:h-full object-cover"
                 />
@@ -167,7 +167,7 @@ const ExplorePage = ({ userId, isStudent }) => {
               {/* Event Image with Overlay Status Badge */}
               <div className="relative">
                 <img
-                  src={`http://localhost:3000/${event.image || "default.jpg"}`}
+                  src={`http://localhost:5000/${event.image || "default.jpg"}`}
                   alt={event.title}
                   className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -298,7 +298,7 @@ const ExplorePage = ({ userId, isStudent }) => {
                 {/* Action Buttons */}
                 <div className="flex space-x-2">
                   <Link
-                    to={`explore-event/${event._id}`}
+                     to={`../explore-event/${event._id}`}
                     className="flex-1 block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition-colors duration-300 shadow-sm"
                   >
                     View Details
@@ -311,6 +311,8 @@ const ExplorePage = ({ userId, isStudent }) => {
             </div>
           ))}
         </div>
+        67cf394eeaeb57487ef383c7
+        67cf394eeaeb57487ef383c7
         
         {/* Load More Button */}
         {events.length > 0 && (

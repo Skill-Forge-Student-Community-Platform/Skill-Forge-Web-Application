@@ -42,7 +42,7 @@ import {
     const [regloading, setRegLoading] = useState(false);
   
   
-    const handleRegister = async () => {
+    /*const handleRegister = async () => {
       setRegLoading(true);
   
   
@@ -77,7 +77,7 @@ import {
         alert("Registration failed");
       }
       setRegLoading(false);
-    };
+    }; */
   
   
   
@@ -90,7 +90,7 @@ import {
   
   
     // Fetch saved events for the user when component loads
-    useEffect(() => {
+   /* useEffect(() => {
       const fetchSavedEvents = async () => {
         try {
           const response = await axios.get(`http://localhost:3000/api/saved-events/${userId}`);
@@ -102,6 +102,7 @@ import {
   
       fetchSavedEvents();
     }, [savedEvents, userId]);
+    */
   
     const handleAddSave = async (e) => {
       try {
@@ -148,7 +149,7 @@ import {
       const fetchEventDetails = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`http://localhost:3000/Details/${id}`);
+          const response = await axios.get(`http://localhost:5000/Details/${id}`);
           setEvent(response.data);
           
           // Create Google Maps URL based on location
@@ -215,12 +216,17 @@ import {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Back button */}
-          <Link to="/" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium mb-6 group transition-colors duration-200">
+          <Link to="../view-events" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium mb-6 group transition-colors duration-200">
             <FaArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
             Back to Events
           </Link>
+
+          {/* User Details
           <h1>{user.userName}</h1>
           <h1>{user.email}</h1>
+          
+          */}
+          
           
           {/* Main Content Container */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -229,7 +235,7 @@ import {
               {event.image ? (
                 <div className="h-72 sm:h-96 w-full">
                   <img
-                    src={`http://localhost:3000/${event.image}`}
+                    src={`http://localhost:5000/${event.image}`}
                     alt={event.title}
                     className="w-full h-full object-cover"
                   />
@@ -374,12 +380,13 @@ import {
                         </div>
                       </div>
                       
-                      {/* Register Button */}
+                      {/* Register Button /}
                       <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition-colors duration-300 flex items-center justify-center shadow-sm"
                         onClick={handleRegister} disabled={loading}
                       >
                         <FaTicketAlt className="mr-2" />  {regloading ? "Registering..." : "Register"}
                       </button>
+                       {/* still making in process */}
                       
                      {/* Action Buttons */}
                       <div className="flex mt-4 space-x-2">
