@@ -19,8 +19,9 @@ export default function EditAutoplay() {
     await mutate(testUserId, { autoplay: newValue })
     navigate(-1)
   }
+  // 
 
-  return (
+ return (
     <div className="settings-content">
       <div className="settings-section">
         <h2 className="section-title">Autoplay videos</h2>
