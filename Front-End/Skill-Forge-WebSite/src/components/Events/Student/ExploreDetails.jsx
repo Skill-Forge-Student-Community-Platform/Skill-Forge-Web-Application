@@ -90,10 +90,10 @@ import {
   
   
     // Fetch saved events for the user when component loads
-   /* useEffect(() => {
+    useEffect(() => {
       const fetchSavedEvents = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/api/saved-events/${userId}`);
+          const response = await axios.get(`http://localhost:5000/api/saved-events/${userId}`);
           setSavedEvents(response.data);
         } catch (error) {
           console.error("Error fetching saved events:", error);
@@ -102,7 +102,7 @@ import {
   
       fetchSavedEvents();
     }, [savedEvents, userId]);
-    */
+    
   
     const handleAddSave = async (e) => {
       try {
@@ -115,7 +115,7 @@ import {
         }
   
         // Save the event in the backend
-        const response = await axios.post("http://localhost:3000/api/save-event", {
+        const response = await axios.post("http://localhost:5000/api/save-event", {
           userId,
           eventId: e._id,
           title: e.title,
