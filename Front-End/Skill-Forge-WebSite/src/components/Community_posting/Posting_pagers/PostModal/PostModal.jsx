@@ -129,6 +129,15 @@ const PostModal = ({
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Call the parent's onPost function to handle post creation
+    onPost();
+
+    // Note: Don't call closeWindow() here anymore - it's handled in the parent component
+  };
+
   return (
     <div className="modal-content" data-modal="post">
       <div className="modal-header">
@@ -179,7 +188,7 @@ const PostModal = ({
         <button
           className="primary-btn"
           disabled={isDisabled}
-          onClick={onPost}
+          onClick={handleSubmit}
         >
           Post
         </button>
