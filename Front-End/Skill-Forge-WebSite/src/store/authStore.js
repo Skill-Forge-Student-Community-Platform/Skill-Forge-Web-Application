@@ -1,5 +1,6 @@
 import { create } from "zustand"; // Make sure you're importing from zustand, not "zustand/vanilla"
 import axios from "axios";
+import { toast } from 'react-hot-toast';
 
 // Use the environment variable or fall back to localhost
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/auth";
@@ -55,18 +56,42 @@ const useAuthStore = create((set, get) => ({
       // Determine content type
       const contentType = profileData instanceof FormData ? 'multipart/form-data' : 'application/json';
 
+      console.log(`Sending profile update request to ${API_URL}/profile`);
+      console.log(`Content type: ${contentType}`);
+
+      // If it's form data with a file, show a progress message
+      if (profileData instanceof FormData && profileData.has('profilePicture')) {
+        toast.loading('Uploading profile picture...', { id: 'profile-upload' });
+
+        // Log form data contents for debugging
+        console.log('Form data contains:',
+          Array.from(profileData.keys()).map(key => {
+            if (key === 'profileData') {
+              return `profileData: [JSON string]`;
+            } else if (key === 'profilePicture') {
+              const file = profileData.get('profilePicture');
+              return `profilePicture: ${file.name} (${file.type})`;
+            }
+            return key;
+          })
+        );
+      }
+
 			const response = await axios.put(
         `${API_URL}/profile`,
         profileData,
         { headers: getAuthHeaders(contentType) }
       );
 
+      // Clear any loading toasts
+      toast.dismiss('profile-upload');
+
       // Make sure profile is marked as complete in user object
       const userData = response.data.user || { ...get().user };
 
       // Explicitly set profileComplete flag to true
       userData.profileComplete = true;
-      console.log("Setting profileComplete flag to true after successful profile update");
+      console.log("Profile update successful, user data:", userData);
 
       // Store updated user data
 			set({
@@ -75,13 +100,24 @@ const useAuthStore = create((set, get) => ({
 				message: "Profile updated successfully"
 			});
 
-			console.log("Updated user in auth store:", userData);
 			return response.data;
 		} catch (error) {
 			console.error('Profile update error:', error);
-			const errorMessage =
-				error.response?.data?.message ||
-				"Unable to update profile. Please try again.";
+
+			// Clear any loading toasts
+			toast.dismiss('profile-upload');
+
+			let errorMessage = "Unable to update profile. Please try again.";
+
+			if (error.response) {
+			  console.log('Error response:', error.response.data);
+			  errorMessage = error.response.data?.message || errorMessage;
+
+			  if (error.response.status === 404) {
+			    errorMessage = "Profile not found. Please try refreshing the page.";
+			  }
+			}
+
 			set({ error: errorMessage, isLoading: false });
 			throw new Error(errorMessage);
 		}
@@ -252,4 +288,3 @@ const useAuthStore = create((set, get) => ({
 }));
 
 export { useAuthStore };
-// Alternatively, you can use: export default useAuthStore;
