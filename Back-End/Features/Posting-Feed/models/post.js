@@ -92,6 +92,10 @@ const postSchema = new mongoose.Schema(
     ],
     comments: [
       {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: () => new mongoose.Types.ObjectId(),
+        },
         text: {
           type: String,
           required: true,
@@ -101,10 +105,20 @@ const postSchema = new mongoose.Schema(
           ref: "User",
           required: true,
         },
+        parentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: null,
+        },
         createdAt: {
           type: Date,
           default: Date.now,
         },
+        likes: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          }
+        ],
       },
     ],
     // Repost functionality
