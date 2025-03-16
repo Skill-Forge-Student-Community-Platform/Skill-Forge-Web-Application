@@ -44,6 +44,7 @@
   /* Explicitly prevent hover effect */
   pointer-events: auto;
   cursor: default;
+  animation: fadeIn 0.5s ease-out;
 }
 
 /* Explicitly override any potentially inherited hover styles */
@@ -197,6 +198,7 @@
   word-wrap: break-word; /* Break words if needed */
   max-width: 100%; /* Take full width of container */
   padding: 0 5px; /* Add some padding */
+  animation-delay: 0s;
 }
 
 .profile-profession {
@@ -207,6 +209,7 @@
   white-space: normal;
   overflow: visible;
   word-wrap: break-word;
+  animation-delay: 0.1s;
 }
 
 .profile-detail {
@@ -217,6 +220,7 @@
   font-size: 14px;
   margin-top: 4px;
   word-wrap: break-word;
+  animation-delay: 0.2s;
 }
 
 .profile-detail-icon {
@@ -280,5 +284,149 @@
 
   .profile-profession {
     font-size: 14px;
+  }
+}
+
+/* Add these skeleton loading styles to your existing ProfileOverview CSS */
+
+/* Skeleton animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  position: relative;
+}
+
+.skeleton-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto;
+
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-name {
+  height: 28px;
+  width: 70%;
+  margin: 10px auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-profession {
+  height: 18px;
+  width: 50%;
+  margin: 8px auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-detail {
+  height: 16px;
+  width: 60%;
+  margin: 8px auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-share-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-level, .skeleton-xp {
+  height: 16px;
+  width: 80px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-progress {
+  height: 100%;
+  width: 30%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #d0d0d0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.error-message {
+  padding: 20px;
+  text-align: center;
+  color: #e53e3e;
+}
+
+.retry-button {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 16px;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #2b6cb0;
+}
+
+/* Fade-in animation for smooth content appearance */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Add these styles for a smooth fade-in effect when content appears */
+.profile-info-section h2,
+.profile-info-section p,
+.profile-detail {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.profile-Name {
+  animation-delay: 0s;
+}
+
+.profile-profession {
+
+  animation-delay: 0.1s;
+}
+
+.profile-detail {
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
