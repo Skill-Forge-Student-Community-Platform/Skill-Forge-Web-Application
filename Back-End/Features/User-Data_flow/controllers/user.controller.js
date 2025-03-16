@@ -288,3 +288,80 @@ export const updateUser = async (req, res) => {
     });
   }
 };
+
+export const getCompleteUserProfile = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find user by ID
+    const user = await User.findById(userId).select("-password");
+    if (!user) return res.status(404).json({
+      success: false,
+      message: "User not found"
+    });
+
+    // Get additional profile details based on role
+    let profileData = null;
+    if (user.role && user.profile) {
+      if (user.role === 'student') {
+        profileData = await Student.findById(user.profile);
+      } else if (user.role === 'organizer') {
+        profileData = await Organizer.findById(user.profile);
+      }
+    }
+
+    // Create a merged profile object with normalized structure
+    const completeProfile = {
+      // Basic user info
+      _id: user._id,
+      username: user.Username,
+      firstName: user.FirstName,
+      lastName: user.LastName,
+      email: user.email,
+      role: user.role,
+
+      // Derived fields for consistent access
+      fullName: user.FirstName && user.LastName ?
+        `${user.FirstName} ${user.LastName}` :
+        (profileData?.fullName || user.Username),
+
+      // Cover image from user model
+      coverImg: user.coverImg,
+
+      // Profile picture - prioritize from role-specific profile
+      profilePicture: profileData?.profilePicture || null,
+
+      // Bio - prioritize from role-specific profile
+      bio: profileData?.bio || null,
+
+      // Social data
+      link: user.link || null,
+      socialLinks: profileData?.socialLinks || {},
+
+      // User social networking data
+      followers: user.followers,
+      following: user.following,
+
+      // Complete role-specific profile data
+      profileData: profileData,
+
+      // Timestamps
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+
+      // Profile completion status
+      profileComplete: user.profileComplete
+    };
+
+    res.status(200).json({
+      success: true,
+      data: completeProfile
+    });
+  } catch (error) {
+    console.log("Error in getCompleteUserProfile: ", error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

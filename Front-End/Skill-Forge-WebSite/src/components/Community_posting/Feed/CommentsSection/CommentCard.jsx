@@ -6,6 +6,7 @@ import {
 } from 'react-icons/fa';
 import ReplyComment from './ReplyComment';
 import Picker from 'emoji-picker-react';
+import ProfileAvatar from '../../../Home_page/Home_components/ProfileAvatar';
 import './CommentCard.css';
 
 const CommentCard = ({
@@ -112,9 +113,13 @@ const CommentCard = ({
   return (
     <div className="comment-wrapper main-comment-wrapper">
       <div className="comment main-comment">
-        <img
-          src={comment.user.profilePicture || "/default-avatar.png"}
-          alt="User"
+        <ProfileAvatar
+          userId={comment.user?._id}
+          staticImageUrl={comment.user?.profilePicture || "/default-avatar.png"}
+          customAltText={comment.user?.Username || "User"}
+          size="micro"
+          showLevel={false}
+          showMembershipTag={false}
           className="comment-avatar"
         />
         <div className="comment-content">

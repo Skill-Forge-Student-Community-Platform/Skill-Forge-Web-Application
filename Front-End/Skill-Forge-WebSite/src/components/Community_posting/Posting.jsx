@@ -13,9 +13,14 @@ import Feed from './Feed/Feed';
 import Profile_pic from "../../Assets/test-profile-pic.jpg";
 import postServices from '../../services/postServices';
 import { compressImage, processVideo } from '../../utils/imageCompression';
+import useUserProfile from '../../hooks/useUserProfile.js'; // Add .js extension
+import ProfileAvatar from '../../components/Home_page/Home_components/ProfileAvatar';
 
 // Add user as a prop to your component
 function Posting({ user }) {
+  // Get profile data using our custom hook
+  const { getProfileImage, fullName } = useUserProfile(user?._id);
+
   const [activeModal, setActiveModal] = useState(null);
   const [eventDetails, setEventDetails] = useState(null);
   const [text, setText] = useState("");
@@ -45,8 +50,8 @@ function Posting({ user }) {
 
   // Use authenticated user data or fall back to default values
   const userData = {
-    name: user?.Username || user?.name || "User",
-    profilePicture: user?.profilePicture || defaultProfilePic
+    name: fullName || user?.Username || "User",
+    profilePicture: getProfileImage() || defaultProfilePic
   };
 
   // Socket state
@@ -621,7 +626,14 @@ function Posting({ user }) {
       <div className="post-input-container">
 
         <div className="input-row">
-          <img src={userData.profilePicture} alt="Profile" className="user-icon" />
+          <div className="posting-avatar-container">
+            <ProfileAvatar
+              userId={user?._id}
+              size="small"
+              showLevel={false}
+              showMembershipTag={false}
+            />
+          </div>
           <input
             type="text"
             placeholder="What do you want to talk about?"

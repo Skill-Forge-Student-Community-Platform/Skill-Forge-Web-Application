@@ -454,3 +454,26 @@
   display: inline-block !important;
   vertical-align: middle !important;
 }
+
+/* Add some styles for the ProfileAvatar in post templates */
+.post-author-avatar {
+  margin-right: 4px;
+}
+
+/* Update user-info to align with new avatar component */
+.user-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* You can either keep or remove the old user-avatar style since we're not using it directly anymore */
+/*
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+*/

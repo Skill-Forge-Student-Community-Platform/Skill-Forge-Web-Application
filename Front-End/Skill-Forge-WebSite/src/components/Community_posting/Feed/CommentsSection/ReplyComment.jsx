@@ -5,6 +5,7 @@ import {
   FaEdit, FaTrash, FaFlag, FaCopy, FaEyeSlash
 } from 'react-icons/fa';
 import Picker from 'emoji-picker-react';
+import ProfileAvatar from '../../../Home_page/Home_components/ProfileAvatar';
 import './ReplyComment.css';
 
 const ReplyComment = ({
@@ -104,9 +105,13 @@ const ReplyComment = ({
     <div className="reply-comment">
       <div className="reply-connector"></div>
       <div className="comment nested-comment">
-        <img
-          src={reply.user.profilePicture || "/default-avatar.png"}
-          alt="User"
+        <ProfileAvatar
+          userId={reply.user?._id}
+          staticImageUrl={reply.user?.profilePicture || "/default-avatar.png"}
+          customAltText={reply.user?.Username || "User"}
+          size="micro"
+          showLevel={false}
+          showMembershipTag={false}
           className="comment-avatar"
         />
         <div className="reply-content">

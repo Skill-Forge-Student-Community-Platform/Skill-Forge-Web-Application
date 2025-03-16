@@ -8,6 +8,8 @@ import {
 import './CommentSection.css';
 import Picker from 'emoji-picker-react';
 import CommentCard from './CommentCard';
+import ProfileAvatar from '../../../Home_page/Home_components/ProfileAvatar';
+import { useAuthStore } from '../../../../store/authStore';
 
 const QuickReplies = ({ onSelectReply }) => {
   const quickReplies = [
@@ -100,6 +102,9 @@ const CommentSection = ({
   currentUserId,
   postAuthorId
 }) => {
+  // Add auth store to get current user
+  const { user } = useAuthStore();
+
   // State for comment input
   const [newComment, setNewComment] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
@@ -285,12 +290,15 @@ const CommentSection = ({
       {/* Quick replies section */}
       <QuickReplies onSelectReply={handleQuickReplySelect} />
 
-      {/* Add comment form */}
+      {/* Add comment form - replace img with ProfileAvatar */}
       <form className="comment-form" onSubmit={handleCommentSubmit}>
-        <img
-          src="/default-avatar.png"
-          alt="Your avatar"
+        <ProfileAvatar
+          userId={currentUserId}
+          size="micro"
+          showLevel={false}
+          showMembershipTag={false}
           className="comment-avatar"
+          staticImageUrl={user?.profilePicture || "/default-avatar.png"}
         />
         <div className="comment-input-container">
           <input
