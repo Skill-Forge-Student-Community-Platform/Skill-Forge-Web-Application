@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { FaEllipsisH, FaGlobe, FaUserFriends, FaUserSlash, FaUserPlus } from 'react-icons/fa';
 import { BiLike, BiSolidLike, BiComment, BiRepost, BiSend } from 'react-icons/bi';
+import ProfileAvatar from '../../../../components/Home_page/Home_components/ProfileAvatar';
+// Remove the unused import
+// import { useUserProfile } from '../../../../hooks/useUserProfile';
 
 import { formatPostTime } from '../../../../utils/timeUtils';
 import PostContent from './PostContent';
@@ -75,9 +78,17 @@ const PostTemplate = ({
     >
       <header className="post-header">
         <div className="user-info">
-          <img src={post.user.profilePicture || "/default-avatar.png"} alt={post.user.Username || "User"} className="user-avatar" />
+          <ProfileAvatar
+            userId={post.user?._id} // Use userId directly if available
+            staticImageUrl={post.user?.profilePicture} // Fallback to static URL
+            customAltText={post.user?.Username || "User"}
+            size="small"
+            showLevel={false}
+            showMembershipTag={false}
+            className="post-author-avatar"
+          />
           <div className="post-meta">
-            <h3 className="user-name">{post.user.Username || "Guest"}</h3>
+            <h3 className="user-name">{post.user?.Username || "Guest"}</h3>
             <div className="post-details">
               <span className="post-time">{formatPostTime(post.createdAt)}</span>
               <span className="privacy-icon">

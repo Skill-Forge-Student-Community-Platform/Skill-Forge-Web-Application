@@ -2,47 +2,66 @@
 .avatar-container {
   position: relative;
   border-radius: 50%;
-  padding: 4px; /* Border thickness */
+  padding: 0; /* Default to no padding/border */
+  box-sizing: border-box;
+  overflow: visible; /* Change from hidden to visible to allow badge overflow */
+  z-index: 11; /* Add base z-index */
 }
 
-/* Size variants */
+/* Size variants - made more consistent */
+.avatar-container.size-micro {
+  width: 24px;
+  height: 24px;
+}
+
+.avatar-container.size-tiny {
+  width: 38px;
+  height: 38px;
+}
+
 .avatar-container.size-small {
-  width: 80px;
-  height: 80px;
+  width: 48px;
+  height: 48px;
+  padding: 1px; /* Small border */
 }
 
 .avatar-container.size-medium {
   width: 120px;
   height: 120px;
+  padding: 3px; /* Medium border */
 }
 
 .avatar-container.size-large {
   width: 160px;
   height: 160px;
+  padding: 4px; /* Larger border */
 }
 
-/* Membership Border Styles */
+/* Membership borders - apply based on container class */
 .membership-border-basic {
   background: var(--color-basic, #64748b);
-  box-shadow: 0 0 0 2px var(--color-white, #ffffff);
+  box-shadow: 0 0 0 1px var(--color-white, #ffffff);
 }
 
 .membership-border-plus {
   background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-  box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+  box-shadow: 0 0 5px rgba(14, 165, 233, 0.5);
 }
 
 .membership-border-pro {
   background: linear-gradient(135deg, #8b5cf6, #c084fc);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
 }
 
-/* Avatar Image */
+/* Ensure avatar image fills container properly */
 .avatar-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  z-index: 11;
+  display: block; /* Prevent inline spacing issues */
+  overflow: hidden; /* Keep the image contained */
 }
 
 /* Level Badge */
@@ -78,30 +97,51 @@
   font-size: 16px;
 }
 
-/* Membership Tag */
+/* Membership Tag - Fix positioning and overflow issues */
 .membership-tag {
   position: absolute;
-  top: 0;
-  right: -10px;
+  top: -5px;
+  right: -15px;
   padding: 4px 8px;
   font-size: 10px;
   font-weight: bold;
   border-radius: 4px;
   color: #ffffff;
   transform: rotate(20deg);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10; /* Increase z-index to ensure visibility */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: visible; /* Allow content to overflow */
 }
 
 /* Adjust tag for different sizes */
 .size-small .membership-tag {
   font-size: 8px;
   padding: 2px 6px;
+  top: -3px;
+  right: -12px;
+}
+
+.size-micro .membership-tag,
+.size-tiny .membership-tag {
+  font-size: 7px;
+  padding: 1px 4px;
+  top: -2px;
+  right: -10px;
+}
+
+.size-medium .membership-tag {
+  font-size: 12px;
+  padding: 4px 8px;
+  right: -10px;
+  top: -5px;
 }
 
 .size-large .membership-tag {
-  font-size: 12px;
+  font-size: 14px;
   padding: 5px 10px;
-  right: -5px;
+  right: -20px;
+  top: -8px;
 }
 
 .membership-tag-plus {
@@ -110,4 +150,109 @@
 
 .membership-tag-pro {
   background: linear-gradient(135deg, #8b5cf6, #c084fc);
+}
+
+/* Add these CSS rules for loading and error states */
+.loading-avatar {
+  background-color: #f0f0f0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.image-error {
+  background-color: #f0f0f0;
+  position: relative;
+}
+
+.image-error::after {
+  content: "?";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 24px;
+  color: #888;
+}
+
+.error-image {
+  background-color: #f0f0f0;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Specific styling for different UI contexts */
+
+/* For profile dropdown */
+.profile-dropdown-avatar {
+  margin: 0;
+}
+
+/* For post header */
+.post-author-avatar {
+  flex-shrink: 0;
+}
+
+/* For post modal */
+.post-modal-avatar {
+  flex-shrink: 0;
+}
+
+/* For comment avatars */
+.comment-avatar {
+  margin-right: 8px;
+}
+
+/* Context-specific size overrides */
+/* For post headers where space is limited */
+.post-author-avatar.avatar-container.size-tiny {
+  width: 38px;
+  height: 38px;
+  padding: 1px;
+  margin-top: 2px; /* Align better with post header text */
+}
+
+/* For the ProfileDropDown navigation component */
+.profile-dropdown-avatar.avatar-container.size-tiny {
+  width: 38px;
+  height: 38px;
+  padding: 1px;
+}
+
+/* For comment avatars */
+.comment-avatar.avatar-container.size-micro {
+  width: 24px;
+  height: 24px;
+  padding: 0.5px;
+}
+
+/* For the posting input area, make it stand out a bit more */
+.posting-avatar-container .avatar-container.size-tiny {
+  width: 42px;
+  height: 42px;
+  padding: 2px;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
 }

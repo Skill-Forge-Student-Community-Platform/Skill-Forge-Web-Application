@@ -186,11 +186,17 @@
   margin-bottom: 20px;
 }
 
-.profile-name {
+.profile-Name {
   margin: 0 0 8px 0;
   font-size: 22px;
   font-weight: 700;
   color: var(--color-text-primary);
+  white-space: normal; /* Allow wrapping */
+  overflow: visible; /* Don't clip text */
+  text-overflow: clip; /* Don't add ellipsis */
+  word-wrap: break-word; /* Break words if needed */
+  max-width: 100%; /* Take full width of container */
+  padding: 0 5px; /* Add some padding */
 }
 
 .profile-profession {
@@ -198,6 +204,9 @@
   font-size: 16px;
   color: var(--color-text-secondary);
   font-weight: 500;
+  white-space: normal;
+  overflow: visible;
+  word-wrap: break-word;
 }
 
 .profile-detail {
@@ -206,11 +215,14 @@
   justify-content: center;
   color: var(--color-text-secondary);
   font-size: 14px;
+  margin-top: 4px;
+  word-wrap: break-word;
 }
 
 .profile-detail-icon {
   margin-right: 6px;
   color: var(--color-text-secondary);
+  flex-shrink: 0;
 }
 
 /* Level Progress Section */

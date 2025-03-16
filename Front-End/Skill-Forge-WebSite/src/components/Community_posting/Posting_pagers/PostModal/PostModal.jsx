@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { FaTimes, FaGlobe, FaImages, FaPlusCircle, FaCaretDown, FaUserFriends, FaUserSlash, FaUserPlus } from 'react-icons/fa';
+import ProfileAvatar from '../../../Home_page/Home_components/ProfileAvatar';
 import './PostModal.css';
 import '../shared/ModalStyles.css';
 import SingleLayout from '../MediaUploadModal/Stages/Grid_Layouts/SingleLayout';
@@ -147,7 +148,14 @@ const PostModal = ({
 
       <div className="modal-content-scroll">
         <div className="modal-user-info">
-          <img src={user ? user.profilePicture : "default-avatar.png"} alt="Profile" className="user-icon" />
+          <ProfileAvatar
+            staticImageUrl={user?.profilePicture}
+            userId={user?._id} // Pass user ID if available
+            size="small"
+            showLevel={false}
+            showMembershipTag={false}
+            className="post-modal-avatar"
+          />
           <div className='user-info-container'>
             <p className="user-name">{user ? user.name : "Guest"}</p>
             <button className="privacy-selector" onClick={() => setShowPrivacyModal(true)}>

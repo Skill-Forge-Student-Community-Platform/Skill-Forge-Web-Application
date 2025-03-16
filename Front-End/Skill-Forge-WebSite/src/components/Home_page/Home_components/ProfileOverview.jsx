@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { MdShare } from 'react-icons/md';
-import { FaUniversity } from 'react-icons/fa';
+import { FaUniversity, FaBuilding } from 'react-icons/fa';
 import { useAuthStore } from '../../../store/authStore';
 import ProfileAvatar from './ProfileAvatar';
+import useUserProfile from '../../../hooks/useUserProfile.js'; // Add .js extension
 import './ProfileOverview.css';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
@@ -10,23 +11,30 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 const ProfileOverview = () => {
   // Auth state
   const { user } = useAuthStore();
+  const userId = user?._id;
+
+  // Get profile data from our custom hook
+  const {
+    fullName,
+    occupation,
+    getOccupation,
+    getInstitutionName,
+    role,
+    isLoading,
+    error
+  } = useUserProfile(userId);
 
   // UI states
   const [progressWidth, setProgressWidth] = useState(0);
   const [animateProgress, setAnimateProgress] = useState(false);
   const [showShareTooltip, setShowShareTooltip] = useState(false);
 
-  // Default user data
+  // Default user data for XP system (until implemented)
   const defaultUser = {
-    firstName: "John",
-    lastName: "Doe",
     level: 1,
     xp: 25,
     xpToNextLevel: 100,
     membershipType: "pro", // basic, plus, pro
-    profileImage: "https://via.placeholder.com/150",
-    university: "University of Technology",
-    profession: "Software Engineering Student"
   };
 
   // User data state
@@ -50,9 +58,20 @@ const ProfileOverview = () => {
   const handleShareProfile = () => {
     setShowShareTooltip(true);
     // Copy profile url to clipboard
-    navigator.clipboard.writeText(`${window.location.origin}/profile/${userData.id || 'demo'}`);
+    navigator.clipboard.writeText(`${window.location.origin}/profile/${userId || 'demo'}`);
     setTimeout(() => setShowShareTooltip(false), 2000);
   };
+
+  if (isLoading) {
+    return <div className="profile-container loading">Loading profile...</div>;
+  }
+
+  if (error) {
+    return <div className="profile-container error">Failed to load profile</div>;
+  }
+
+  const institutionName = getInstitutionName();
+  const userOccupation = getOccupation();
 
   return (
     <div className="profile-container">
@@ -74,7 +93,7 @@ const ProfileOverview = () => {
         <div className="profile-avatar-section">
           {/* Using the ProfileAvatar component */}
           <ProfileAvatar
-            userData={userData}
+            userId={userId}
             size="medium"
             showLevel={true}
             showMembershipTag={true}
@@ -83,12 +102,23 @@ const ProfileOverview = () => {
 
         {/* Profile Info Section */}
         <div className="profile-info-section">
-          <h2 className="profile-name">{userData.firstName} {userData.lastName}</h2>
-          <p className="profile-profession">{userData.profession}</p>
-          <div className="profile-detail">
-            <FaUniversity className="profile-detail-icon" />
-            <span>{userData.university}</span>
-          </div>
+          {/* Display full name without truncation */}
+          <h2 className="profile-Name">{fullName}</h2>
+
+          {/* Display occupation based on role */}
+          <p className="profile-profession">{userOccupation}</p>
+
+          {/* Show institution with appropriate icon */}
+          {institutionName && (
+            <div className="profile-detail">
+              {role === 'student' ? (
+                <FaUniversity className="profile-detail-icon" />
+              ) : (
+                <FaBuilding className="profile-detail-icon" />
+              )}
+              <span>{institutionName}</span>
+            </div>
+          )}
         </div>
 
         {/* Level Progress Bar */}
