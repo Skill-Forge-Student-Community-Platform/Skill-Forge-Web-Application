@@ -3,8 +3,10 @@ import roleServices from '../services/roleServices';
 import { useAuthStore } from '../store/authStore';
 // Import a local fallback image
 import defaultProfilePicture from '../Assets/test-profile-pic.jpg';
-// Import our new image cache
+// Import the imageCache utility
 import imageCache from '../utils/imageCache';
+// Add this to your userUserProfile hook
+import sessionProfileCache from '../utils/sessionProfileCache';
 
 // Ensure a clean default export with no named export
 function useUserProfile(userId) {
@@ -12,7 +14,7 @@ function useUserProfile(userId) {
   const [isLoading, setIsLoading] = useState(!!userId); // Only set loading true if we have a userId
   const [error, setError] = useState(null);
   const { user } = useAuthStore();
-  const [profileImage, setProfileImage] = useState(null);
+  const [textDataReady, setTextDataReady] = useState(false);
 
   // Temporary fallback solution if backend endpoint not yet available
   const getUserData = async (userId) => {
@@ -47,33 +49,6 @@ function useUserProfile(userId) {
     }
   };
 
-  // Enhanced get profile image function that uses the cache
-  const getProfileImage = useCallback(() => {
-    // First check if we have set a profile image in state
-    if (profileImage) {
-      return profileImage;
-    }
-
-    // Then check if we have profile picture from merged profile data
-    if (profileData?.profilePicture) {
-      return profileData.profilePicture;
-    }
-
-    // Check if image is in our memory cache
-    const cachedImage = imageCache.getCachedImage(userId);
-    if (cachedImage) {
-      return cachedImage;
-    }
-
-    // Then check current user object from auth store
-    if (user?.profilePicture && user._id === userId) {
-      return user.profilePicture;
-    }
-
-    // Finally, use local fallback image
-    return defaultProfilePicture;
-  }, [profileData, profileImage, user, userId]);
-
   useEffect(() => {
     // Skip fetching if no userId is provided
     if (!userId) {
@@ -81,65 +56,179 @@ function useUserProfile(userId) {
       return;
     }
 
+    let isMounted = true;
+    let abortController = new AbortController();
+
+    // First check for text fields which are ultra-fast
+    const textFields = sessionProfileCache.getTextFields(userId);
+    if (textFields && isMounted) {
+      // Create a minimal profile data object with just text fields
+      const minimalData = {
+        fullName: textFields.fullName,
+        role: textFields.role,
+        // Add the pre-computed fields
+        occupation: textFields.occupation,
+        institution: textFields.institution,
+
+        // Flag that this is minimal data
+        _isMinimalData: true
+      };
+
+      setProfileData(minimalData);
+      setTextDataReady(true);
+      // Don't set isLoading to false yet, as we still need to load the full data
+    }
+
+    // Then, try to get full cached data
+    const sessionData = sessionProfileCache.getProfileData(userId);
+    if (sessionData && isMounted) {
+      // Apply cached data - this might replace the minimal data with more complete data
+      setProfileData(sessionData);
+      setTextDataReady(true);
+      setIsLoading(false); // Now we can set loading to false
+    }
+
+    // Then, fetch fresh data in the background
     const fetchProfileData = async () => {
+      if (!userId) return;
+
       try {
-        setIsLoading(true);
+        // Only set loading if we don't have cached data
+        if (!sessionData && isMounted) {
+          setIsLoading(true);
+        }
 
-        // Start pre-fetching the image to populate cache
-        imageCache.getImage(userId).then(imageUrl => {
-          if (imageUrl) {
-            setProfileImage(imageUrl);
-          }
-        });
+        // Try to get the image from cache
+        const cachedImageUrl = imageCache.getCachedImage(userId);
+        if (cachedImageUrl && isMounted) {
+          // Update profile image immediately if we have it cached
+          setProfileData(prev => prev ? {...prev, profilePicture: cachedImageUrl} : { profilePicture: cachedImageUrl });
+        }
 
-        // Get full profile data
+        // Get fresh data from backend
         const data = await getUserData(userId);
-        setProfileData(data);
+
+        if (isMounted) {
+          // Update with fresh data
+          setProfileData(data);
+
+          // Update session cache
+          sessionProfileCache.storeProfileData(userId, data);
+
+          // Update image cache
+          if (data?.profilePicture) {
+            imageCache._saveToIndexedDB(
+              `profile_${userId}`,
+              data.profilePicture,
+              Date.now() + (30 * 60 * 1000)
+            );
+          }
+        }
       } catch (err) {
         console.error("Error fetching profile data:", err);
-        setError(typeof err === 'string' ? err : err.message || "Failed to load profile data");
+
+        // Only set error if we don't already have cached data
+        if (isMounted && !sessionData) {
+          setError(typeof err === 'string' ? err : err.message || "Failed to load profile data");
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
+    // Execute the fetch operation as a background update
     fetchProfileData();
 
-    // Clean up function - run cache maintenance
+    // Clean up function to prevent state updates after unmount
     return () => {
-      imageCache.clearExpiredCache();
+      isMounted = false;
+      abortController.abort();
     };
   }, [userId, user]);
 
-  // Add this helper function in the useUserProfile hook
-  const getInstitutionName = () => {
-    const roleData = profileData?.profileData || {};
-
-    if (profileData?.role === 'student') {
-      return roleData.school || '';
-    } else if (profileData?.role === 'organizer') {
-      return roleData.organizationName || '';
+  // Helper function to get profile image with better fallbacks and caching
+  const getProfileImage = useCallback(() => {
+    // First check if we have profile picture from merged profile data
+    if (profileData?.profilePicture) {
+      return profileData.profilePicture;
     }
 
-    return '';
-  };
+    // Check cache synchronously for immediate response
+    const cachedImage = imageCache.getCachedImage(userId);
+    if (cachedImage) {
+      return cachedImage;
+    }
 
-  // Enhance getOccupation to be more descriptive based on role
-  const getOccupation = () => {
-    if (!profileData || !profileData.profileData) return "";
+    // Then check current user object from auth store
+    if (user?.profilePicture) {
+      return user.profilePicture;
+    }
 
+    // Finally, use local fallback image
+    return defaultProfilePicture;
+  }, [profileData, userId, user]);
+
+  // Optimize getOccupation and getInstitutionName to work faster with cached data
+  const getOccupation = useCallback(() => {
+    if (!profileData) return "";
+
+    // If we have a pre-computed occupation, use it
+    if (profileData.occupation) {
+      return profileData.occupation;
+    }
+
+    // If we don't have profile-specific data, we need to handle that case
+    if (!profileData.profileData) {
+      // Check role directly from profileData
+      if (profileData.role === 'student') {
+        return profileData.fieldOfStudy ? `${profileData.fieldOfStudy} Student` : "Student";
+      } else if (profileData.role === 'organizer') {
+        return profileData.position || profileData.organizerType || "Organizer";
+      }
+      return "";
+    }
+
+    // Otherwise, use the profile-specific data as before
     const roleData = profileData.profileData;
 
     if (profileData.role === 'student') {
-      // For students, return field of study + "Student"
       return `${roleData.fieldOfStudy || ''} ${roleData.fieldOfStudy ? 'Student' : 'Student'}`;
     } else if (profileData.role === 'organizer') {
-      // For organizers, prioritize position, then organizerType
       return roleData.position || roleData.organizerType || "Organizer";
     }
 
     return "";
-  };
+  }, [profileData]);
+
+  // Optimize getInstitutionName to work with both flattened and nested data structures
+  const getInstitutionName = useCallback(() => {
+    if (!profileData) return "";
+
+    // If we have a pre-computed institution, use it
+    if (profileData.institution) {
+      return profileData.institution;
+    }
+
+    // First check if it's flattened in the session storage data
+    if (profileData.school) {
+      return profileData.school;
+    } else if (profileData.organizationName) {
+      return profileData.organizationName;
+    }
+
+    // Fall back to nested data
+    const roleData = profileData.profileData || {};
+
+    if (profileData.role === 'student') {
+      return roleData.school || '';
+    } else if (profileData.role === 'organizer') {
+      return roleData.organizationName || '';
+    }
+
+    return '';
+  }, [profileData]);
 
   // Helper to get social links with proper fallbacks
   const getSocialLinks = () => {
@@ -338,7 +427,13 @@ function useUserProfile(userId) {
     roleSpecificData: profileData?.profileData || null,
 
     // Default image for direct use
-    defaultProfilePicture
+    defaultProfilePicture,
+
+    // Expose the ability to force refresh the image
+    refreshProfileImage: () => imageCache.getImage(userId, true),
+
+    // Add this new flag
+    textDataReady
   };
 }
 

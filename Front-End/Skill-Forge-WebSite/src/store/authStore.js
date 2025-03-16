@@ -1,6 +1,10 @@
 import { create } from "zustand"; // Make sure you're importing from zustand, not "zustand/vanilla"
 import axios from "axios";
 import { toast } from 'react-hot-toast';
+// Import the image cache utility
+import imageCache from '../utils/imageCache';
+// Add this import
+import sessionProfileCache from '../utils/sessionProfileCache';
 
 // Use the environment variable or fall back to localhost
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/auth";
@@ -89,6 +93,13 @@ const useAuthStore = create((set, get) => ({
       // Make sure profile is marked as complete in user object
       const userData = response.data.user || { ...get().user };
 
+      // Clear the image cache for the current user to ensure fresh data
+      if (userData._id) {
+        imageCache.clearCache(userData._id);
+        // Also clear session cache for profile data
+        sessionProfileCache.clearProfileData(userData._id);
+      }
+
       // Explicitly set profileComplete flag to true
       userData.profileComplete = true;
       console.log("Profile update successful, user data:", userData);
@@ -157,6 +168,14 @@ const useAuthStore = create((set, get) => ({
 	      formData,
 	      { headers: getAuthHeaders('multipart/form-data') }
 	    );
+
+	    // Clear the image cache for the current user
+	    const currentUser = get().user;
+	    if (currentUser?._id) {
+	      imageCache.clearCache(currentUser._id);
+	      // Also clear session cache for profile data
+	      sessionProfileCache.clearProfileData(currentUser._id);
+	    }
 
 	    // Update the user object with the new profile picture
 	    set(state => ({
