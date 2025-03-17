@@ -22,6 +22,7 @@ import postRoutes from "./Features/Posting-Feed/routes/Post.route.js";
 
 import eventRoutes from "./Features/EventListing/routes/eventRoutes.js";
 import saveEventsRoutes from "./Features/SaveEvents/routes/saveEventsRoutes.js";
+import registerRoutes from "./Features/EventRegister/routes/registerRoutes.js";
 
 
 
@@ -145,6 +146,7 @@ app.use("/api/posts", postRoutes);
 
 app.use("/Details", eventRoutes);
 app.use("/api", saveEventsRoutes);
+app.use("/api", registerRoutes);
 
 
 app.use("/api/messages", messageRoutes);
