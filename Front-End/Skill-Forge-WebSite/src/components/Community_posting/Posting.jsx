@@ -12,9 +12,15 @@ import ShareModal from './Posting_pagers/ShareModal/ShareModal'; // Import the n
 import Feed from './Feed/Feed';
 import Profile_pic from "../../Assets/test-profile-pic.jpg";
 import postServices from '../../services/postServices';
+import { compressImage, processVideo } from '../../utils/imageCompression';
+import useUserProfile from '../../hooks/useUserProfile.js'; // Add .js extension
+import ProfileAvatar from '../../components/Home_page/Home_components/ProfileAvatar';
 
 // Add user as a prop to your component
 function Posting({ user }) {
+  // Get profile data using our custom hook
+  const { getProfileImage, fullName } = useUserProfile(user?._id);
+
   const [activeModal, setActiveModal] = useState(null);
   const [eventDetails, setEventDetails] = useState(null);
   const [text, setText] = useState("");
@@ -31,13 +37,21 @@ function Posting({ user }) {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
+  // New states for upload progress tracking
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+
+  // For handling upload cancellation
+  const cancelUploadRef = useRef(false);
+
   // Default profile picture as fallback
   const defaultProfilePic = Profile_pic;
 
   // Use authenticated user data or fall back to default values
   const userData = {
-    name: user?.Username || user?.name || "User",
-    profilePicture: user?.profilePicture || defaultProfilePic
+    name: fullName || user?.Username || "User",
+    profilePicture: getProfileImage() || defaultProfilePic
   };
 
   // Socket state
@@ -94,6 +108,24 @@ function Posting({ user }) {
           return {
             ...post,
             comments: [...(post.comments || []), comment]
+          };
+        }
+        return post;
+      }));
+    });
+
+    // Add handler for comment deletion events
+    socketInstance.on("commentDeleted", ({ postId, commentIds }) => {
+      console.log("Comment deleted event received:", { postId, commentIds });
+
+      // Update posts by filtering out deleted comments
+      setPosts(prev => prev.map(post => {
+        if (post._id === postId) {
+          return {
+            ...post,
+            comments: (post.comments || []).filter(comment =>
+              !commentIds.includes(comment._id.toString())
+            )
           };
         }
         return post;
@@ -224,82 +256,168 @@ function Posting({ user }) {
     setActiveModal("media");
   };
 
-  // Create new post using API
+  const handleCancelUpload = () => {
+    if (isUploading) {
+      cancelUploadRef.current = true;
+      setIsUploading(false);
+      setUploadProgress(0);
+      toast.info("Upload cancelled");
+    }
+  };
+
+  // Create new post using API - optimized version with progress
   const handleCreatePost = async () => {
     try {
-      setIsLoading(true);
+      // Reset cancel flag
+      cancelUploadRef.current = false;
 
-      // Validate if we have any media to process
-      if (!media || !media.media || media.media.length === 0) {
-        // Create post with just text
-        const postData = {
-          text: text.trim(),
-          privacy,
-          postType: eventDetails ? "event" : "post",
-          eventDetails: eventDetails || undefined
-        };
-
-        // Check for empty content
-        if (!postData.text && !postData.eventDetails) {
-          toast.error("Please add some text, media, or event details");
-          setIsLoading(false);
-          return;
-        }
-
-        const response = await postServices.createPost(postData);
-        setPosts(prevPosts => [response.post, ...prevPosts]);
-        toast.success("Post created successfully!");
-        closeWindow();
+      // Skip if no content
+      if (!text.trim() && (!media || media.length === 0) && !eventDetails) {
+        toast.error("Please add some text, media, or event details");
         return;
       }
 
-      // Process media files if present
-      const processedFiles = await Promise.all(media.media.map(async (item) => {
-        // Start with default values
-        let fileUrl = item.url || null;
-        let fileType = item.type || "image"; // Default to image
+      // *** Important: Close modal immediately when starting upload ***
+      closeWindow();
 
-        // Handle File objects
-        if (item instanceof File) {
-          fileUrl = await convertFileToDataURL(item);
-          fileType = item.type.startsWith('image/') ? 'image' : 'video';
+      // Indicate upload starting
+      setIsUploading(true);
+      setUploadProgress(0);
+      setUploadError(null);
+
+      // Initialize mediaData to null
+      let mediaData = null;
+
+      // Check if we have media to process
+      if (media && media.media && Array.isArray(media.media) && media.media.length > 0) {
+        try {
+          const totalFiles = media.media.length;
+          console.log(`Processing ${totalFiles} media files...`);
+          setUploadProgress(5); // Start with 5% progress
+
+          // Process files with optimized approach - compress images, process in parallel batches
+          const processedFiles = [];
+          const startTime = Date.now();
+
+          // Process files in batches of 2 for better performance
+          const batchSize = 2;
+          const batches = Math.ceil(media.media.length / batchSize);
+
+          for (let i = 0; i < batches; i++) {
+            if (cancelUploadRef.current) {
+              throw new Error("Upload cancelled by user");
+            }
+
+            const start = i * batchSize;
+            const end = Math.min((i + 1) * batchSize, media.media.length);
+            const batchItems = media.media.slice(start, end);
+
+            // Process this batch in parallel
+            const batchPromises = batchItems.map(async (item, itemIndex) => {
+              const index = start + itemIndex;
+              let processedItem = null;
+
+              // If it's a File object, compress and convert to base64
+              if (item instanceof File) {
+                if (item.type.startsWith('image/')) {
+                  // Compress image
+                  const base64Data = await compressImage(item, {
+                    maxWidth: 1600,
+                    maxHeight: 1600,
+                    quality: 0.85
+                  });
+
+                  processedItem = {
+                    url: base64Data,
+                    type: 'image',
+                    altText: ""
+                  };
+                } else if (item.type.startsWith('video/')) {
+                  // Process video
+                  const videoData = await processVideo(item);
+                  processedItem = {
+                    url: videoData,
+                    type: 'video',
+                    altText: ""
+                  };
+                }
+              }
+              // If it already has a URL
+              else if (item.url) {
+                processedItem = {
+                  url: item.url,
+                  type: item.type || guessFileTypeFromURL(item.url),
+                  altText: item.altText || ""
+                };
+              }
+              // If it has a file property that's a File object
+              else if (item.file instanceof File) {
+                if (item.file.type.startsWith('image/')) {
+                  const base64Data = await compressImage(item.file, {
+                    maxWidth: 1600,
+                    maxHeight: 1600,
+                    quality: 0.85
+                  });
+
+                  processedItem = {
+                    url: base64Data,
+                    type: 'image',
+                    altText: item.altText || ""
+                  };
+                } else if (item.file.type.startsWith('video/')) {
+                  const videoData = await processVideo(item.file);
+                  processedItem = {
+                    url: videoData,
+                    type: 'video',
+                    altText: item.altText || ""
+                  };
+                }
+              }
+
+              return processedItem;
+            });
+
+            // Wait for all files in this batch to process
+            const batchResults = await Promise.all(batchPromises);
+            processedFiles.push(...batchResults.filter(Boolean));
+
+            // Update progress - media processing is 50% of total progress
+            const progressValue = 5 + ((i + 1) / batches) * 45;
+            setUploadProgress(progressValue);
+          }
+
+          if (processedFiles.length > 0) {
+            mediaData = {
+              layout: media.layout || "single",
+              files: processedFiles
+            };
+
+            const processingTime = Date.now() - startTime;
+            console.log(`Media processed successfully in ${processingTime}ms:`, processedFiles.length);
+          }
+        } catch (processError) {
+          if (cancelUploadRef.current) {
+            setIsUploading(false);
+            return; // Silent return on cancellation
+          }
+
+          console.error("Error processing media:", processError);
+          setUploadError("Failed to process media files");
+          setIsUploading(false);
+          toast.error("Failed to process media files");
+          return;
         }
-        // Handle objects with File property
-        else if (item.file && item.file instanceof File) {
-          fileUrl = await convertFileToDataURL(item.file);
-          fileType = item.file.type.startsWith('image/') ? 'image' : 'video';
-        }
-        // Handle objects with file property that has a URL
-        else if (item.file && item.file.url) {
-          fileUrl = item.file.url;
-        }
+      }
 
-        // Always verify we have a URL before proceeding
-        if (!fileUrl) {
-          throw new Error("Failed to process media file: No URL available");
-        }
+      if (cancelUploadRef.current) {
+        setIsUploading(false);
+        return;
+      }
 
-        // Ensure type is simplified to match schema requirements
-        if (fileType.includes('/')) {
-          fileType = fileType.startsWith('image/') ? 'image' : 'video';
-        }
+      // Update progress before sending to server
+      setUploadProgress(50);
 
-        return {
-          url: fileUrl,
-          type: fileType,
-          altText: item.altText || ""
-        };
-      }));
-
-      // Create the media data with processed files
-      const mediaData = {
-        layout: media.layout || "single",
-        files: processedFiles
-      };
-
-      console.log("Final media data for submission:", JSON.stringify(mediaData));
-
-      // Create post with media
+      // Prepare post data with properly formatted media
       const postData = {
         text: text.trim(),
         privacy,
@@ -308,21 +426,52 @@ function Posting({ user }) {
         eventDetails: eventDetails || undefined
       };
 
-      const response = await postServices.createPost(postData);
-      setPosts(prevPosts => [response.post, ...prevPosts]);
-      toast.success("Post created successfully!");
-      closeWindow();
+      console.log("Submitting post data with media:", mediaData ? mediaData.files.length : 0);
 
-    } catch (error) {
-      const errorMessage = typeof error === 'object' ? error.message || 'Post creation failed' : String(error);
+      // Submit post to API
+      setUploadProgress(75); // Server receiving data
+      const response = await postServices.createPost(postData);
+
+      // Set progress to 100% when complete
+      setUploadProgress(100);
+
+      // Add new post to state - ensure we prepend to show newest first
+      setPosts(prevPosts => [response.post, ...prevPosts]);
+
+      // Emit socket event if available
+      if (socket && socket.connected) {
+        socket.emit('createPost', response.post);
+      }
+
+      // Keep progress bar visible briefly for success feedback
+      setTimeout(() => {
+        if (!cancelUploadRef.current) {
+          setIsUploading(false);
+        }
+      }, 1500);
+
+      // Show success message
+      toast.success("Post created successfully!");
+
+    } catch (err) {
+      if (cancelUploadRef.current) {
+        return; // Silent return on cancellation
+      }
+
+      const errorMessage = typeof err === 'object' ? err.message || 'Post creation failed' : String(err);
+      setUploadError(errorMessage);
       toast.error(errorMessage);
-      console.error("Post creation error:", error);
-    } finally {
-      setIsLoading(false);
+      console.error("Post creation error:", err);
+
+      // Reset upload state after showing error
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadError(null);
+      }, 3000);
     }
   };
 
-  // Enhanced function to convert and compress files to data URLs
+  // Helper function to convert File object to data URL
   const convertFileToDataURL = (file) => {
     return new Promise((resolve, reject) => {
       if (!file) {
@@ -330,65 +479,10 @@ function Posting({ user }) {
         return;
       }
 
-      // For images, compress before converting to data URL
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            // Create canvas for compression
-            const canvas = document.createElement('canvas');
-
-            // Calculate new dimensions (max 1200px width/height)
-            let width = img.width;
-            let height = img.height;
-            const maxSize = 1200;
-
-            if (width > height && width > maxSize) {
-              height = Math.round((height * maxSize) / width);
-              width = maxSize;
-            } else if (height > maxSize) {
-              width = Math.round((width * maxSize) / height);
-              height = maxSize;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-
-            // Draw and compress
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Get compressed data URL (0.7 quality for JPEG)
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-            console.log(`Image compressed from ${file.size} to approximately ${Math.round(dataUrl.length * 0.75)} bytes`);
-
-            resolve(dataUrl);
-          };
-          img.onerror = () => {
-            reject(new Error("Failed to load image for compression"));
-          };
-          img.src = event.target.result;
-        };
-        reader.onerror = (error) => {
-          console.error("Error reading file for compression:", error);
-          reject(error);
-        };
-        reader.readAsDataURL(file);
-      }
-      // For videos and other files, use standard conversion
-      else {
-        const reader = new FileReader();
-        reader.onload = () => {
-          console.log(`File conversion completed, size: ${reader.result.length}`);
-          resolve(reader.result);
-        };
-        reader.onerror = (error) => {
-          console.error("Error converting file to data URL:", error);
-          reject(error);
-        };
-        reader.readAsDataURL(file);
-      }
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
     });
   };
 
@@ -406,22 +500,6 @@ function Posting({ user }) {
     return 'image'; // Default to image if unknown
   };
 
-  // Validate media data structure
-  const validateMediaData = (mediaData) => {
-    if (!mediaData || !mediaData.files || !Array.isArray(mediaData.files)) {
-      return false;
-    }
-
-    // Check each file has required fields with correct values
-    return mediaData.files.every(file => {
-      return file.url &&
-             typeof file.url === 'string' &&
-             file.type &&
-             (file.type === 'image' || file.type === 'video');
-    });
-  };
-
-  // Handle post interactions
   const handleLikePost = async (postId) => {
     try {
       const response = await postServices.likePost(postId);
@@ -512,12 +590,50 @@ function Posting({ user }) {
     }
   };
 
+  // Add a new handler for comment deletion
+  const handleDeleteComment = async (postId, commentId) => {
+    try {
+      // Call the API to delete the comment
+      await postServices.deleteComment(postId, commentId);
+
+      // Update local state immediately to provide optimistic UI update
+      setPosts(prev => prev.map(post => {
+        if (post._id === postId) {
+          // Filter out the deleted comment and any replies to it
+          const updatedComments = post.comments.filter(comment => {
+            const isTargetComment = comment._id === commentId;
+            const isReplyToTarget = comment.parentId === commentId;
+            return !(isTargetComment || isReplyToTarget);
+          });
+
+          return {
+            ...post,
+            comments: updatedComments
+          };
+        }
+        return post;
+      }));
+
+      toast.success("Comment deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete comment");
+      console.error("Delete comment error:", error);
+    }
+  };
+
   return (
     <div className="community-posting">
       <div className="post-input-container">
 
         <div className="input-row">
-          <img src={userData.profilePicture} alt="Profile" className="user-icon" />
+          <div className="posting-avatar-container">
+            <ProfileAvatar
+              userId={user?._id}
+              size="small"
+              showLevel={false}
+              showMembershipTag={false}
+            />
+          </div>
           <input
             type="text"
             placeholder="What do you want to talk about?"
@@ -538,10 +654,10 @@ function Posting({ user }) {
             <FaCalendarAlt title="Create Event" />
             <span className="icon-text">Event</span>
           </span>
-          <span className="action-icon article" onClick={() => setActiveModal("article")}>
+          {/* <span className="action-icon article" onClick={() => setActiveModal("article")}>
             <FaNewspaper title="Write Article" />
             <span className="icon-text">Article</span>
-          </span>
+          </span> */}
         </div>
       </div>
 
@@ -586,6 +702,7 @@ function Posting({ user }) {
             <ShareModal
               closeWindow={closeWindow}
               postToShare={postToShare}
+
               onShare={finalizeShare}
               user={userData}
             />
@@ -612,7 +729,13 @@ function Posting({ user }) {
             onComment={handleAddComment}
             onShare={handleSharePost}
             onDelete={handleDeletePost}
+            onDeleteComment={handleDeleteComment} // Pass the deletion handler
             lastPostRef={lastPostRef} // Pass the ref for the last post
+            currentUserId={user?._id} // Pass the current user ID
+            uploadProgress={uploadProgress}
+            isUploading={isUploading}
+            uploadError={uploadError}
+            onCancelUpload={handleCancelUpload}
           />
 
           {/* Load more button */}
