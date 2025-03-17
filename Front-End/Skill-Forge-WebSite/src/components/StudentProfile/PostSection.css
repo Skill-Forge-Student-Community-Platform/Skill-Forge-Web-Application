@@ -1,0 +1,55 @@
+.post-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* ✅ Display posts horizontally */
+.post-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+/* ✅ Smaller post cards */
+.post-card {
+  width: 300px; /* Smaller width */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: white;
+  text-align: center;
+}
+
+/* ✅ Images in the posts */
+.post-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* ✅ Center buttons */
+.post-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* ✅ Unified Button Styling */
+.post-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.post-btn:hover {
+  background-color: green;
+}

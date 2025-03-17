@@ -1,0 +1,432 @@
+/* CSS Variables for theme consistency */
+:root {
+  --color-white: #ffffff;
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-border-light: #e5e7eb;
+  --color-background-light: #f9fafb;
+
+  /* Membership colors */
+  --color-basic: #64748b;
+  --color-plus: #0ea5e9;
+  --color-pro: #8b5cf6;
+
+  /* Progress colors */
+  --color-progress-bg: #e5e7eb;
+  --color-progress-fill: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Container */
+.profile-container {
+  background-color: var(--color-white); /* Changed from transparent to white */
+  width: 100%;
+  max-width: 260px; /* Increased from 500px to 260px */
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Profile Card */
+.profile-card {
+  background-color: transparent;
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+  /* Ensure no transition or hover effects */
+  transition: none;
+  border: none;
+  box-shadow: none;
+  /* Explicitly prevent hover effect */
+  pointer-events: auto;
+  cursor: default;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Explicitly override any potentially inherited hover styles */
+.profile-card:hover {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Removed hover border animation elements */
+/* Removed ::before and ::after pseudo-elements */
+/* Removed .border-side-left and .border-side-right styles */
+
+/* Share Button */
+.profile-header-actions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+}
+
+.share-button {
+  background-color: var(--color-background-light);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-button:hover {
+  background-color: var(--color-border-light);
+}
+
+.share-button-icon {
+  color: var(--color-text-secondary);
+}
+
+.share-tooltip {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background-color: var(--color-text-primary);
+  color: var(--color-white);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Profile Avatar Section */
+.profile-avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  padding: 4px; /* Border thickness */
+}
+
+/* Membership Border Styles */
+.membership-border-basic {
+  background: var(--color-basic);
+  box-shadow: 0 0 0 2px var(--color-white);
+}
+
+.membership-border-plus {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+}
+
+.membership-border-pro {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+}
+
+/* Avatar Image */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Level Badge */
+.level-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #f59e0b;
+  color: var(--color-white);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Membership Tag */
+.membership-tag {
+  position: absolute;
+  top: 0;
+  right: -10px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 4px;
+  color: var(--color-white);
+  transform: rotate(20deg);
+  box-shadow: var(--shadow-sm);
+}
+
+.membership-tag-plus {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+}
+
+.membership-tag-pro {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+}
+
+/* Profile Info Section */
+.profile-info-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-Name {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  white-space: normal; /* Allow wrapping */
+  overflow: visible; /* Don't clip text */
+  text-overflow: clip; /* Don't add ellipsis */
+  word-wrap: break-word; /* Break words if needed */
+  max-width: 100%; /* Take full width of container */
+  padding: 0 5px; /* Add some padding */
+  animation-delay: 0s;
+}
+
+.profile-profession {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  white-space: normal;
+  overflow: visible;
+  word-wrap: break-word;
+  animation-delay: 0.1s;
+}
+
+.profile-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin-top: 4px;
+  word-wrap: break-word;
+  animation-delay: 0.2s;
+}
+
+.profile-detail-icon {
+  margin-right: 6px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+/* Level Progress Section */
+.level-progress-section {
+  margin-top: 16px;
+}
+
+.level-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: var(--color-progress-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-progress-fill);
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Animation for progress bar */
+.progress-fill.animate {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 0.9; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 16px;
+  }
+
+  .avatar-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-name {
+    font-size: 18px;
+  }
+
+  .profile-profession {
+    font-size: 14px;
+  }
+}
+
+/* Add these skeleton loading styles to your existing ProfileOverview CSS */
+
+/* Skeleton animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  position: relative;
+}
+
+.skeleton-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto;
+
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-name {
+  height: 28px;
+  width: 70%;
+  margin: 10px auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-profession {
+  height: 18px;
+  width: 50%;
+  margin: 8px auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-detail {
+  height: 16px;
+  width: 60%;
+  margin: 8px auto;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-share-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-level, .skeleton-xp {
+  height: 16px;
+  width: 80px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-progress {
+  height: 100%;
+  width: 30%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #d0d0d0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.error-message {
+  padding: 20px;
+  text-align: center;
+  color: #e53e3e;
+}
+
+.retry-button {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 16px;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #2b6cb0;
+}
+
+/* Fade-in animation for smooth content appearance */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Add these styles for a smooth fade-in effect when content appears */
+.profile-info-section h2,
+.profile-info-section p,
+.profile-detail {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.profile-Name {
+  animation-delay: 0s;
+}
+
+.profile-profession {
+
+  animation-delay: 0.1s;
+}
+
+.profile-detail {
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

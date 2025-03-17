@@ -10,6 +10,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.1",
+    "emoji-picker-react": "^4.12.2",
     "framer-motion": "^12.4.7",
     "lucide-react": "^0.476.0",
     "react": "^19.0.0",
@@ -21,6 +22,7 @@
     "react-masonry-css": "^1.0.16",
     "react-router-dom": "^7.1.3",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4",
     "zustand": "^5.0.3"
   },
@@ -50,6 +52,7 @@
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.24.1",
+    "ajv": "^7.2.4",
     "autoprefixer": "^10.4.16",
     "eslint": "^9.20.1",
     "eslint-plugin-import": "^2.31.0",

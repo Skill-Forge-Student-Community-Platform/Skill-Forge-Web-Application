@@ -1,0 +1,150 @@
+.notification-bar {
+  /* position: fixed; */
+  top: 40px;
+  right: 500px;
+  z-index: 1000;
+}
+
+.notification-icon {
+  background: none;
+  border: none;
+  font-size: 24px;
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -2px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications-panel {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 420px;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+}
+
+.notifications-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.mark-read {
+  background: none;
+  border: none;
+  color: rgb(41, 93, 161);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.notifications-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.notification-item:hover {
+  background: #f9f9f9;
+}
+
+.notification-item.unread {
+  font-weight: bold;
+}
+
+.blue-circle {
+  width: 8px;
+  height: 8px;
+  background: rgb(1, 185, 209);
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.notification-content {
+  flex-grow: 1;
+}
+
+.notification-content p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.time {
+  font-size: 12px;
+  color: gray;
+}
+
+.notification-buttons {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.accept-btn,
+.decline-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.accept-btn {
+  background: green;
+  color: white;
+}
+
+.decline-btn {
+  background: red;
+  color: white;
+}
+
+.view-all {
+  width: 100%;
+  padding: 10px;
+  background: #dadbdd;
+  color: rgb(31, 29, 29);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 0 0 8px 8px;
+}
+
