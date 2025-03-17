@@ -11,6 +11,10 @@ import { Server } from 'socket.io'; // Import Socket.IO
 import fileUpload from 'express-fileupload'; // Add this import
 
 
+
+
+import fileUpload from 'express-fileupload'; // Add this import
+
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
 import authRoutes from "./Features/User-Authentication/routes/Authentication.js";
@@ -114,7 +118,10 @@ app.use(cookieParser()); // to allow us parse incoming cookies
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a083d0924c93b0bf239def691b09391aeba88a05
 app.use(fileUpload({
   createParentPath: true,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
@@ -128,7 +135,10 @@ app.use('/uploads', uploadMiddleware);
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a083d0924c93b0bf239def691b09391aeba88a05
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
