@@ -1,9 +1,8 @@
 import { User } from '../models/User.js';
 import Student from '../models/Student.js';
 import Organizer from '../models/Organizer.js';
-import fs from 'fs';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { v2 as cloudinary } from 'cloudinary';
+
 
 // Validation helpers
 const validateStudentProfile = (data) => {
@@ -110,32 +109,63 @@ const validateOrganizerProfile = (data) => {
   };
 };
 
-// File upload helper
+// File upload helper (updated to use cloudinary)
 const handleFileUpload = async (file) => {
   try {
     if (!file) return null;
 
-    // Define upload directory
-    const uploadDir = path.join(process.cwd(), 'uploads', 'profiles');
+    // Debug logging
+    console.log("File received for upload:", file.name);
+    console.log("File mime type:", file.mimetype);
+    console.log("File data type:", typeof file.data);
 
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    // Check if we have valid Cloudinary configuration
+    if (!process.env.CLOUDINARY_CLOUD_NAME ||
+        !process.env.CLOUDINARY_API_KEY ||
+        !process.env.CLOUDINARY_API_SECRET) {
+      throw new Error("Cloudinary configuration is incomplete");
     }
 
-    // Generate a unique filename
-    const fileExtension = path.extname(file.originalname);
-    const fileName = `${uuidv4()}${fileExtension}`;
-    const filePath = path.join(uploadDir, fileName);
+    // Common upload options
+    const uploadOptions = {
+      folder: 'skill-forge/profile-pictures',
+      resource_type: 'auto'
+    };
 
-    // Write file to disk
-    await fs.promises.writeFile(filePath, file.buffer);
+    // Handle file data based on what's available
+    let result;
 
-    // Return the relative URL to access the file
-    return `/uploads/profiles/${fileName}`;
+    if (file.tempFilePath) {
+      // express-fileupload gives us a tempFilePath (string path)
+      console.log("Using tempFilePath for upload");
+      result = await cloudinary.uploader.upload(file.tempFilePath, uploadOptions);
+    } else if (file.path) {
+      // multer gives us a path (string path)
+      console.log("Using path for upload");
+      result = await cloudinary.uploader.upload(file.path, uploadOptions);
+    } else if (file.data) {
+      // For Buffer data, we need to use the buffer upload approach
+      console.log("Using buffer data for upload");
+
+      // Convert buffer to base64 string for Cloudinary
+      const base64Data = file.data.toString('base64');
+      const dataURI = `data:${file.mimetype};base64,${base64Data}`;
+
+      result = await cloudinary.uploader.upload(dataURI, uploadOptions);
+    } else {
+      throw new Error("No valid file data found to upload");
+    }
+
+    if (!result || !result.secure_url) {
+      throw new Error("Upload succeeded but no URL was returned");
+    }
+
+    console.log("Cloudinary upload successful:", result.secure_url);
+    return result.secure_url;
   } catch (error) {
-    console.error('File upload error:', error);
-    throw new Error('Failed to upload profile picture');
+    console.error('File upload error details:', error);
+    // More specific error message with actual error details
+    throw new Error(`Failed to upload profile picture: ${error.message || 'Unknown cloudinary error'}`);
   }
 };
 
@@ -269,13 +299,16 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
+    console.log(`Processing profile update for user: ${userId}`);
 
     // Handle form data from multipart/form-data
     let profileData = {};
     if (req.body.profileData) {
       try {
         profileData = JSON.parse(req.body.profileData);
+        console.log("Successfully parsed profile data JSON");
       } catch (error) {
+        console.error("Failed to parse profile data JSON:", error);
         return res.status(400).json({
           success: false,
           message: "Invalid profile data format"
@@ -288,8 +321,11 @@ export const updateProfile = async (req, res) => {
     // Get user and validate
     const user = await User.findById(userId);
     if (!user) {
+      console.log(`User ${userId} not found`);
       return res.status(404).json({ success: false, message: "User not found" });
     }
+
+    console.log(`Found user ${userId}, role: ${user.role}, profile ID: ${user.profile}`);
 
     if (!user.profile || !user.role) {
       return res.status(400).json({
@@ -297,6 +333,26 @@ export const updateProfile = async (req, res) => {
         message: "User role and profile must be set before updating profile details"
       });
     }
+
+    // First check if profile exists, create if it doesn't
+    let existingProfile;
+    if (user.role === 'student') {
+      existingProfile = await Student.findById(user.profile);
+      if (!existingProfile) {
+        console.log(`Student profile ${user.profile} not found, creating new profile`);
+        existingProfile = new Student({ _id: user.profile, user: userId });
+        await existingProfile.save();
+      }
+    } else if (user.role === 'organizer') {
+      existingProfile = await Organizer.findById(user.profile);
+      if (!existingProfile) {
+        console.log(`Organizer profile ${user.profile} not found, creating new profile`);
+        existingProfile = new Organizer({ _id: user.profile, user: userId });
+        await existingProfile.save();
+      }
+    }
+
+    console.log(`Profile exists: ${!!existingProfile}`);
 
     // Validate profile data based on role
     let validationResult;
@@ -315,38 +371,60 @@ export const updateProfile = async (req, res) => {
     }
 
     // Handle profile picture upload if present
-    if (req.file) {
+    if (req.files && req.files.profilePicture) {
       try {
-        const profilePicUrl = await handleFileUpload(req.file);
+        console.log("Profile picture found in request:", req.files.profilePicture.name);
+
+        // Validate file type (optional but recommended)
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+        if (!allowedTypes.includes(req.files.profilePicture.mimetype)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid file type. Only JPG, PNG and GIF images are allowed."
+          });
+        }
+
+        const profilePicUrl = await handleFileUpload(req.files.profilePicture);
+        if (!profilePicUrl) {
+          throw new Error("Failed to get URL after upload");
+        }
+
         profileData.profilePicture = profilePicUrl;
       } catch (error) {
+        console.error("Profile picture upload failed:", error);
         return res.status(500).json({
           success: false,
           message: "Error uploading profile picture",
-          error: error.message
+          error: error.message || "Unknown upload error"
         });
       }
     }
 
-    // Update profile based on user role
+    // Update profile based on user role - using findOneAndUpdate for better reliability
     let updatedProfile;
     if (user.role === 'student') {
-      updatedProfile = await Student.findByIdAndUpdate(
-        user.profile,
-        { ...profileData, isProfileComplete: true },
-        { new: true, runValidators: true }
+      updatedProfile = await Student.findOneAndUpdate(
+        { _id: user.profile },
+        { ...profileData, isProfileComplete: true, user: userId },
+        { new: true, runValidators: true, upsert: true }
       );
     } else if (user.role === 'organizer') {
-      updatedProfile = await Organizer.findByIdAndUpdate(
-        user.profile,
-        { ...profileData, isProfileComplete: true },
-        { new: true, runValidators: true }
+      updatedProfile = await Organizer.findOneAndUpdate(
+        { _id: user.profile },
+        { ...profileData, isProfileComplete: true, user: userId },
+        { new: true, runValidators: true, upsert: true }
       );
     }
 
     if (!updatedProfile) {
-      return res.status(404).json({ success: false, message: "Profile not found" });
+      console.error(`Failed to update/create profile for user ${userId}`);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to update profile"
+      });
     }
+
+    console.log(`Successfully updated profile for user ${userId}`);
 
     // IMPORTANT: Also update the User document to mark profile as complete
     user.profileComplete = true;
@@ -372,6 +450,140 @@ export const updateProfile = async (req, res) => {
 };
 
 /**
+ * Create the user's initial profile
+ * @route POST /api/auth/create-profile
+ * @access Private
+ */
+export const createProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Handle form data from express-fileupload
+    let profileData = {};
+    if (req.body.profileData) {
+      try {
+        profileData = JSON.parse(req.body.profileData);
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid profile data format"
+        });
+      }
+    } else {
+      profileData = req.body;
+    }
+
+    // Get user and validate
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (!user.profile || !user.role) {
+      return res.status(400).json({
+        success: false,
+        message: "User role must be set before creating a profile"
+      });
+    }
+
+    // Check if user already has a complete profile
+    if (user.profileComplete) {
+      return res.status(400).json({
+        success: false,
+        message: "User already has a complete profile. Use the update route instead."
+      });
+    }
+
+    // Validate profile data based on role
+    let validationResult;
+    if (user.role === 'student') {
+      validationResult = validateStudentProfile(profileData);
+    } else if (user.role === 'organizer') {
+      validationResult = validateOrganizerProfile(profileData);
+    }
+
+    if (!validationResult.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid profile data",
+        errors: validationResult.errors
+      });
+    }
+
+    // Handle profile picture upload if present
+    if (req.files && req.files.profilePicture) {
+      try {
+        console.log("Profile picture found in request:", req.files.profilePicture.name);
+
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+        if (!allowedTypes.includes(req.files.profilePicture.mimetype)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid file type. Only JPG, PNG and GIF images are allowed."
+          });
+        }
+
+        const profilePicUrl = await handleFileUpload(req.files.profilePicture);
+        if (!profilePicUrl) {
+          throw new Error("Failed to get URL after upload");
+        }
+
+        profileData.profilePicture = profilePicUrl;
+      } catch (error) {
+        console.error("Profile picture upload failed:", error);
+        return res.status(500).json({
+          success: false,
+          message: "Error uploading profile picture",
+          error: error.message || "Unknown upload error"
+        });
+      }
+    }
+
+    // Create/update profile based on user role
+    let updatedProfile;
+    if (user.role === 'student') {
+      updatedProfile = await Student.findByIdAndUpdate(
+        user.profile,
+        { ...profileData, isProfileComplete: true },
+        { new: true, runValidators: true }
+      );
+    } else if (user.role === 'organizer') {
+      updatedProfile = await Organizer.findByIdAndUpdate(
+        user.profile,
+        { ...profileData, isProfileComplete: true },
+        { new: true, runValidators: true }
+      );
+    }
+
+    if (!updatedProfile) {
+      return res.status(404).json({ success: false, message: "Profile not found" });
+    }
+
+    // IMPORTANT: Also update the User document to mark profile as complete
+    user.profileComplete = true;
+    await user.save();
+
+    // Get updated user data
+    const updatedUser = await User.findById(userId).select('-password');
+
+    return res.status(201).json({
+      success: true,
+      message: "Profile created successfully",
+      profile: updatedProfile,
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error('Error creating profile:', error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while creating profile",
+      error: error.message
+    });
+  }
+};
+
+/**
  * Upload a profile picture
  * @route POST /api/auth/profile/upload-picture
  * @access Private
@@ -380,10 +592,20 @@ export const uploadProfilePicture = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    if (!req.file) {
+    // Check if request has files
+    if (!req.files || !req.files.profilePicture) {
       return res.status(400).json({
         success: false,
         message: "No file uploaded"
+      });
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+    if (!allowedTypes.includes(req.files.profilePicture.mimetype)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid file type. Only JPG, PNG and GIF images are allowed."
       });
     }
 
@@ -400,12 +622,17 @@ export const uploadProfilePicture = async (req, res) => {
     }
 
     // Handle file upload
-    const profilePicUrl = await handleFileUpload(req.file);
+    console.log("Processing profile picture upload");
+    const profilePicUrl = await handleFileUpload(req.files.profilePicture);
+    if (!profilePicUrl) {
+      throw new Error("Failed to get URL after upload");
+    }
 
     // Update profile with the new picture URL
     let updatedProfile;
     if (user.role === 'student') {
       updatedProfile = await Student.findByIdAndUpdate(
+
         user.profile,
         { profilePicture: profilePicUrl },
         { new: true }

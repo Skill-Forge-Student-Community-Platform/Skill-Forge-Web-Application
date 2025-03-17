@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 
+
 import { EventProvider } from '../../context/EventContext';
+
 
 
 import NavBar from '../Navigation/NavBar';
@@ -10,11 +12,13 @@ import NavBar from '../Navigation/NavBar';
 // Page components
 import Home from '../Home_page/Home';
 
+
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
+
 
 
 // TODO: Uncomment these imports when the components are implemented
@@ -79,13 +83,14 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const { userId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+
   
+
   const location = useLocation();
 
   // Extract the current section from the URL path
   const pathParts = location.pathname.split('/');
   const currentSection = pathParts[3] || 'home'; // [0]=empty, [1]=role, [2]=userId, [3]=section
-
 
 
   // Validate user matches URL parameters
@@ -109,6 +114,8 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
 
+
+
   };
 
   return (
@@ -123,6 +130,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
         userId={userId}
         roleType={roleType}
       />
+
 
 
       {/* Main Content - full width */}
@@ -163,6 +171,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="*" element={<Navigate to="home" replace />} />
           </Routes>
         </EventProvider>
+
 
 
       </main>

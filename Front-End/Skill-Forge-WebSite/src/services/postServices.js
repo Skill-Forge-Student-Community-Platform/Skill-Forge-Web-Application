@@ -31,35 +31,16 @@ console.log("API Base URL Configuration:", { original: API_URL, modified: BASE_U
 const postServices = {
   /**
    * Upload media files to Cloudinary via the backend
+   * NOTE: This function is deprecated - files should be converted to base64
+   * and included directly in the post creation request
    */
   uploadMediaFiles: async (files) => {
     try {
-      if (!files || files.length === 0) return [];
-
-      // Create a proper form data object with raw files
-      const formData = new FormData();
-      Array.from(files).forEach(file => {
-        formData.append('files', file);
-      });
-
-      console.log("Uploading files to Cloudinary...", files.length);
-
-      // Make sure we're using the right endpoint - check your backend API
-      const uploadUrl = `${BASE_URL}/uploads/media`; // Adjust this endpoint to match your backend
-      console.log("Upload URL:", uploadUrl);
-
-      const response = await axios.post(uploadUrl, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      console.log("File upload response:", response.data);
-      return response.data.files || [];
+      console.warn("The uploadMediaFiles endpoint is not available. Files should be converted to base64 instead.");
+      throw new Error("Direct file upload endpoint not available");
     } catch (error) {
       console.error("Error uploading files:", error);
-      console.error("Response data:", error.response?.data);
-      throw error.response?.data || { message: 'Failed to upload media files' };
+      throw { message: 'Failed to upload media files - direct upload not supported' };
     }
   },
 
@@ -100,58 +81,58 @@ const postServices = {
     try {
       const url = `${BASE_URL}/posts/create`;
       console.log("Creating post at:", url);
+      console.log("Final post data for submission:", JSON.stringify(postData, null, 2));
 
-      // Handle file uploads first if there are any
-      let processedPostData = { ...postData };
+      // Validate media data before sending
+      if (postData.media && postData.media.files) {
+        // Check for valid media data format
+        if (!Array.isArray(postData.media.files)) {
+          throw new Error("Media files must be an array");
+        }
 
-      if (postData.files && postData.files.length > 0) {
-        console.log("Files detected for upload:", postData.files.length);
+        // Validate each file entry
+        for (const file of postData.media.files) {
+          // Check for valid URL
+          if (!file.url || typeof file.url !== 'string') {
+            console.error("Invalid file URL:", file);
+            throw new Error("Each media file must have a valid URL");
+          }
 
-        // First check if they are actual File objects and not already base64 strings
-        const hasRawFiles = postData.files.some(file => file instanceof File ||
-                                               (file.name && file.type && file.size));
+          // Make sure types are simplified to what the backend expects
+          if (!file.type || (file.type !== 'image' && file.type !== 'video')) {
+            // If type is missing or invalid, try to infer it from the URL
+            const ext = file.url.split('.').pop().toLowerCase();
+            const imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+            const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
 
-        if (hasRawFiles) {
-          // Upload files to Cloudinary via backend
-          const uploadedFiles = await postServices.uploadMediaFiles(postData.files);
-
-          // Format media structure for the post with the Cloudinary URLs
-          processedPostData.media = {
-            layout: postData.layout || "default",
-            files: uploadedFiles.map(file => ({
-              url: file.url,
-              type: file.resource_type === 'video' ? 'video' : 'image',
-              publicId: file.public_id
-            }))
-          };
-
-          // Remove the raw files from the request
-          delete processedPostData.files;
-        } else {
-          // Files are already in some processed format (maybe base64)
-          console.warn("Files are not in raw format. Make sure they're properly handled by the backend.");
+            if (imgExts.includes(ext)) {
+              file.type = 'image';
+            } else if (videoExts.includes(ext)) {
+              file.type = 'video';
+            } else {
+              // Default to image if type cannot be determined
+              file.type = 'image';
+            }
+          }
         }
       }
 
-      console.log("Final post data for submission:", JSON.stringify(processedPostData, null, 2));
-
-      // Extra validation before sending to server
-      if (processedPostData.media && processedPostData.media.files) {
-        const invalidFiles = processedPostData.media.files.filter(
-          file => !file.url || !(file.type === 'image' || file.type === 'video')
-        );
-
-        if (invalidFiles.length > 0) {
-          console.error("Invalid file format detected:", invalidFiles);
-          throw { message: "Media files are not properly formatted" };
-        }
-      }
-
-      const response = await axios.post(url, processedPostData);
+      // Send the post to the backend
+      const response = await axios.post(url, postData);
+      console.log("Post creation successful:", response.data);
       return response.data;
     } catch (error) {
       console.error('Error creating post:', error);
       console.error('Status:', error.response?.status);
+
+      // Detailed error logging for debugging
+      if (error.response?.data) {
+        console.error('Response data:', error.response.data);
+      }
+
+      if (error.request) {
+        console.error('Request was made but no response received');
+      }
 
       // Check for validation errors from MongoDB
       if (error.response?.data?.error && error.response.data.error.includes('validation failed')) {
@@ -187,13 +168,63 @@ const postServices = {
   /**
    * Add comment to a post
    */
-  addComment: async (postId, text) => {
+  addComment: async (postId, text, parentId = null) => {
     try {
-      const response = await axios.post(`${BASE_URL}/posts/${postId}/comment`, { text });
+      const response = await axios.post(`${BASE_URL}/posts/${postId}/comment`, {
+        text,
+        parentId
+      });
       return response.data;
     } catch (error) {
       console.error(`Error commenting on post ${postId}:`, error);
+      console.error('Comment error details:', error.response?.data || error.message);
       throw error.response?.data || { message: 'Failed to add comment' };
+    }
+  },
+
+  /**
+   * Like or unlike a comment
+   */
+  likeComment: async (postId, commentId) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/posts/${postId}/comments/${commentId}/like`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error liking comment ${commentId}:`, error);
+      throw error.response?.data || { message: 'Failed to like comment' };
+    }
+  },
+
+  /**
+   * Delete a comment
+   */
+  deleteComment: async (postId, commentId) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/posts/${postId}/comments/${commentId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting comment ${commentId}:`, error);
+      throw error.response?.data || { message: 'Failed to delete comment' };
+    }
+  },
+
+  /**
+   * Edit a comment (frontend-only solution as we didn't implement a backend endpoint)
+   */
+  editComment: async (postId, commentId, newText) => {
+    try {
+      // This would ideally call a PUT endpoint, but we'll mock it for now
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return {
+        success: true,
+        message: "Comment updated successfully",
+        comment: { _id: commentId, text: newText }
+      };
+    } catch (error) {
+      console.error(`Error editing comment ${commentId}:`, error);
+      throw { message: 'Failed to edit comment' };
+
     }
   },
 
