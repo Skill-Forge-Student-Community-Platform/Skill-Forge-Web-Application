@@ -1,5 +1,7 @@
 import express from 'express'
+
 // import {protectRoute} from "../../User-Authentication/middleware/auth.middleware.js";
+
 import { createTeam, sendInvite, acceptInvite, getTeamsByUser} from '../controllers/team.controller.js'
 
 const router = express.Router();

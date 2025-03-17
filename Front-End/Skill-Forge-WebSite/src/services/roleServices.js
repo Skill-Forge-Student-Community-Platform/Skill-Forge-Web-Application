@@ -58,7 +58,6 @@ const roleServices = {
     try {
       console.log(`Updating event ${eventId} for ${role} ${userId}`);
       const response = await axios.put(
-
         `${BASE_URL}/role/${role}/${userId}/events/${eventId}`,
         eventData
       );
@@ -124,7 +123,26 @@ const roleServices = {
     }
   },
 
-  
+  /**
+   * Fetch complete user profile data (combined from User and role-specific models)
+   */
+  fetchUserProfileData: async (userId) => {
+    try {
+      console.log(`Fetching complete profile data for user ${userId}`);
+
+      // Explicitly remove '/auth' from the URL path to avoid conflict with authStore.js settings
+      const apiBase = BASE_URL.includes('/auth')
+        ? BASE_URL.replace('/auth', '')
+        : BASE_URL;
+
+      console.log("Using API base URL:", apiBase);
+      const response = await axios.get(`${apiBase}/users/complete-profile/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching profile data:`, error);
+      throw error.response?.data || { message: 'Failed to load profile data' };
+    }
+  },
 
   // Organizer-specific: Analytics
   fetchAnalytics: async (userId) => {

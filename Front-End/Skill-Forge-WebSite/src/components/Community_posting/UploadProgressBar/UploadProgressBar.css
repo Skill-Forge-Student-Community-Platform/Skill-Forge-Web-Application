@@ -1,0 +1,82 @@
+.upload-progress-container {
+  position: sticky;
+  top: 60px; /* Adjust based on your navbar height */
+  left: 0;
+  width: 100%;
+  background-color: #f0f8ff;
+  z-index: 999;
+  padding: 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 0 0 15px 0; /* Removed top margin since it's now at the top of feed */
+  animation: slideDown 0.3s ease;
+  border-left: 4px solid #2196f3;
+}
+
+.upload-progress-container.error {
+  background-color: #fff0f0;
+  border-left-color: #f44336;
+}
+
+.upload-progress-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.upload-progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.upload-status {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.upload-cancel-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.upload-cancel-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.upload-progress-bar-container {
+  width: 100%;
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background-color: #2196f3;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
