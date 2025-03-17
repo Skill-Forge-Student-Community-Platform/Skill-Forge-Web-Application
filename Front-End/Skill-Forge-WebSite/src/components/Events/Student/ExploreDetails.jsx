@@ -42,44 +42,60 @@ import {
     const [regloading, setRegLoading] = useState(false);
   
   
-    /*const handleRegister = async () => {
-      setRegLoading(true);
+    // In ExploreDetails.jsx
+const handleRegister = async () => {
+  setRegLoading(true);
   
+  // Add error checking
+  if (!user) {
+    alert("Please log in to register for this event");
+    setRegLoading(false);
+    return;
+  }
   
-      try {
-        const response = await fetch("http://localhost:3000/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userId,
-            userName: user.userName,
-            email: user.email,
-            eventId: id,
-          }),
-        });
+  // Debug your user object
+  console.log("User object:", user);
   
-        if (response.status === 409) {
-          alert("You have already registered for this event!");
-          setRegLoading(false);
-          return;
-        }
-  
-        if (!response.ok) {
-          throw new Error("Failed to register user");
-        }
-  
-        const data = await response.json();
-        alert("Registration successful!");
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Registration failed");
-      }
-      setRegLoading(false);
-    }; */
-  
-  
+  try {
+    // Use userName instead of Username (case sensitivity matters!)
+    const response = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userId,
+        userName: user.Username, // Changed from Username to userName to match model
+        email: user.email,
+        eventId: id,
+      }),
+    });
+    
+    // Get response body even for error cases
+    const responseData = await response.json().catch(() => ({}));
+    console.log("Server response:", response.status, responseData);
+    
+    if (response.status === 409) {
+      alert("You have already registered for this event!");
+      return;
+    }
+    
+    if (!response.ok) {
+      throw new Error(`Failed to register: ${responseData.message || "Server error"}`);
+    }
+    
+    // Success path
+    alert("Registration successful!");
+    
+    // Refresh event data to show updated participant count
+    window.location.reload();
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert(`Registration failed: ${error.message}`);
+  } finally {
+    setRegLoading(false);
+  }
+};
   
     const handleCopy = () => {
       navigator.clipboard.writeText(pageUrl)
@@ -221,11 +237,11 @@ import {
             Back to Events
           </Link>
 
-          {/* User Details
-          <h1>{user.userName}</h1>
+           User Details
+          <h1>{user.Username}</h1>
           <h1>{user.email}</h1>
           
-          */}
+          
           
           
           {/* Main Content Container */}
@@ -380,13 +396,13 @@ import {
                         </div>
                       </div>
                       
-                      {/* Register Button /}
+                      {/* Register Button */}
                       <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition-colors duration-300 flex items-center justify-center shadow-sm"
                         onClick={handleRegister} disabled={loading}
                       >
                         <FaTicketAlt className="mr-2" />  {regloading ? "Registering..." : "Register"}
                       </button>
-                       {/* still making in process */}
+                       
                       
                      {/* Action Buttons */}
                       <div className="flex mt-4 space-x-2">

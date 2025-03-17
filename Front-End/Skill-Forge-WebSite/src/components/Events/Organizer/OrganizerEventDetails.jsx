@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate,Link } from "react-router-dom";
 import axios from "axios";
-//import RegisteredUsers from "./RegisteredUsers";
+import RegisteredUsers from "./RegisterdUsers";
 import { useEvents } from "../../../context/EventContext";
 
 
@@ -413,7 +413,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                 </div>
               </div>
               <div className="p-6">
-               {/*   <RegisteredUsers eventId={id} />    poddak testing               */} 
+                  <RegisteredUsers eventId={id} />     
               </div>
 
             </div>

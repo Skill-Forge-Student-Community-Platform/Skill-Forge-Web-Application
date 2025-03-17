@@ -149,7 +149,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
-            <Route path="explore-event/:id" element={<ExploreDetails userId={userId} />} />
+            <Route path="explore-event/:id" element={<ExploreDetails userId={userId} user={user} />} />
 
 
             {/* Organizer-specific routes */}
