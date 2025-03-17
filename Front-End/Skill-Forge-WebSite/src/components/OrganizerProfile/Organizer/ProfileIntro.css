@@ -1,0 +1,256 @@
+/* Main container */
+.intro-container {
+  border: 1px solid #dddfe2;
+  border-radius: 10px;
+  background-color: white;
+  padding: 20px;
+  max-width: 550px;
+  box-sizing: border-box;
+  margin: 10px ; /* Centering */
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Intro Heading */
+.intro-heading {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #1c1e21;
+  text-align: center;
+  border-bottom: 2px solid #dddfe2;
+  padding-bottom: 8px;
+}
+
+/* Bio Section */
+.bio-section {
+  text-align: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.bio-text {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.bio-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  font-size: 15px;
+  resize: vertical;
+  background: #ffffff;
+  outline: none;
+}
+
+.bio-textarea:focus {
+  border-color: #1877f2;
+}
+
+/* Buttons Section */
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+/* Edit Button */
+.edit-button {
+  width: 100%;
+  background-color: #e4e6eb;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #050505;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  text-align: center;
+}
+
+.edit-button:hover {
+  background-color: #d8dadf;
+}
+
+/* Save Button */
+.save-button {
+  background-color: #1877f2;
+  color: white;
+  margin-right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.save-button:hover {
+  background-color: #166fe5;
+}
+
+/* Cancel Button */
+.cancel-button {
+  background-color: #e4e6eb;
+  color: #050505;
+  display: flex;
+  justify-content: center;
+}
+
+.cancel-button:hover {
+  background-color: #d8dadf;
+}
+
+/* Edit Buttons Container */
+.edit-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+/* Information Section */
+.info-section {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Info Row */
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background 0.3s ease-in-out;
+}
+
+.info-row:hover {
+  background-color: #f0f2f5;
+}
+
+/* Icon Container */
+.icon-container {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+/* Info Text */
+.info-text {
+  font-size: 15px;
+  color: #1c1e21;
+}
+
+/* Bold Text */
+.bold-text {
+  font-weight: bold;
+}
+
+/* Edit Field */
+.edit-info-field {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Input Fields */
+.edit-input {
+  padding: 8px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  margin-bottom: 8px;
+  background: #ffffff;
+}
+
+.edit-input:focus {
+  border-color: #1877f2;
+  outline: none;
+}
+
+/* Small Input for Short Text Fields */
+.small-input {
+  width: 40%;
+  margin-right: 10px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+  .intro-container {
+    width: 95%;
+  }
+  
+  .edit-buttons-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .save-button, .cancel-button {
+    width: 100%;
+  }
+}
+
+.profile-stats-container {
+  display: flex;
+  justify-content: space-between; /* Align components side by side */
+  align-items: flex-start; /* Align them at the top */
+  gap: 20px; /* Space between components */
+  width: 100%;
+  padding: 20px;
+}
+
+/* Ensure both components take equal height */
+.profile-intro {
+  flex: 1;
+  max-width: 350px; /* Adjust width */
+}
+
+.organizer-stats {
+  flex: 2;
+  width: 100%;
+}
+
+/* Container to align Profile Intro and Organizer Statistics in the same row */
+.profile-stats-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 20px;
+}
+
+/* Ensure Profile Intro takes appropriate width */
+.profile-intro {
+  flex: 1;
+  max-width: 40%;
+}
+
+/* Ensure Organizer Statistics takes appropriate width */
+.organizer-stats {
+  flex: 1;
+  max-width: 58%;
+}
+
+/* Responsive design: stack sections in smaller screens */
+@media (max-width: 992px) {
+  .profile-stats-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .profile-intro,
+  .organizer-stats {
+    max-width: 100%;
+  }
+}
+

@@ -1,0 +1,26 @@
+.filter-section {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.filter-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0;
+}
+
+.filter-button.active {
+  background-color: #000;
+  color: #fff;
+} 

@@ -1,0 +1,121 @@
+/* Styles specific to reply comments */
+
+.reply-comment {
+  position: relative;
+  display: flex;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease;
+}
+
+.reply-comment:hover {
+  transform: translateY(-1px);
+}
+
+/* Horizontal connector line from vertical line to reply */
+.reply-connector {
+  position: absolute;
+  top: 16px;
+  left: -20px;
+  width: 20px;
+  height: 2px;
+  background-color: var(--linkedin-border);
+  z-index: 2;
+}
+
+.nested-comment {
+  padding: 8px 12px;
+  background-color: var(--linkedin-ultra-light); /* Lighter color for replies */
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.reply-content {
+  flex: 1;
+  padding: 0;
+}
+
+/* Override some styles for replies to make them more compact */
+.reply-comment .comment-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.reply-comment .comment-author {
+  font-size: 13px;
+}
+
+.reply-comment .user-profession {
+  font-size: 11px;
+}
+
+.reply-comment .comment-text {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.reply-comment .comment-actions {
+
+  margin-top: 4px;
+}
+
+.reply-comment .comment-action-btn {
+  font-size: 12px;
+  padding: 2px 0;
+}
+
+/* Style reply form within nested comments */
+.reply-comment .reply-form {
+  margin-top: 6px;
+}
+
+.reply-comment .reply-input {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.reply-comment .reply-submit-btn {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+/* Hover state for nested replies */
+.reply-comment .nested-comment:hover {
+  background-color: #fafbfc;
+}
+
+/* Edit form in replies */
+.reply-comment .edit-form {
+  margin-bottom: 6px;
+}
+
+.reply-comment .edit-input {
+  min-height: 50px;
+  font-size: 13px;
+}
+
+.reply-comment .cancel-edit-btn,
+.reply-comment .save-edit-btn {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .reply-comment .comment-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .reply-connector {
+    left: -16px;
+    width: 16px;
+  }
+
+  .nested-comment {
+    padding: 6px 10px;
+  }
+
+  .reply-comment .comment-text {
+    font-size: 12px;
+  }
+}
