@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ImageRender from './ImageRender';
+import ImageRender from '../ImageRendering/ImageRender';
 import './PostContent.css';
 
 const PostContent = ({ post }) => {

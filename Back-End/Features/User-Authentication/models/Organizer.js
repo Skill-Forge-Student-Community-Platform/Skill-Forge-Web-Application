@@ -44,6 +44,33 @@ const organizerSchema = new mongoose.Schema({
     twitter: String,
     instagram: String
   },
+  // New fields
+  organizerType: {
+    type: String,
+    enum: ['Individual', 'Student Club', 'University', 'Company', 'NGO']
+  },
+  mobileNumber: {
+    type: String
+  },
+  preferredEventTypes: [{
+    type: String
+  }],
+  expectedParticipantsRange: {
+    type: String,
+    enum: ['Small (<50)', 'Medium (50-200)', 'Large (200+)']
+  },
+  eventFormatPreference: {
+    type: String,
+    enum: ['Online', 'In-Person', 'Hybrid']
+  },
+  backupContact: {
+    type: String
+  },
+  termsAccepted: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
   isProfileComplete: {
     type: Boolean,
     default: false

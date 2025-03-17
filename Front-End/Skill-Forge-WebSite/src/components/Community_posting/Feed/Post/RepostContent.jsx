@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { formatPostTime } from '../../../utils/timeUtils';
+import { formatPostTime } from '../../../../utils/timeUtils';
 import './RepostContent.css';
 
 const RepostContent = ({ post }) => {
