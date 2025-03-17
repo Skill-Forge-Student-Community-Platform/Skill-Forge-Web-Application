@@ -1,0 +1,53 @@
+.add-project-container {
+  max-width: 400px;
+  margin: 40px auto;
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-project-container h2 {
+  margin-bottom: 20px;
+}
+
+.add-project-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-project-container label {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.add-project-container input {
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.add-project-container button {
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.add-project-container button:hover {
+  background-color: green;
+}
+
+.cancel-btn {
+  background-color: red;
+}
+
+.cancel-btn:hover {
+  background-color: darkred;
+}
