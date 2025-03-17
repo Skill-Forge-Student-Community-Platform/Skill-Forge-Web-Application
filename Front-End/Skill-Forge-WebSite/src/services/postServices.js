@@ -30,6 +30,7 @@ console.log("API Base URL Configuration:", { original: API_URL, modified: BASE_U
  */
 const postServices = {
   /**
+
    * Upload media files to Cloudinary via the backend
    * NOTE: This function is deprecated - files should be converted to base64
    * and included directly in the post creation request
@@ -41,10 +42,46 @@ const postServices = {
     } catch (error) {
       console.error("Error uploading files:", error);
       throw { message: 'Failed to upload media files - direct upload not supported' };
+
+
+  //  * Upload media files to Cloudinary via the backend
+  //  */
+  uploadMediaFiles: async (files) => {
+    try {
+      if (!files || files.length === 0) return [];
+
+      // Create a proper form data object with raw files
+      const formData = new FormData();
+      Array.from(files).forEach(file => {
+        formData.append('files', file);
+      });
+
+      console.log("Uploading files to Cloudinary...", files.length);
+
+      // Make sure we're using the right endpoint - check your backend API
+      const uploadUrl = `${BASE_URL}/uploads/media`; // Adjust this endpoint to match your backend
+      console.log("Upload URL:", uploadUrl);
+
+      const response = await axios.post(uploadUrl, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log("File upload response:", response.data);
+      return response.data.files || [];
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      console.error("Response data:", error.response?.data);
+      throw error.response?.data || { message: 'Failed to upload media files' };
+
     }
   },
 
   /**
+
+
+
    * Fetch user feed posts with pagination
    */
   getFeedPosts: async (page = 1, limit = 10) => {
@@ -81,6 +118,7 @@ const postServices = {
     try {
       const url = `${BASE_URL}/posts/create`;
       console.log("Creating post at:", url);
+
       console.log("Final post data for submission:", JSON.stringify(postData, null, 2));
 
       // Validate media data before sending
@@ -89,6 +127,7 @@ const postServices = {
         if (!Array.isArray(postData.media.files)) {
           throw new Error("Media files must be an array");
         }
+
 
         // Validate each file entry
         for (const file of postData.media.files) {
@@ -120,6 +159,86 @@ const postServices = {
       // Send the post to the backend
       const response = await axios.post(url, postData);
       console.log("Post creation successful:", response.data);
+
+
+      // Handle file uploads first if there are any
+      let processedPostData = { ...postData };
+
+      if (postData.files && postData.files.length > 0) {
+        console.log("Files detected for upload:", postData.files.length);
+
+        // First check if they are actual File objects and not already base64 strings
+        const hasRawFiles = postData.files.some(file => file instanceof File ||
+                                               (file.name && file.type && file.size));
+
+        if (hasRawFiles) {
+          // Upload files to Cloudinary via backend
+          const uploadedFiles = await postServices.uploadMediaFiles(postData.files);
+
+          // Format media structure for the post with the Cloudinary URLs
+          processedPostData.media = {
+            layout: postData.layout || "default",
+            files: uploadedFiles.map(file => ({
+              url: file.url,
+              type: file.resource_type === 'video' ? 'video' : 'image',
+              publicId: file.public_id
+            }))
+          };
+
+          // Remove the raw files from the request
+          delete processedPostData.files;
+        } else {
+          // Files are already in some processed format (maybe base64)
+          console.warn("Files are not in raw format. Make sure they're properly handled by the backend.");
+        }
+      }
+
+      console.log("Final post data for submission:", JSON.stringify(processedPostData, null, 2));
+
+      // Extra validation before sending to server
+      if (processedPostData.media && processedPostData.media.files) {
+        const invalidFiles = processedPostData.media.files.filter(
+
+          file => !file.url || !(file.type === 'image' || file.type === 'video')
+        );
+
+
+        // Validate each file entry
+        for (const file of postData.media.files) {
+          // Check for valid URL
+          if (!file.url || typeof file.url !== 'string') {
+            console.error("Invalid file URL:", file);
+            throw new Error("Each media file must have a valid URL");
+          }
+
+          // Make sure types are simplified to what the backend expects
+          if (!file.type || (file.type !== 'image' && file.type !== 'video')) {
+            // If type is missing or invalid, try to infer it from the URL
+            const ext = file.url.split('.').pop().toLowerCase();
+            const imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+            const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
+
+            if (imgExts.includes(ext)) {
+              file.type = 'image';
+            } else if (videoExts.includes(ext)) {
+              file.type = 'video';
+            } else {
+              // Default to image if type cannot be determined
+              file.type = 'image';
+            }
+          }
+        }
+      }
+
+
+      // Send the post to the backend
+      const response = await axios.post(url, postData);
+      console.log("Post creation successful:", response.data);
+
+
+      const response = await axios.post(url, processedPostData);
+
+
       return response.data;
     } catch (error) {
       console.error('Error creating post:', error);
