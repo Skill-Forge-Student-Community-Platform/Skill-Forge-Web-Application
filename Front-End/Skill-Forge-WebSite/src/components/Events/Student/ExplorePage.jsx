@@ -221,19 +221,19 @@ const ExplorePage = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors">{event.title}</h3>
                 
                 <div className="space-y-3 mb-4">
-                  <p className="text-gray-700 flex items-center">
+                  <div className="text-gray-700 flex items-center">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-100 group-hover:bg-red-200 mr-3 flex-shrink-0 transition-colors">
                       <FaMapMarkerAlt className="text-red-600" />
                     </div>
                     <span className="truncate">{event.location}</span>
-                  </p>
+                  </div>
                   
-                  <p className="text-gray-700 flex items-center">
+                  <div className="text-gray-700 flex items-center">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center bg-orange-100 group-hover:bg-orange-200 mr-3 flex-shrink-0 transition-colors">
                       <FaUsers className="text-orange-600" />
                     </div>
                     <span>{event.registered_participants} / {event.max_participants} spots filled</span>
-                  </p>
+                  </div>
                   
                   {/* Progress bar for capacity with animated transition */}
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -262,14 +262,14 @@ const ExplorePage = () => {
                   
                   {/* Registration Deadline (if applicable) */}
                   {event.registration_deadline && (
-                    <p className="text-gray-700 flex items-center">
+                    <div className="text-gray-700 flex items-center">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center bg-indigo-100 group-hover:bg-indigo-200 mr-3 flex-shrink-0 transition-colors">
                         <FaTicketAlt className="text-indigo-600" />
                       </div>
                       <span className="text-gray-700">
                         Register by <span className="font-medium text-indigo-600">{event.registration_deadline}</span>
                       </span>
-                    </p>
+                    </div>
                   )}
                   
                   {/* Ratings (if applicable) */}
@@ -311,8 +311,7 @@ const ExplorePage = () => {
             </div>
           ))}
         </div>
-        67cf394eeaeb57487ef383c7
-        67cf394eeaeb57487ef383c7
+        
         
         {/* Load More Button */}
         {events.length > 0 && (
