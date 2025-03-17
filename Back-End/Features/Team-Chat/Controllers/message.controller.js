@@ -4,6 +4,13 @@ import { User } from "../../User-Authentication/models/User.js"
 import Message from "../models/message.model.js";
 import { v2 as cloudinary } from "cloudinary";
 
+
+import Message from "../models/message.model.js";
+import { v2 as cloudinary } from "cloudinary";
+import Message from "../models/message.model.js";
+import { v2 as cloudinary } from "cloudinary";
+
+
 // this route is being protected
 export const getUsersForSidebar = async(req, res)=>{
      try {
@@ -68,4 +75,4 @@ export const sendMessages = async(req, res)=>{
       console.log("Erro in sendMessage controller: ", error.message);
       res.status(500).json({message:"Internal Sever Error"});
    }
-
+}
