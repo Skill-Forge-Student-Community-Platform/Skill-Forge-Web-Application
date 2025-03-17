@@ -1,0 +1,81 @@
+/* 📌 Intro Section Container */
+.intro-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+}
+
+/* 📌 Section Title */
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 📌 Bio Text */
+.bio-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* 📌 Edit Mode Inputs */
+.edit-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* 📌 Save & Edit Buttons */
+.edit-btn, .save-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.edit-btn:hover {
+  background-color: green;
+}
+
+.save-btn:hover {
+  background-color: #28a745;
+  transform: scale(1.05);
+}
+
+/* 📌 Responsive */
+@media (max-width: 600px) {
+  .intro-section {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .edit-input {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .edit-btn, .save-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

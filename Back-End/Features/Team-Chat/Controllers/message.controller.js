@@ -1,6 +1,8 @@
-import User from ".../User-Authentication/models/User.js";   
+
+import { User } from "../../User-Authentication/models/User.js"
+
 import Message from "../models/message.model.js";
-import cloudinary from "../utils/cloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
 
 // this route is being protected
 export const getUsersForSidebar = async(req, res)=>{
@@ -19,7 +21,6 @@ export const getUsersForSidebar = async(req, res)=>{
      }
 }
 
-// Listens and gets the messages
 export const getMessages = async(req, res)=>{
    try {
       const { id: userToChatId } = req.params
@@ -31,7 +32,6 @@ export const getMessages = async(req, res)=>{
             {senderId:userToChatId, receiverId:myId},
          ]
       })
-
       res.status(200).json(message);
    } catch (error) {
       console.log("Error in getMessage controller:",error.message);
@@ -39,8 +39,6 @@ export const getMessages = async(req, res)=>{
    }
 }
 
-// Sends messages 
-// able to send messages, images
 export const sendMessages = async(req, res)=>{
    try {
       const { text, image } = req.body;
@@ -49,7 +47,6 @@ export const sendMessages = async(req, res)=>{
 
       let imageUrl;
       if(image){
-         // images are send via cloudinary
          // upload base64 image to cloudinary
          const uploadResponse = await cloudinary.uploader.upload(image);
          imageUrl = uploadResponse.secure_url;
@@ -68,7 +65,7 @@ export const sendMessages = async(req, res)=>{
 
       res.status(201).json(newMessage)
    } catch (error) {
-      console.log("Error in sendMessage controller: ", error.message);
+      console.log("Erro in sendMessage controller: ", error.message);
       res.status(500).json({message:"Internal Sever Error"});
    }
-} 
+
