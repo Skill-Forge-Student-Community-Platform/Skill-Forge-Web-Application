@@ -1,8 +1,20 @@
 
 import { User } from "../../User-Authentication/models/User.js"
+<<<<<<< HEAD
 
 import Message from "../models/message.model.js";
 import { v2 as cloudinary } from "cloudinary";
+=======
+<<<<<<< HEAD
+
+import Message from "../models/message.model.js";
+import { v2 as cloudinary } from "cloudinary";
+=======
+import Message from "../models/message.model.js";
+import { v2 as cloudinary } from "cloudinary";
+
+>>>>>>> a083d0924c93b0bf239def691b09391aeba88a05
+>>>>>>> 3521792529ece479df0c0739e2e84c1ff4c6f250
 
 // this route is being protected
 export const getUsersForSidebar = async(req, res)=>{

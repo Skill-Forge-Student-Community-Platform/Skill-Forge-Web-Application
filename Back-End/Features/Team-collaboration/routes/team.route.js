@@ -1,7 +1,17 @@
 import express from 'express'
+<<<<<<< HEAD
 
 // import {protectRoute} from "../../User-Authentication/middleware/auth.middleware.js";
 
+=======
+<<<<<<< HEAD
+
+// import {protectRoute} from "../../User-Authentication/middleware/auth.middleware.js";
+
+=======
+// import {protectRoute} from "../../User-Authentication/middleware/auth.middleware.js";
+>>>>>>> a083d0924c93b0bf239def691b09391aeba88a05
+>>>>>>> 3521792529ece479df0c0739e2e84c1ff4c6f250
 import { createTeam, sendInvite, acceptInvite, getTeamsByUser} from '../controllers/team.controller.js'
 
 const router = express.Router();
