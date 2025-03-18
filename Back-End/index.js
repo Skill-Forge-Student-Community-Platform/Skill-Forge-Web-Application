@@ -133,6 +133,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/teams", teamRoutes);
 
 
 
