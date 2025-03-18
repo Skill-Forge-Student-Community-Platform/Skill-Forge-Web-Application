@@ -49,6 +49,7 @@ export const SendPasswordResetEmail = async (email , ResetUrl) => {
     });
 
     console.log("Email sent successfully ", response);
+    console.log("Reset URL: ", ResetUrl);
   } catch (error) {
     console.log("Error sending Password Reset email: ", error);
     throw new Error(`Error sending Password Reset email:${error}`);

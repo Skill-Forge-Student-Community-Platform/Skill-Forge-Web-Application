@@ -10,17 +10,26 @@ export const signup = async (req , res) => {
   const { FirstName, LastName, Username, email, password } = req.body;
 
   try {
-    if (!FirstName || !LastName || !Username || !email || !password) {
-       throw new Error("All fields are required");
+    if (!Username || !email || !password) {
+      throw new Error("All fields are required");
     }
 
-    const userAlreadyExists = await User.findOne({ email , Username });
-    if (userAlreadyExists) {
+    // Check for existing email separately
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
       return res.status(400).json({
-        // success: false,
-        message: "User already exists"
+        message: "Email is already registered with a SkillForge account"
       });
     }
+
+    // Check for existing username
+    const usernameExists = await User.findOne({ Username });
+    if (usernameExists) {
+      return res.status(400).json({
+        message: "Username is already taken"
+      });
+    }
+
     // hash the password , making the password not readable
     const hashedPassword = await bcryptjs.hash(password, 10);
     // generate random a verification token
@@ -37,12 +46,12 @@ export const signup = async (req , res) => {
     })
 
     await user.save();
-     // jwt
-     generateTokenAndSetCookie(res , user._id);
-     // send  verification email
+    // jwt
+    generateTokenAndSetCookie(res, user._id);
+    // send verification email
     await sendVerificationEmail(user.email, verificationToken);
 
-     res.status(201).json({
+    res.status(201).json({
       success: true,
       message: "User created successfully",
       user: {
@@ -51,28 +60,60 @@ export const signup = async (req , res) => {
       },
     });
   } catch (error) {
-      res.status(400).json({
-          // success: false,
-          message: error.message
+    // Handle MongoDB duplicate key error specifically
+    if (error.code === 11000) {
+      // Check which field caused the duplicate error
+      if (error.keyPattern?.email) {
+        return res.status(400).json({
+          message: "Email is already registered with a SkillForge account"
         });
+      } else if (error.keyPattern?.Username) {
+        return res.status(400).json({
+          message: "Username is already taken"
+        });
+      } else {
+        return res.status(400).json({
+          message: "User already exists"
+        });
+      }
+    }
+
+    res.status(400).json({
+      message: error.message
+    });
   }
 
 }
 
-export const Login = async (req , res) => {
-  const {email , password} = req.body;
+export const Login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const user = await User.findOne({email});
-    if (!user){
-        return res.status(400).json({ success : false , message: "No Email Found" });
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required"
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "No account found with this email"
+      });
     }
 
     const isPasswordValid = await bcryptjs.compare(password, user.password);
-    if (!isPasswordValid){
-      return res.status(400).json({ success : false , message: "Invalid Password" });
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid password"
+      });
     }
 
-    generateTokenAndSetCookie(res , user._id);
+    generateTokenAndSetCookie(res, user._id);
     user.lastLogin = new Date();
     await user.save();
 
@@ -86,7 +127,10 @@ export const Login = async (req , res) => {
     });
   } catch (error) {
     console.log("Error logging in: ", error);
-    res.status(500).json({success: false,message: error.message});
+    res.status(500).json({
+      success: false,
+      message: "An error occurred during login"
+    });
   }
 }
 
@@ -149,9 +193,11 @@ export const forgetPassword = async (req , res) => {
 
     await user.save();
 
-    // sent email for password Reset
-    await SendPasswordResetEmail( user.email ,`${process.env.CLIENT_URL}/reset-password/${resetToken}`);
-    res.status(200).json( {success : true, message: "Password reset Link send to your email" });
+    // Update to include the /auth prefix in the reset password URL
+    await SendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`);
+    console.log("Reset URL: ", `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`);
+
+    res.status(200).json({success : true, message: "Password reset Link send to your email" });
 
   } catch (error) {
     console.log("Error in resetting the  password: ", error);
@@ -191,14 +237,21 @@ export const resetPassword = async (req , res) => {
   }
 }
 
-export const checkAuth = async (req , res) => {
+export const checkAuth = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
-      res.status(400).json({success: false, message: "User not found"});
+      return res.status(400).json({success: false, message: "User not found"});
     }
 
-    res.status(200).json({success: true, user});
+    const userObject = user.toObject();
+    res.status(200).json({
+      success: true,
+      user: {
+        ...userObject,
+        profileComplete: userObject.profileComplete,
+      },
+    });
 
   } catch (error) {
       console.log("Error in checkAuth" , error);
