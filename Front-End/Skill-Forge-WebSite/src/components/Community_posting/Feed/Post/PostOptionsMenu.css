@@ -1,0 +1,218 @@
+/* add css styles and media queries foe mobile responsiveness also theme toggle dark and light theme only  */
+
+/* Base container for the options menu */
+.post-options-menu-container {
+  position: relative;
+}
+
+/* Menu backdrop for mobile */
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  /* background-color: rgba(0, 0, 0, 0.3); */
+}
+
+/* Base styling for all menus */
+.post-options-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 280px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+  animation: menuFadeIn 0.2s ease-out;
+}
+
+/* Dark theme support */
+.dark .post-options-menu {
+  background-color: #1f2937;
+  color: white;
+  border: 1px solid #374151;
+}
+
+/* Animation for menu appearance */
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Position the privacy submenu */
+.privacy-submenu {
+  z-index: 60;
+}
+
+/* Header for submenus */
+.submenu-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 500;
+}
+
+.dark .submenu-header {
+  border-bottom-color: #374151;
+}
+
+/* Back button in submenu header */
+.back-button {
+  margin-right: 12px;
+  padding: 6px;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .back-button:hover {
+  background-color: #374151;
+}
+
+/* Menu item styling */
+.menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .menu-item:hover {
+  background-color: #374151;
+}
+
+/* Active menu item */
+.menu-item.active {
+  background-color: #e6f7ff;
+  color: #0078d4;
+}
+
+.dark .menu-item.active {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Items with danger text (red) */
+.text-danger {
+  color: #dc2626;
+}
+
+.dark .text-danger {
+  color: #f87171;
+}
+
+/* Menu content wrapper */
+.menu-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+/* Icon styling */
+.menu-icon {
+  flex-shrink: 0;
+  margin-right: 12px;
+  font-size: 1.125rem;
+}
+
+/* Active blue color for icons */
+.menu-icon.active {
+  color: #0078d4;
+}
+
+.dark .menu-icon.active {
+  color: #3b82f6;
+}
+
+/* Text container for items with description */
+.menu-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-text small {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.dark .menu-text small {
+  color: #9ca3af;
+}
+
+/* Arrow icon for items with submenu */
+.arrow-icon {
+  margin-left: auto;
+  color: #6b7280;
+}
+
+.dark .arrow-icon {
+  color: #9ca3af;
+}
+
+/* Divider line between menu sections */
+.menu-divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 4px 0;
+}
+
+.dark .menu-divider {
+  background-color: #374151;
+}
+
+/* Styles for menu items with a right arrow */
+.menu-item.with-arrow {
+  justify-content: space-between;
+}
+
+/* Responsive styles for mobile */
+@media (max-width: 640px) {
+  .post-options-menu {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 1rem 1rem 0 0;
+    max-height: 80vh;
+    animation: menuSlideUp 0.3s ease-out;
+  }
+
+  @keyframes menuSlideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .submenu-header {
+    padding: 16px;
+  }
+
+  .menu-item {
+    padding: 16px;
+  }
+}

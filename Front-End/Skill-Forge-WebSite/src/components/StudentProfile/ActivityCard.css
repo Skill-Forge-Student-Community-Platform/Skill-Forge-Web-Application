@@ -1,0 +1,21 @@
+.activity-card {
+  width: 300px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  text-align: center;
+}
+
+.activity-image {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.activity-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+}
