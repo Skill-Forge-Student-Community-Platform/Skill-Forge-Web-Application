@@ -1,0 +1,368 @@
+/* Modern variables for consistent styling */
+:root {
+  --navbar-height: 72px;
+  --primary-color: #0a66c2;
+  --primary-light: #e6f7ff;
+  --primary-dark: #0550a0;
+  --text-color: #333;
+  --text-secondary: #666;
+  --text-muted: #888;
+  --bg-color: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-hover: #f3f4f6;
+  --border-color: #e4e7eb;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --transition-normal: all 0.3s ease;
+  --transition-fast: all 0.15s ease;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+/* Base reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main navbar container */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  background-color: var(--bg-color);
+  box-shadow: var(--shadow-md);
+  z-index: 999;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar.scrolled {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Inner container with max-width */
+.navbar-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+/* Left section with logo and toggle */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 200px;
+}
+
+/* Logo styling */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navbar-logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-left: 8px;
+}
+
+/* Sidebar toggle button */
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  color: var(--text-secondary);
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-color);
+}
+
+/* Middle section with nav and search */
+.navbar-middle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px;
+}
+
+/* Navigation menu container */
+.nav-menu-container {
+  display: flex;
+  height: 100%;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  list-style: none;
+  gap: 8px;
+}
+
+/* Nav item styling */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.nav-item:hover {
+  color: var(--primary-color);
+}
+
+.nav-item.active {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+}
+
+/* Search bar styling */
+.search-wrapper {
+  margin-left: auto;
+  width: 300px;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  transition: var(--transition-fast);
+}
+
+.search-container.is-focused {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(10, 102, 194, 0.1);
+}
+
+.search-icon {
+  color: var(--text-muted);
+}
+
+.search-input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  padding: 0 12px;
+  color: var(--text-color);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.clear-button:hover {
+  color: var(--text-color);
+}
+
+/* Right section - theme, notifications, profile */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Theme toggle wrapper */
+.theme-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.theme-toggle-wrapper:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Applying specific theme styling */
+.themeToggle {
+  color: var(--text-secondary);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Ensure the SVG is centered within its container */
+.st-sunMoonThemeToggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.st-sunMoonThemeToggleBtn svg {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(40deg);
+}
+
+.st-sunMoonThemeToggleBtn .themeToggleInput:checked + svg {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* Notification button */
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.notification-button:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-color);
+}
+
+.notification-indicator {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background-color: #ff4d4f;
+  border-radius: 50%;
+}
+
+/* Mobile menu styles */
+.mobile-menu {
+  display: none;
+}
+
+/* ======== Responsive design ======== */
+@media (max-width: 1200px) {
+  .search-wrapper {
+    width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar-middle .nav-menu-container {
+    display: none;
+  }
+
+  .navbar-middle {
+    justify-content: flex-end;
+  }
+
+  .search-wrapper {
+    width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-middle {
+    padding: 0 12px;
+  }
+
+  .navbar-container {
+    padding: 0 16px;
+  }
+
+  .search-wrapper {
+    width: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-logo h1 {
+    display: none;
+  }
+
+  .navbar-left {
+    min-width: auto;
+  }
+
+  .search-wrapper {
+    width: 180px;
+  }
+
+  .navbar-right {
+    gap: 12px;
+  }
+
+  .theme-toggle-wrapper {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-wrapper {
+    display: none;
+  }
+}
