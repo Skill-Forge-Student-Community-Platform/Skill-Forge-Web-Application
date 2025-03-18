@@ -150,32 +150,32 @@
   padding-right: 0.5rem;
 }
 
-textarea,
-input[type="text"],
-input[type="url"],
-input[type="date"],
-input[type="time"] {
+.modal-content textarea,
+.modal-content input[type="text"],
+.modal-content input[type="url"],
+.modal-content input[type="date"],
+.modal-content input[type="time"] {
   width: 97%;
-  padding: 0.5rem; /* Reduced padding */
+  padding: 0.5rem;
   border-radius: 8px;
-  border: 1px solid var(--input-border) !important;
-  background-color: var(--input-bg) !important;
-  color: var(--text-color) !important;
+  border: 1px solid var(--input-border) ;
+  background-color: var(--input-bg) ;
+  color: var(--text-color) ;
   font-size: 0.95rem;
   resize: none;
 }
 
-input[type="text"],
-input[type="url"],
-input[type="date"],
-input[type="time"] {
+.modal-content input[type="text"],
+.modal-content input[type="url"],
+.modal-content input[type="date"],
+.modal-content input[type="time"] {
   outline: 1px solid var(--hover-bg); /* Light outline */
 }
 
-textarea:focus,
-input:focus {
+.modal-content textarea:focus,
+.modal-content input:focus {
   outline: 1px solid var(--hover-bg);
-  background-color: var(--hover-bg) !important;
+  background-color: var(--hover-bg) ;
 }
 
 textarea {

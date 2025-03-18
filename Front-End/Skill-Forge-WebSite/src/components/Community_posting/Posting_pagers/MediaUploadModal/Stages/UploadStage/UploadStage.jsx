@@ -6,6 +6,7 @@ import './UploadStage.css';
 
 const UploadStage = ({ onComplete, selectedFiles: existingFiles, onEditFile }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     // Ensure existingFiles is always an array
@@ -16,17 +17,84 @@ const UploadStage = ({ onComplete, selectedFiles: existingFiles, onEditFile }) =
     }
   }, [existingFiles]);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const validFiles = acceptedFiles.filter(file => {
-      const isImage = file.type.startsWith('image/');
-      const isVideo = file.type.startsWith('video/');
-      return isImage || isVideo;
-    });
+  // Compress image function
+  const compressImage = (file) => {
+    return new Promise((resolve) => {
+      // Skip compression for non-image files
+      if (!file.type.startsWith('image/')) {
+        resolve(file);
+        return;
+      }
 
-    if (validFiles.length > 0) {
-      const newFiles = [...selectedFiles, ...validFiles];
-      setSelectedFiles(newFiles);
-      onComplete(newFiles, false);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          // Create canvas for compression
+          const canvas = document.createElement('canvas');
+
+          // Calculate new dimensions (max 1200px)
+          let width = img.width;
+          let height = img.height;
+          const maxSize = 1200;
+
+          if (width > height && width > maxSize) {
+            height = Math.round((height * maxSize) / width);
+            width = maxSize;
+          } else if (height > maxSize) {
+            width = Math.round((width * maxSize) / height);
+            height = maxSize;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          // Draw and compress
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert to blob with reduced quality (0.7)
+          canvas.toBlob((blob) => {
+            // Create a new file from the blob
+            const compressedFile = new File([blob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            });
+
+            // Add these for debugging
+            console.log(`Compressed ${file.name} from ${file.size} to ${compressedFile.size} bytes`);
+
+            resolve(compressedFile);
+          }, 'image/jpeg', 0.7);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const onDrop = useCallback(async (acceptedFiles) => {
+    setIsProcessing(true);
+
+    try {
+      const validFiles = acceptedFiles.filter(file => {
+        const isImage = file.type.startsWith('image/');
+        const isVideo = file.type.startsWith('video/');
+        return isImage || isVideo;
+      });
+
+      if (validFiles.length > 0) {
+        // Process and compress images before adding
+        const processedFiles = await Promise.all(validFiles.map(compressImage));
+
+        const newFiles = [...selectedFiles, ...processedFiles];
+        setSelectedFiles(newFiles);
+        onComplete(newFiles, false);
+      }
+    } catch (error) {
+      console.error("Error processing files:", error);
+    } finally {
+      setIsProcessing(false);
     }
   }, [selectedFiles, onComplete]);
 
@@ -59,9 +127,12 @@ const UploadStage = ({ onComplete, selectedFiles: existingFiles, onEditFile }) =
 
   return (
     <div className="upload-stage">
+      {isProcessing && <div className="processing-overlay">Processing files...</div>}
+
       {selectedFiles.length === 0 ? (
         <div
           {...getRootProps()}
+
           className={`dropzone ${isDragActive ? 'active' : ''}`}
         >
           <input {...getInputProps()} />
