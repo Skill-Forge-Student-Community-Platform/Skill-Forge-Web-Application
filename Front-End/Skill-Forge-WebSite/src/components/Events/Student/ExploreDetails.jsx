@@ -42,44 +42,60 @@ import {
     const [regloading, setRegLoading] = useState(false);
   
   
-    const handleRegister = async () => {
-      setRegLoading(true);
+    // In ExploreDetails.jsx
+const handleRegister = async () => {
+  setRegLoading(true);
   
+  // Add error checking
+  if (!user) {
+    alert("Please log in to register for this event");
+    setRegLoading(false);
+    return;
+  }
   
-      try {
-        const response = await fetch("http://localhost:3000/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: userId,
-            userName: user.userName,
-            email: user.email,
-            eventId: id,
-          }),
-        });
+  // Debug your user object
+  console.log("User object:", user);
   
-        if (response.status === 409) {
-          alert("You have already registered for this event!");
-          setRegLoading(false);
-          return;
-        }
-  
-        if (!response.ok) {
-          throw new Error("Failed to register user");
-        }
-  
-        const data = await response.json();
-        alert("Registration successful!");
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Registration failed");
-      }
-      setRegLoading(false);
-    };
-  
-  
+  try {
+    // Use userName instead of Username (case sensitivity matters!)
+    const response = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userId,
+        userName: user.Username, // Changed from Username to userName to match model
+        email: user.email,
+        eventId: id,
+      }),
+    });
+    
+    // Get response body even for error cases
+    const responseData = await response.json().catch(() => ({}));
+    console.log("Server response:", response.status, responseData);
+    
+    if (response.status === 409) {
+      alert("You have already registered for this event!");
+      return;
+    }
+    
+    if (!response.ok) {
+      throw new Error(`Failed to register: ${responseData.message || "Server error"}`);
+    }
+    
+    // Success path
+    alert("Registration successful!");
+    
+    // Refresh event data to show updated participant count
+    window.location.reload();
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert(`Registration failed: ${error.message}`);
+  } finally {
+    setRegLoading(false);
+  }
+};
   
     const handleCopy = () => {
       navigator.clipboard.writeText(pageUrl)
@@ -93,7 +109,7 @@ import {
     useEffect(() => {
       const fetchSavedEvents = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/api/saved-events/${userId}`);
+          const response = await axios.get(`http://localhost:5000/api/saved-events/${userId}`);
           setSavedEvents(response.data);
         } catch (error) {
           console.error("Error fetching saved events:", error);
@@ -102,6 +118,7 @@ import {
   
       fetchSavedEvents();
     }, [savedEvents, userId]);
+    
   
     const handleAddSave = async (e) => {
       try {
@@ -114,7 +131,7 @@ import {
         }
   
         // Save the event in the backend
-        const response = await axios.post("http://localhost:3000/api/save-event", {
+        const response = await axios.post("http://localhost:5000/api/save-event", {
           userId,
           eventId: e._id,
           title: e.title,
@@ -148,7 +165,7 @@ import {
       const fetchEventDetails = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`http://localhost:3000/Details/${id}`);
+          const response = await axios.get(`http://localhost:5000/Details/${id}`);
           setEvent(response.data);
           
           // Create Google Maps URL based on location
@@ -215,12 +232,17 @@ import {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Back button */}
-          <Link to="/" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium mb-6 group transition-colors duration-200">
+          <Link to="../view-events" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium mb-6 group transition-colors duration-200">
             <FaArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
             Back to Events
           </Link>
-          <h1>{user.userName}</h1>
+
+           User Details
+          <h1>{user.Username}</h1>
           <h1>{user.email}</h1>
+          
+          
+          
           
           {/* Main Content Container */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -229,7 +251,7 @@ import {
               {event.image ? (
                 <div className="h-72 sm:h-96 w-full">
                   <img
-                    src={`http://localhost:3000/${event.image}`}
+                    src={`http://localhost:5000/${event.image}`}
                     alt={event.title}
                     className="w-full h-full object-cover"
                   />
@@ -380,6 +402,7 @@ import {
                       >
                         <FaTicketAlt className="mr-2" />  {regloading ? "Registering..." : "Register"}
                       </button>
+                       
                       
                      {/* Action Buttons */}
                       <div className="flex mt-4 space-x-2">

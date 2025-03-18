@@ -16,6 +16,8 @@ import Home from '../Home_page/Home';
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
+import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
+import ExploreDetails from '../Events/Student/ExploreDetails';
 
 
 
@@ -147,12 +149,15 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
+            <Route path="explore-event/:id" element={<ExploreDetails userId={userId} user={user} />} />
+
 
             {/* Organizer-specific routes */}
             {roleType === 'organizer' && (
               <>
                 <Route path="add-events/*" element={<OrgnizerEventAddingForm userId={userId} />} />
                 <Route path="manage-events/*" element={<OrganizerEventList userId={userId} />} />
+                <Route path="view-event/:id" element={<OrganizerEventDetails />} />
               </>
             )}
 
