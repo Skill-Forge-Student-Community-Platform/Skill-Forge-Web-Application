@@ -1,36 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./AllPostsPage.css"; // ✅ Create a new CSS file for styling
+import "./AllProjectsPage.css";
 
-const AllPostsPage = () => {
+const AllProjects = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
+  const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    // ✅ Fetch all posts from localStorage
-    const savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    setPosts(savedPosts);
+    // ✅ Get Projects from localStorage
+    const savedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    setProjects(savedProjects);
   }, []);
 
   return (
-    <div className="all-posts-container">
-      <h2>All Posts</h2>
+    <div className="all-projects-container">
+      <h2 className="all-projects-title">Our Projects</h2>
 
-      {/* ✅ Display all posts */}
-      <div className="all-posts-grid">
-        {posts.length > 0 ? (
-          posts.map((post, index) => (
-            <div key={index} className="post-card">
-              <img src={post.image} alt="Post" />
-              <p>{post.caption}</p>
+      {/* ✅ Responsive Grid Layout for Projects */}
+      <div className="projects-grid">
+        {projects.map((project, index) => (
+          <div key={index} className="project-card">
+            <img src={project.image} alt={project.title} className="project-image" />
+            <div className="project-info">
+              <h3 className="project-title">{project.title}</h3>
+              <p className="project-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus mattis.
+              </p>
+              <button className="read-more-btn">Read Case Study →</button>
             </div>
-          ))
-        ) : (
-          <p>No posts available.</p>
-        )}
+          </div>
+        ))}
       </div>
 
-      {/* ✅ Back Button */}
+      {/* ✅ Back to Profile Button */}
       <button className="back-btn" onClick={() => navigate("/")}>
         Back to Profile
       </button>
@@ -38,4 +40,4 @@ const AllPostsPage = () => {
   );
 };
 
-export default AllPostsPage;
+export default AllProjects;

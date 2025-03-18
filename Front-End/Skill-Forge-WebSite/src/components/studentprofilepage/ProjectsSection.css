@@ -1,82 +1,78 @@
+/* ✅ Parent container to ensure equal height */
+.flex-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: stretch; /* Ensures both sections stretch to the same height */
+}
+
+/* ✅ Projects Section */
 .projects-container {
   text-align: center;
-  margin-top: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* ✅ Force projects to align in a single row */
-.projects-grid {
+/* ✅ Wrapper for Side-by-Side Layout */
+.projects-wrapper {
   display: flex;
   justify-content: center;
-  align-items: stretch; /* Ensures all cards have the same height */
-  gap: 20px; /* Adjust space between items */
-  flex-wrap: nowrap; /* Prevents wrapping to a new row */
-  overflow-x: auto; /* Enables horizontal scrolling if needed */
-  margin-top: 15px;
-  padding-bottom: 10px; /* Extra spacing for scrolling */
+  gap: 20px;
+  align-items: stretch;
 }
 
-/* ✅ Individual project card */
-.project-card {
-  width: 280px;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+/* ✅ Project Card */
+.project-card,
+.add-more-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 200px;
   background: white;
-  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   transition: transform 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .project-card:hover {
   transform: translateY(-5px);
 }
 
-/* ✅ Project Images */
-.project-card img {
+/* ✅ Image Section */
+.project-image {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
-/* ✅ Project Title */
-.project-title {
+/* ✅ "Add More" Block */
+.add-more-card {
+  background: #f5f5f5;
+  border: 2px dashed #ccc;
+  transition: background-color 0.2s;
+}
+
+.add-more-text {
+  font-size: 18px;
   font-weight: bold;
-  margin: 10px 0;
-}
-
-/* ✅ Project Details */
-.project-location {
-  font-size: 14px;
   color: #666;
 }
 
-/* ✅ Rating & Price Styling */
-.project-rating {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 5px 0;
-  font-weight: bold;
-  color: #ffcc00;
-}
-
-.project-price {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-top: 5px;
-}
-
-/* ✅ Center buttons */
+/* ✅ View All Projects Button */
 .project-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
   margin-top: 20px;
 }
 
-/* ✅ Buttons */
-.add-project-btn,
 .view-projects-btn {
   padding: 10px 15px;
   font-size: 16px;
@@ -88,7 +84,6 @@
   transition: background-color 0.3s ease-in-out;
 }
 
-.add-project-btn:hover,
 .view-projects-btn:hover {
   background-color: green;
 }
