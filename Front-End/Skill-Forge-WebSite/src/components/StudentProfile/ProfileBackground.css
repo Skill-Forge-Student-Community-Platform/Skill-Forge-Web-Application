@@ -1,0 +1,69 @@
+/* ✅ Profile Background Container */
+.profile-background {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px; /* Adds separation from next section */
+  }
+  
+  /* ✅ Cover Photo Styling */
+  .cover-photo {
+    width: 100%;
+    height: 250px;
+    background-color: lightgray; /* Placeholder */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cover-photo-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  /* ✅ Profile Info Section */
+  .profile-info {
+    width: 60%;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: -50px; /* Moves the section slightly up over cover photo */
+  }
+  
+  /* ✅ Profile Picture */
+  .profile-picture {
+    width: 80px;
+    height: 80px;
+    background-color: gray; /* Placeholder */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* ✅ Profile Details */
+  .profile-details {
+    flex: 1;
+    margin-left: 20px;
+  }
+  
+  /* ✅ Edit Profile Button */
+  .edit-profile-btn {
+    background-color: blue;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .edit-profile-btn:hover {
+    background-color: darkblue;
+  }
+  

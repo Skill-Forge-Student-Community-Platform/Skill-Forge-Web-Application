@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaGlobe, FaUserFriends, FaUserSlash, FaUserPlus, FaTimes } from 'react-icons/fa';
 import './ShareModal.css';
-import PostContent from '../../Feed/PostContent';
+import PostContent from '../../Feed/Post/PostContent';
 
 const ShareModal = ({ closeWindow, postToShare, onShare, user }) => {
   const [text, setText] = useState('');
