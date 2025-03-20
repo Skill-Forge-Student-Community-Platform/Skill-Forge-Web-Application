@@ -462,9 +462,9 @@
 
 /* Update user-info to align with new avatar component */
 .user-info {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
 }
 
 /* You can either keep or remove the old user-avatar style since we're not using it directly anymore */
