@@ -262,37 +262,70 @@
   transform: translate(-50%, -50%) rotate(90deg);
 }
 
-/* Notification button */
+/* Notification wrapper styling */
 .notification-wrapper {
   position: relative;
-}
-
-.notification-button {
+  margin-right: 15px;
+  height: 40px;
+  width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Remove the old notification button and indicator styles
+   since they're now handled by the Notification component */
+.notification-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+/* Ensure proper positioning of the notification panel */
+.notification-wrapper .notification-bar {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+}
+
+.notification-wrapper .notification-icon {
+  color: var(--text-color);
+  transition: color 0.2s;
+  border-radius: 50%;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.notification-button:hover {
+.notification-wrapper .notification-icon:hover {
+  color: var(--primary-color);
   background-color: var(--bg-hover);
-  color: var(--text-color);
 }
 
-.notification-indicator {
+.notification-wrapper .notifications-panel {
   position: absolute;
-  top: 8px;
-  right: 10px;
-  width: 8px;
-  height: 8px;
-  background-color: #ff4d4f;
-  border-radius: 50%;
+  right: 0;
+  top: calc(100% + 8px);
+}
+
+/* Ensure the panel appears below the navbar */
+.notification-wrapper .notifications-panel {
+  position: absolute;
+  top: calc(100% + 1.2rem);
+  right: -160px; /* Adjust this value to center below the bell icon */
+  z-index: 1000;
 }
 
 /* Mobile menu styles */
@@ -333,6 +366,10 @@
   .search-wrapper {
     width: 200px;
   }
+
+  .notification-wrapper .notifications-panel {
+    right: -140px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -364,5 +401,10 @@
 @media (max-width: 480px) {
   .search-wrapper {
     display: none;
+  }
+
+  .notification-wrapper .notifications-panel {
+    width: 320px;
+    right: -140px;
   }
 }

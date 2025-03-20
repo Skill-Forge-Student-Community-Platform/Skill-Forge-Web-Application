@@ -8,7 +8,6 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     text: {
-
       type: String,
       trim: true,
     },
@@ -35,9 +34,18 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
           },
+          // UPDATED: More flexible type validation
           type: {
             type: String,
-            enum: ["image", "video"],
+            validate: {
+              validator: function(v) {
+                // Accept either simple types or MIME types
+                return v === "image" ||
+                       v === "video" ||
+                       (typeof v === 'string' && (v.startsWith("image/") || v.startsWith("video/")));
+              },
+              message: props => `${props.value} is not a valid media type!`
+            },
             required: true,
           },
           altText: String,
@@ -84,6 +92,10 @@ const postSchema = new mongoose.Schema(
     ],
     comments: [
       {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: () => new mongoose.Types.ObjectId(),
+        },
         text: {
           type: String,
           required: true,
@@ -93,10 +105,20 @@ const postSchema = new mongoose.Schema(
           ref: "User",
           required: true,
         },
+        parentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: null,
+        },
         createdAt: {
           type: Date,
           default: Date.now,
         },
+        likes: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          }
+        ],
       },
     ],
     // Repost functionality

@@ -8,10 +8,8 @@ import fs from 'fs';
 import {v2 as cloudinary } from 'cloudinary';
 import http from 'http'; // Import HTTP
 import { Server } from 'socket.io'; // Import Socket.IO
-
-
-
 import fileUpload from 'express-fileupload'; // Add this import
+
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
@@ -23,12 +21,15 @@ import postRoutes from "./Features/Posting-Feed/routes/Post.route.js";
 
 
 import eventRoutes from "./Features/EventListing/routes/eventRoutes.js";
+import saveEventsRoutes from "./Features/SaveEvents/routes/saveEventsRoutes.js";
+import registerRoutes from "./Features/EventRegister/routes/registerRoutes.js";
 
 
 
 import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
 
 import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
+import notificationRoutes from './Features/Notifications/routes/Notification.route.js';
 
 
 // Environment configuration
@@ -108,9 +109,10 @@ if (!fs.existsSync(uploadDir)) {
 
 // Middleware setup
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-app.use(express.json({ limit: '5mb' })); // Increased payload limit
-app.use(express.urlencoded({ limit: '5mb', extended: true })); // Increased payload limit
+app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
+
 
 
 
@@ -129,6 +131,7 @@ app.use('/uploads', uploadMiddleware);
 
 
 
+
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -138,12 +141,12 @@ app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
 
-
-
-
+// Notification routes
+ app.use("/api/notifications", notificationRoutes);
 
 app.use("/Details", eventRoutes);
-
+app.use("/api", saveEventsRoutes);
+app.use("/api", registerRoutes);
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);

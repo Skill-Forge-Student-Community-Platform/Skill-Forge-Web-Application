@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useEvents } from "../../../context/EventContext";
 
-const ExplorePage = ({ userId, isStudent }) => {
+const ExplorePage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const { events, loading, error } = useEvents();
   
@@ -123,7 +123,7 @@ const ExplorePage = ({ userId, isStudent }) => {
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/2 relative">
                 <img 
-                  src={`http://localhost:3000/${events.find(e => e.is_featured)?.image || "default.jpg"}`} 
+                  src={`http://localhost:5000/${events.find(e => e.is_featured)?.image || "default.jpg"}`} 
                   alt="Featured Event" 
                   className="w-full h-64 md:h-full object-cover"
                 />
@@ -169,7 +169,7 @@ const ExplorePage = ({ userId, isStudent }) => {
               {/* Event Image with Overlay Status Badge */}
               <div className="relative">
                 <img
-                  src={`http://localhost:3000/${event.image || "default.jpg"}`}
+                  src={`http://localhost:5000/${event.image || "default.jpg"}`}
                   alt={event.title}
                   className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -223,19 +223,19 @@ const ExplorePage = ({ userId, isStudent }) => {
                 <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors">{event.title}</h3>
                 
                 <div className="space-y-3 mb-4">
-                  <p className="text-gray-700 flex items-center">
+                  <div className="text-gray-700 flex items-center">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-100 group-hover:bg-red-200 mr-3 flex-shrink-0 transition-colors">
                       <FaMapMarkerAlt className="text-red-600" />
                     </div>
                     <span className="truncate">{event.location}</span>
-                  </p>
+                  </div>
                   
-                  <p className="text-gray-700 flex items-center">
+                  <div className="text-gray-700 flex items-center">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center bg-orange-100 group-hover:bg-orange-200 mr-3 flex-shrink-0 transition-colors">
                       <FaUsers className="text-orange-600" />
                     </div>
                     <span>{event.registered_participants} / {event.max_participants} spots filled</span>
-                  </p>
+                  </div>
                   
                   {/* Progress bar for capacity with animated transition */}
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -264,14 +264,14 @@ const ExplorePage = ({ userId, isStudent }) => {
                   
                   {/* Registration Deadline (if applicable) */}
                   {event.registration_deadline && (
-                    <p className="text-gray-700 flex items-center">
+                    <div className="text-gray-700 flex items-center">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center bg-indigo-100 group-hover:bg-indigo-200 mr-3 flex-shrink-0 transition-colors">
                         <FaTicketAlt className="text-indigo-600" />
                       </div>
                       <span className="text-gray-700">
                         Register by <span className="font-medium text-indigo-600">{event.registration_deadline}</span>
                       </span>
-                    </p>
+                    </div>
                   )}
                   
                   {/* Ratings (if applicable) */}
@@ -300,7 +300,7 @@ const ExplorePage = ({ userId, isStudent }) => {
                 {/* Action Buttons */}
                 <div className="flex space-x-2">
                   <Link
-                    to={`explore-event/${event._id}`}
+                     to={`../explore-event/${event._id}`}
                     className="flex-1 block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition-colors duration-300 shadow-sm"
                   >
                     View Details
@@ -313,6 +313,7 @@ const ExplorePage = ({ userId, isStudent }) => {
             </div>
           ))}
         </div>
+        
         
         {/* Load More Button */}
         {events.length > 0 && (

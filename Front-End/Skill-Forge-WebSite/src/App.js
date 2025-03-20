@@ -9,6 +9,7 @@ import { ProtectedRoute } from './components/Registration/AuthGuard';
 import MainLayout from './components/Main_APP_Layout/MainLayout';
 import HomeRedirect from './components/Main_APP_Layout/HomeRedirect';
 
+
 import { useAuthStore } from './store/authStore';
 import { Toaster } from 'react-hot-toast';
 
@@ -61,6 +62,8 @@ function App() {
             <MainLayout isDarkMode={isDarkMode} toggleTheme={toggleTheme} roleType="organizer" />
           </ProtectedRoute>
         } />
+
+
 
         {/* Root redirect */}
         <Route path="/" element={

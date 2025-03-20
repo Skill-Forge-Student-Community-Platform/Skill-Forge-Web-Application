@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Post from "../models/post.js";
 import { User } from "../../User-Authentication/models/User.js";
 import Notification from "../../Notifications/models/Notification.js";
@@ -29,37 +30,85 @@ export const createPost = async (req, res) => {
 
     // Handle media uploads if present
     if (media && media.files && media.files.length > 0) {
+      console.log(`Processing ${media.files.length} media files for upload...`);
       const processedFiles = [];
 
       for (const file of media.files) {
         try {
+          console.log(`Processing file: ${file.type} - ${file.url?.substring(0, 30)}...`);
+
           if (file.url && file.url.startsWith('data:')) {
-            console.log("Processing base64 image");
+            console.log("Uploading base64 media to Cloudinary...");
+            // Extract MIME type from data URL for better type detection
+            const mimeMatch = file.url.match(/^data:([^;]+);/);
+            const detectedType = mimeMatch ? mimeMatch[1] : null;
+
+            // Determine image vs video from MIME type or use provided type
+            let mediaType = file.type;
+            if (!mediaType && detectedType) {
+              mediaType = detectedType.startsWith('image/') ? 'image' :
+                         detectedType.startsWith('video/') ? 'video' : 'image';
+            } else if (!mediaType) {
+              mediaType = 'image'; // Default to image if no type info available
+            }
+
             // It's a base64 image that needs to be uploaded to cloudinary
             const uploadResult = await cloudinary.uploader.upload(file.url, {
               folder: "skill-forge/posts",
+              resource_type: mediaType === 'video' ? 'video' : 'auto',
+            });
+
+            console.log("✅ Cloudinary upload successful:", {
+              publicId: uploadResult.public_id,
+              url: uploadResult.secure_url,
+              type: mediaType,
+              resource_type: uploadResult.resource_type,
+              format: uploadResult.format,
+              size: uploadResult.bytes
             });
 
             processedFiles.push({
               url: uploadResult.secure_url,
-              type: file.type,
+              type: uploadResult.resource_type === 'video' ? 'video' : 'image',
               altText: file.altText || ""
             });
           } else {
             // URL is already a valid link
             console.log("Using existing URL:", file.url);
-            processedFiles.push(file);
+
+            // Normalize type to ensure schema validation passes
+            let mediaType = file.type;
+            if (mediaType && (mediaType.startsWith('image/') || mediaType.startsWith('video/'))) {
+              mediaType = mediaType.startsWith('image/') ? 'image' : 'video';
+            } else if (!mediaType) {
+              // Try to guess from URL
+              const ext = file.url.split('.').pop().toLowerCase();
+              const imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+              const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
+
+              if (imgExts.includes(ext)) mediaType = 'image';
+              else if (videoExts.includes(ext)) mediaType = 'video';
+              else mediaType = 'image'; // Default
+            }
+
+            processedFiles.push({
+              url: file.url,
+              type: mediaType,
+              altText: file.altText || ""
+            });
           }
         } catch (uploadError) {
-          console.error("Error uploading file to Cloudinary:", uploadError);
+          console.error("❌ Error uploading file to Cloudinary:", uploadError);
           throw new Error("Failed to upload media: " + uploadError.message);
         }
       }
 
       media.files = processedFiles;
+      console.log("✅ All media files processed successfully:", JSON.stringify(processedFiles, null, 2));
     }
 
     // Create new post
+    console.log("Creating new post in database...");
     const newPost = new Post({
       user: userId,
       text,
@@ -71,14 +120,20 @@ export const createPost = async (req, res) => {
     });
 
     await newPost.save();
+    console.log(`✅ Post successfully saved to database with ID: ${newPost._id}`);
 
     // Populate user data for the response
     const populatedPost = await Post.findById(newPost._id)
       .populate("user", "-password")
       .populate("comments.user", "-password");
 
+    console.log("Post created successfully with media:",
+      populatedPost.media ? JSON.stringify(populatedPost.media, null, 2) : "No media");
+
     // Emit socket event for real-time updates
     io.emit('newPost', populatedPost);
+
+    console.log("✅ Post creation complete. Emitting socket event and sending response.");
 
     res.status(201).json({
       success: true,
@@ -86,7 +141,7 @@ export const createPost = async (req, res) => {
       post: populatedPost
     });
   } catch (error) {
-    console.error("Error in createPost controller:", error);
+    console.error("❌ Error in createPost controller:", error);
     res.status(500).json({
       success: false,
       message: "Server error while creating post",
@@ -314,6 +369,92 @@ export const likeUnlikePost = async (req, res) => {
 };
 
 /**
+ * Like or unlike a comment
+ * @route POST /api/posts/:postId/comments/:commentId/like
+ * @access Private
+ */
+export const likeUnlikeComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const userId = req.user.id;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
+    }
+
+    // Find the comment (could be a nested reply)
+    const findCommentById = (comments, id) => {
+      for (const comment of comments) {
+        if (comment._id.toString() === id) {
+          return comment;
+        }
+      }
+      return null;
+    };
+
+    const comment = findCommentById(post.comments, commentId);
+    if (!comment) {
+      return res.status(404).json({ success: false, message: "Comment not found" });
+    }
+
+    // Initialize likes array if it doesn't exist
+    if (!comment.likes) {
+      comment.likes = [];
+    }
+
+    // Check if user already liked the comment
+    const likeIndex = comment.likes.findIndex(id => id.toString() === userId);
+    const isLiked = likeIndex !== -1;
+
+    if (isLiked) {
+      // Unlike comment
+      comment.likes.splice(likeIndex, 1);
+    } else {
+      // Like comment
+      comment.likes.push(userId);
+
+      // Create notification if comment is not by current user
+      if (comment.user.toString() !== userId) {
+        const newNotification = new Notification({
+          from: userId,
+          to: comment.user,
+          type: "commentLike",
+          post: postId,
+          message: comment.text.substring(0, 50) + (comment.text.length > 50 ? "..." : "")
+        });
+        await newNotification.save();
+      }
+    }
+
+    await post.save();
+
+    // Emit socket event for real-time updates
+    io.emit('commentLiked', {
+      postId,
+      commentId,
+      userId,
+      liked: !isLiked,
+      likeCount: comment.likes.length
+    });
+
+    res.status(200).json({
+      success: true,
+      message: isLiked ? "Comment unliked successfully" : "Comment liked successfully",
+      liked: !isLiked,
+      likeCount: comment.likes.length
+    });
+  } catch (error) {
+    console.error("Error in likeUnlikeComment controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while processing comment like/unlike",
+      error: error.message
+    });
+  }
+};
+
+/**
  * Add comment to post
  * @route POST /api/posts/:postId/comment
  * @access Private
@@ -321,7 +462,7 @@ export const likeUnlikePost = async (req, res) => {
 export const addComment = async (req, res) => {
   try {
     const { postId } = req.params;
-    const { text } = req.body;
+    const { text, parentId } = req.body;
     const userId = req.user.id;
 
     if (!text || !text.trim()) {
@@ -333,21 +474,30 @@ export const addComment = async (req, res) => {
       return res.status(404).json({ success: false, message: "Post not found" });
     }
 
-    // Add comment
+    // Create comment with proper fields
     const comment = {
+      _id: new mongoose.Types.ObjectId(), // Generate a new ID
       text,
       user: userId,
-      createdAt: new Date()
+      parentId: parentId || null, // Handle replies
+      createdAt: new Date(),
+      likes: []
     };
 
+    // Add comment to post
     post.comments.push(comment);
     await post.save();
 
-    // Populate the new comment with user data
+    // Populate the new comment with user data for the response
     const updatedPost = await Post.findById(postId)
-      .populate("comments.user", "-password");
+      .populate({
+        path: "comments.user",
+        select: "-password"
+      });
 
-    const newComment = updatedPost.comments[updatedPost.comments.length - 1];
+    // Find the newly added comment in the populated post
+    const newComment = updatedPost.comments.find(c =>
+      c._id.toString() === comment._id.toString());
 
     // Create notification if post is not by current user
     if (post.user.toString() !== userId) {
@@ -359,6 +509,21 @@ export const addComment = async (req, res) => {
         message: text.substring(0, 50) + (text.length > 50 ? "..." : "")
       });
       await newNotification.save();
+    }
+
+    // Also notify parent comment author if this is a reply and not the same user
+    if (parentId) {
+      const parentComment = post.comments.find(c => c._id.toString() === parentId);
+      if (parentComment && parentComment.user.toString() !== userId) {
+        const newNotification = new Notification({
+          from: userId,
+          to: parentComment.user,
+          type: "reply",
+          post: postId,
+          message: text.substring(0, 50) + (text.length > 50 ? "..." : "")
+        });
+        await newNotification.save();
+      }
     }
 
     // Emit socket event
@@ -383,6 +548,81 @@ export const addComment = async (req, res) => {
 };
 
 /**
+ * Delete a comment
+ * @route DELETE /api/posts/:postId/comments/:commentId
+ * @access Private
+ */
+export const deleteComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const userId = req.user.id;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
+    }
+
+    // Find the comment
+    const commentIndex = post.comments.findIndex(c => c._id.toString() === commentId);
+    if (commentIndex === -1) {
+      return res.status(404).json({ success: false, message: "Comment not found" });
+    }
+
+    const comment = post.comments[commentIndex];
+
+    // Check if user is authorized to delete the comment
+    // (either comment owner or post owner)
+    if (comment.user.toString() !== userId && post.user.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this comment"
+      });
+    }
+
+    // Find and remove all replies to this comment as well
+    const commentAndRepliesIds = [commentId];
+    post.comments.forEach(c => {
+      if (c.parentId && c.parentId.toString() === commentId) {
+        commentAndRepliesIds.push(c._id.toString());
+      }
+    });
+
+    // Remove comment and all its replies
+    post.comments = post.comments.filter(c =>
+      !commentAndRepliesIds.includes(c._id.toString()));
+
+    await post.save();
+
+    // Delete associated notifications
+    await Notification.deleteMany({
+      $or: [
+        { type: "comment", post: postId },
+        { type: "commentLike", post: postId },
+        { type: "reply", post: postId }
+      ]
+    });
+
+    // Emit socket event
+    io.emit('commentDeleted', {
+      postId,
+      commentIds: commentAndRepliesIds
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Comment deleted successfully"
+    });
+  } catch (error) {
+    console.error("Error in deleteComment controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while deleting comment",
+      error: error.message
+    });
+  }
+};
+
+/**
  * Delete a post
  * @route DELETE /api/posts/:postId
  * @access Private
@@ -400,6 +640,7 @@ export const deletePost = async (req, res) => {
     // Check if user is post owner
     if (post.user.toString() !== userId) {
       return res.status(403).json({
+
         success: false,
         message: "You are not authorized to delete this post"
       });
@@ -512,6 +753,161 @@ export const sharePost = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error while sharing post",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get all posts for admin
+ * @route GET /api/posts/all
+ * @access Admin only
+ */
+export const getAllPosts = async (req, res) => {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
+
+    const totalPosts = await Post.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      posts,
+      pagination: {
+        total: totalPosts,
+        page: parseInt(page),
+        pages: Math.ceil(totalPosts / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error in getAllPosts controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching all posts",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get posts liked by a specific user
+ * @route GET /api/posts/likes/:userId
+ * @access Private
+ */
+export const getLikedPosts = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Get user to check their liked posts
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Find posts that this user has liked
+    const posts = await Post.find({ likes: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
+
+    const totalPosts = await Post.countDocuments({ likes: userId });
+
+    res.status(200).json({
+      success: true,
+      posts,
+      pagination: {
+        total: totalPosts,
+        page: parseInt(page),
+        pages: Math.ceil(totalPosts / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error in getLikedPosts controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching liked posts",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get posts only from followed users
+ * @route GET /api/posts/following
+ * @access Private
+ */
+export const getFollowingPosts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Get user to access following list
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (!user.following.length) {
+      return res.status(200).json({
+        success: true,
+        posts: [],
+        message: "You are not following anyone yet",
+        pagination: {
+          total: 0,
+          page: parseInt(page),
+          pages: 0
+        }
+      });
+    }
+
+    const posts = await Post.find({
+      user: { $in: user.following },
+      $or: [
+        { privacy: "Public" },
+        { privacy: "Friends" }
+      ]
+    })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(parseInt(limit))
+    .populate("user", "-password")
+    .populate("comments.user", "-password");
+
+    const totalPosts = await Post.countDocuments({
+      user: { $in: user.following },
+      $or: [
+        { privacy: "Public" },
+        { privacy: "Friends" }
+      ]
+    });
+
+    res.status(200).json({
+      success: true,
+      posts,
+      pagination: {
+        total: totalPosts,
+        page: parseInt(page),
+        pages: Math.ceil(totalPosts / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error in getFollowingPosts controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching following posts",
       error: error.message
     });
   }

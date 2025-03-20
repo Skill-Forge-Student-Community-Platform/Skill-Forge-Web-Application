@@ -1,0 +1,366 @@
+/* Base notification page styling */
+.notifications-page {
+  padding: 20px;
+  color: var(--text-color, black);
+  box-sizing: border-box;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Page header */
+.notifications-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.notifications-title {
+  display: flex;
+  align-items: center;
+}
+
+.bell-icon {
+  font-size: 24px;
+  margin-right: 10px;
+  color: #295da1;
+}
+
+.notifications-page-header h1 {
+  font-size: 20px;
+  color: var(--heading-color, #333);
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Action buttons in header */
+.notifications-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.notifications-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.notifications-actions button:hover {
+  background: #e9e9e9;
+}
+
+.notifications-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.notifications-actions button svg {
+  font-size: 18px;
+}
+
+/* Loading and error states */
+.notifications-loading,
+.notifications-error {
+  padding: 20px;
+  text-align: center;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.notifications-error {
+  color: #d32f2f;
+  background: #ffebee;
+}
+
+/* Empty notification state */
+.no-notifications {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.empty-bell {
+  font-size: 40px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.no-notifications h2 {
+  margin: 0 0 8px;
+  color: #333;
+  font-size: 18px;
+}
+
+.no-notifications p {
+  color: #777;
+  max-width: 400px;
+  margin: 0 auto;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Notification group styling */
+.notification-group {
+  margin-bottom: 24px;
+}
+
+.date-header {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  font-size: 14px;
+}
+
+/* Individual notification item */
+.notification-item {
+  display: flex;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: white;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-items: flex-start;
+}
+
+.notification-item:hover {
+  background: #f5f7fa;
+}
+
+.notification-item.unread {
+  background: #ebf3f9;
+}
+
+/* Avatar and indicator */
+.notification-avatar {
+  position: relative;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.unread-indicator {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgb(1, 185, 209);
+  border-radius: 50%;
+  bottom: 0;
+  right: 0;
+  border: 2px solid white;
+}
+
+/* Notification content */
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-text {
+  margin-bottom: 4px;
+}
+
+.notification-text p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.time {
+  display: block;
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+/* Action buttons within notifications */
+.notification-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.notification-buttons button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.accept-btn {
+  background: #4caf50;
+  color: white;
+}
+
+.accept-btn:hover {
+  background: #388e3c;
+}
+
+.decline-btn {
+  background: #f44336;
+  color: white;
+}
+
+.decline-btn:hover {
+  background: #d32f2f;
+}
+
+/* Delete button */
+.delete-notification {
+  background: none;
+  border: none;
+  color: #777;
+  padding: 4px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+.delete-notification:hover {
+  opacity: 1;
+  color: #d32f2f;
+}
+
+/* Sidebar cards styling */
+.sidebar-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.sidebar-card h3 {
+  font-size: 16px;
+  margin: 0 0 12px 0;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Activity stats styling */
+.activity-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f7f9fc;
+  padding: 10px 8px;
+  border-radius: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.stat-value.highlight {
+  color: #295da1;
+}
+
+/* Suggested connections styling */
+.connection-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggested-user {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.suggested-user:last-child {
+  border-bottom: none;
+}
+
+/* User info class renamed to avoid conflicts with PostTemplate.css */
+.user-profile-info {
+  flex: 1;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.role {
+  font-size: 12px;
+  color: #666;
+}
+
+.connect-btn {
+  background-color: #f0f2f5;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #295da1;
+  transition: all 0.2s;
+}
+
+.connect-btn:hover {
+  background-color: #e4e6e9;
+}
+
+.connect-btn:disabled {
+  color: #4CAF50;
+  cursor: default;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .notifications-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .notifications-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
