@@ -1,5 +1,5 @@
 
-import SavedEvent from "../models/SavedEvent.js";
+import SavedEvent from "../models/SaveEvents.js";
 
 // Save an event for a user
 export const saveEvent = async (req, res) => {
@@ -28,12 +28,9 @@ export const getSavedEvents = async (req, res) => {
 
   try {
     const savedEvents = await SavedEvent.find({ userId });
+    
 
-    if (!savedEvents.length) {
-      return res.status(404).json({ message: "No saved events found." });
-    }
-
-    res.status(200).json(savedEvents);
+    res.status(200).json(savedEvents.length ? savedEvents : []);
   } catch (error) {
     console.error("Error fetching saved events:", error);
     res.status(500).json({ message: "Error fetching saved events." });

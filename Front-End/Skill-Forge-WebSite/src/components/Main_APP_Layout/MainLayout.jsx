@@ -12,6 +12,10 @@ import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 import NotificationPage from '../Notifications/NotificationPage';
+import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
+import ExploreDetails from '../Events/Student/ExploreDetails';
+
+
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -132,6 +136,8 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
+            <Route path="explore-event/:id" element={<ExploreDetails userId={userId} user={user} />} />
+
 
             {/* Notifications page */}
             <Route path="notifications" element={<NotificationPage userId={userId} />} />
@@ -141,6 +147,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
               <>
                 <Route path="add-events/*" element={<OrgnizerEventAddingForm userId={userId} />} />
                 <Route path="manage-events/*" element={<OrganizerEventList userId={userId} />} />
+                <Route path="view-event/:id" element={<OrganizerEventDetails />} />
               </>
             )}
 

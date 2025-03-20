@@ -9,7 +9,7 @@ const SaveEvents = ({ cart, userId, setCart }) => {
 
   const handleDelete = async (_id) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/api/delete-saved-event/${_id}`);
+      const response = await axios.delete(`http://localhost:5000/api/delete-saved-event/${_id}`);
   
       console.log("Response from server:", response); // Log response
   
@@ -57,7 +57,7 @@ const SaveEvents = ({ cart, userId, setCart }) => {
           <div
             key={index}
             className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 transition-all hover:shadow-md hover:border-indigo-200 cursor-pointer"
-            onClick={() => navigate(`/explore-event/${event.eventId}`)}  // Navigate to event details
+            onClick={() => navigate(`../explore-event/${event.eventId}`)}  // Navigate to event details
           >
             <h4 className="font-medium text-gray-900 truncate">{event.title}</h4>
             <div className="mt-2 space-y-1 text-sm">
