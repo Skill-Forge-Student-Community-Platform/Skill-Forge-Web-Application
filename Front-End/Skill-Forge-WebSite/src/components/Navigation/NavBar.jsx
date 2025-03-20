@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, Bell } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { getMenus } from './MenuList';
 import Theme from './shared/Theme';
 import DesktopMenu from './shared/DesktopMenu';
 import MobileMenu from './shared/MobileMenu';
 import SearchBar from './shared/SearchBar';
 import ProfileDropDown from './shared/ProfiledropDown';
+import Notification from '../Notifications/Notification dropdown/Notification';
 import './NavBar.css';
 
 const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, roleType }) => {
@@ -86,12 +87,9 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
             <Theme isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
           </div>
 
-          {/* Notification Icon */}
+          {/* Notification Component */}
           <div className="notification-wrapper">
-            <button className="notification-button" aria-label="Notifications">
-              <Bell size={20} />
-              <span className="notification-indicator"></span>
-            </button>
+            <Notification />
           </div>
 
           {/* Profile Dropdown Component */}

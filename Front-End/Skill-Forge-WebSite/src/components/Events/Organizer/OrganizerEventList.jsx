@@ -83,10 +83,10 @@ const EventList = ({ userId }) => {
                       Top Prize: <span className="text-yellow-600 ml-1">{event.prizes[0].reward}</span>
                     </p>
                   )}
-                </div>
+                </div>        
                 
                 <Link 
-                  to={`/event/${event._id}`} 
+                   to={`../view-event/${event._id}`} 
                   className="block w-full text-center bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 mt-4"
                 >
                   View Details

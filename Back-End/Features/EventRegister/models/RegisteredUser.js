@@ -5,7 +5,7 @@ const RegisteredUserSchema = new mongoose.Schema({
     userName: { type: String, required: true },
     email: { type: String, required: true },
     eventId: { type: String, required: true },
-    points: { type: Number, required: false,default: 0  },
+    //points: { type: Number, required: false,default: 0  },
   });
 
   const RegisteredUser = mongoose.model('RegisteredUser', RegisteredUserSchema);
