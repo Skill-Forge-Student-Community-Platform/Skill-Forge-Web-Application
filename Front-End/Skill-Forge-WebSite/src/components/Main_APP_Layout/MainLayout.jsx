@@ -16,6 +16,7 @@ import Home from '../Home_page/Home';
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
+import Friendspage from '../Network/Friendspage';
 
 
 
@@ -158,7 +159,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Team routes */}
             <Route path="teams" element={<TeamPage userId={userId} />} />
-            <Route path="teams/management" element={<TeamManagement userId={userId} />} />
+            <Route path="teams/management" element={<Friendspage />} />
             <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
             <Route path="teams/inbox" element={<Inbox userId={userId} />} />
 
