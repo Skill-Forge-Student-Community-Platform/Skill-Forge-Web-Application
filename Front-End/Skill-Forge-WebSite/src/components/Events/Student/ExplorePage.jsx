@@ -2,8 +2,15 @@ import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaTrophy, FaFilter, Fa
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-const ExplorePage = ({ events = [] }) => {
+import { useEvents } from "../../../context/EventContext";
+
+const ExplorePage = ({ userId, isStudent }) => {
   const [showFilters, setShowFilters] = useState(false);
+  const { events, loading, error } = useEvents();
+  
+  if (loading) return <div className="text-center my-8">Loading events...</div>;
+  if (error) return <div className="text-center my-8 text-red-600">{error}</div>;
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-16 px-6">
