@@ -8,6 +8,7 @@ import LoadingSpinner from '../src/components/Registration/shared/LoadingSpinner
 import { ProtectedRoute } from './components/Registration/AuthGuard';
 import MainLayout from './components/Main_APP_Layout/MainLayout';
 import HomeRedirect from './components/Main_APP_Layout/HomeRedirect';
+import SettingsPage from './components/Settings/SettingsPage';
 
 
 import { useAuthStore } from './store/authStore';
@@ -56,6 +57,12 @@ function App() {
           </ProtectedRoute>
         } />
 
+        <Route path="/Student/:userId/settings/*" element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        } />
+
         {/* Organizer routes - using MainLayout */}
         <Route path="/Organizer/:userId/*" element={
           <ProtectedRoute>
@@ -63,6 +70,12 @@ function App() {
           </ProtectedRoute>
         } />
 
+
+        <Route path="/Organizer/:userId/settings/*" element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        } />
 
 
         {/* Root redirect */}
