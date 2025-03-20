@@ -29,7 +29,7 @@ import eventRoutes from "./Features/EventListing/routes/eventRoutes.js";
 import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
 
 import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
-
+import friendRoutes from "./Features/Network/routers/friendRoutes.js";
 
 // Environment configuration
 dotenv.config();
@@ -148,7 +148,7 @@ app.use("/Details", eventRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
 
-
+app.use("/api/friends", friendRoutes);
 
 
 app.get("/api", (req, res) => {
@@ -191,3 +191,6 @@ server.listen(port, () => {
   console.log(`Server is now running on port ${port}`);
   console.log(`Socket.IO server is ready`);
 });
+
+
+
