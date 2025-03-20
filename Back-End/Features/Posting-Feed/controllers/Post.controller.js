@@ -757,3 +757,158 @@ export const sharePost = async (req, res) => {
     });
   }
 };
+
+/**
+ * Get all posts for admin
+ * @route GET /api/posts/all
+ * @access Admin only
+ */
+export const getAllPosts = async (req, res) => {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
+
+    const totalPosts = await Post.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      posts,
+      pagination: {
+        total: totalPosts,
+        page: parseInt(page),
+        pages: Math.ceil(totalPosts / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error in getAllPosts controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching all posts",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get posts liked by a specific user
+ * @route GET /api/posts/likes/:userId
+ * @access Private
+ */
+export const getLikedPosts = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Get user to check their liked posts
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Find posts that this user has liked
+    const posts = await Post.find({ likes: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
+
+    const totalPosts = await Post.countDocuments({ likes: userId });
+
+    res.status(200).json({
+      success: true,
+      posts,
+      pagination: {
+        total: totalPosts,
+        page: parseInt(page),
+        pages: Math.ceil(totalPosts / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error in getLikedPosts controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching liked posts",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get posts only from followed users
+ * @route GET /api/posts/following
+ * @access Private
+ */
+export const getFollowingPosts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Get user to access following list
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (!user.following.length) {
+      return res.status(200).json({
+        success: true,
+        posts: [],
+        message: "You are not following anyone yet",
+        pagination: {
+          total: 0,
+          page: parseInt(page),
+          pages: 0
+        }
+      });
+    }
+
+    const posts = await Post.find({
+      user: { $in: user.following },
+      $or: [
+        { privacy: "Public" },
+        { privacy: "Friends" }
+      ]
+    })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(parseInt(limit))
+    .populate("user", "-password")
+    .populate("comments.user", "-password");
+
+    const totalPosts = await Post.countDocuments({
+      user: { $in: user.following },
+      $or: [
+        { privacy: "Public" },
+        { privacy: "Friends" }
+      ]
+    });
+
+    res.status(200).json({
+      success: true,
+      posts,
+      pagination: {
+        total: totalPosts,
+        page: parseInt(page),
+        pages: Math.ceil(totalPosts / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error in getFollowingPosts controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching following posts",
+      error: error.message
+    });
+  }
+};
