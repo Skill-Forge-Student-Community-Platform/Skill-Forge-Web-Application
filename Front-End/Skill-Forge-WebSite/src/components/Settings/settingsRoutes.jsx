@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import NameSettings from '../pages/NameSettings'
-import EmailSettings from '../pages/EmailSettings'
-import PasswordSettings from '../pages/PasswordSettings'
-import LastLoginSettings from '../pages/LastLoginSettings'
-import SocialLinksSettings from '../pages/SocialLinksSettings'
-import NotificationSettings from '../pages/NotificationSettings'
-import DeleteAccountSettings from '../pages/DeleteAccountSettings'
-import Register from '../pages/Register'
-import { authAPI } from '../services/api'
+import NameSettings from './pages/NameSettings'
+import EmailSettings from './pages/EmailSettings'
+import PasswordSettings from './pages/PasswordSettings'
+import LastLoginSettings from './pages/LastLoginSettings'
+import SocialLinksSettings from './pages/SocialLinksSettings'
+import NotificationSettings from './pages/NotificationSettings'
+import DeleteAccountSettings from './pages/DeleteAccountSettings'
+import Register from './pages/Register'
+import { authAPI } from './services/api'
 
 // Protected Route component that verifies authentication with the API
 const ProtectedRoute = ({ children }) => {
@@ -62,53 +62,54 @@ const ProtectedRoute = ({ children }) => {
 const SettingsRoutes = () => {
   return (
     <Routes>
-      <Route path="/register" element={<Register />} />
+      <Route path="register" element={<Register />} />
       
-      <Route path="/settings/name" element={
+      <Route path="name" element={
         <ProtectedRoute>
           <NameSettings />
         </ProtectedRoute>
       } />
       
-      <Route path="/settings/email" element={
+      <Route path="email" element={
         <ProtectedRoute>
           <EmailSettings />
         </ProtectedRoute>
       } />
       
-      <Route path="/settings/password" element={
+      <Route path="password" element={
         <ProtectedRoute>
           <PasswordSettings />
         </ProtectedRoute>
       } />
       
-      <Route path="/settings/last-login" element={
+      <Route path="last-login" element={
         <ProtectedRoute>
           <LastLoginSettings />
         </ProtectedRoute>
       } />
       
-      <Route path="/settings/social" element={
+      <Route path="social" element={
         <ProtectedRoute>
           <SocialLinksSettings />
         </ProtectedRoute>
       } />
       
-      <Route path="/settings/notifications" element={
+      <Route path="notifications" element={
         <ProtectedRoute>
           <NotificationSettings />
         </ProtectedRoute>
       } />
       
-      <Route path="/settings/delete-account" element={
+      <Route path="delete-account" element={
         <ProtectedRoute>
           <DeleteAccountSettings />
         </ProtectedRoute>
       } />
       
-      <Route path="*" element={<Navigate to="/settings/name" replace />} />
+      <Route path="/" element={<Navigate to="name" replace />} />
+      <Route path="*" element={<Navigate to="name" replace />} />
     </Routes>
   );
 };
 
-export default SettingsRoutes; 
+export default SettingsRoutes;
