@@ -21,12 +21,15 @@ import postRoutes from "./Features/Posting-Feed/routes/Post.route.js";
 
 
 import eventRoutes from "./Features/EventListing/routes/eventRoutes.js";
+import saveEventsRoutes from "./Features/SaveEvents/routes/saveEventsRoutes.js";
+import registerRoutes from "./Features/EventRegister/routes/registerRoutes.js";
 
 
 
 import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
 
 import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
+import notificationRoutes from './Features/Notifications/routes/Notification.route.js';
 
 
 // Environment configuration
@@ -138,12 +141,12 @@ app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
 
-
-
-
+// Notification routes
+ app.use("/api/notifications", notificationRoutes);
 
 app.use("/Details", eventRoutes);
-
+app.use("/api", saveEventsRoutes);
+app.use("/api", registerRoutes);
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);

@@ -10,6 +10,7 @@ import MainLayout from './components/Main_APP_Layout/MainLayout';
 import HomeRedirect from './components/Main_APP_Layout/HomeRedirect';
 import SettingsPage from './components/Settings/SettingsPage';
 
+
 import { useAuthStore } from './store/authStore';
 import { Toaster } from 'react-hot-toast';
 
@@ -69,11 +70,13 @@ function App() {
           </ProtectedRoute>
         } />
 
+
         <Route path="/Organizer/:userId/settings/*" element={
           <ProtectedRoute>
             <SettingsPage />
           </ProtectedRoute>
         } />
+
 
         {/* Root redirect */}
         <Route path="/" element={

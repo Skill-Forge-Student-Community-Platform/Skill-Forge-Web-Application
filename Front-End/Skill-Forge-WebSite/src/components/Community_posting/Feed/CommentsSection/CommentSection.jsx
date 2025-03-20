@@ -12,19 +12,23 @@ import ProfileAvatar from '../../../Home_page/Home_components/ProfileAvatar';
 import { useAuthStore } from '../../../../store/authStore';
 
 const QuickReplies = ({ onSelectReply }) => {
-  const quickReplies = [
-    "Great point!",
-    "Thanks for sharing!",
-    "I agree with you",
-    "Interesting perspective",
-    "Could you elaborate more?",
-    "This is helpful",
-    "Well said!",
-    "Congratulations!",
-    "That's impressive",
-    "Good question",
-    "I learned something new"
+  // All possible quick replies
+  const allQuickReplies = [
+    "Great point!", "Thanks for sharing!", "I agree with you",
+    "Interesting perspective", "Could you elaborate more?",
+    "This is helpful", "Well said!", "Congratulations!",
+    "That's impressive", "Good question", "I learned something new",
+    "Nice work!", "Exactly what I was thinking", "Can't wait to see more"
   ];
+
+  // Randomly select 5-7 replies to show
+  const [quickReplies, setQuickReplies] = useState([]);
+
+  useEffect(() => {
+    const shuffled = [...allQuickReplies].sort(() => 0.5 - Math.random());
+    const selectedCount = Math.floor(Math.random() * 3) + 5; // Random number between 5-7
+    setQuickReplies(shuffled.slice(0, selectedCount));
+  }, []);
 
   const scrollRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -110,7 +114,7 @@ const CommentSection = ({
   const [showEmoji, setShowEmoji] = useState(false);
   const [commentFilter, setCommentFilter] = useState('Most Relevant');
   const [showFilters, setShowFilters] = useState(false);
-
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [visibleCommentsCount, setVisibleCommentsCount] = useState(5);
 
   // References for outside click handling
@@ -226,6 +230,7 @@ const CommentSection = ({
   const handleQuickReplySelect = (reply) => {
     setNewComment(reply);
     inputRef.current?.focus();
+    setIsInputFocused(true);
   };
 
   // Handle loading more comments
@@ -256,17 +261,14 @@ const CommentSection = ({
 
   return (
     <div className="comment-section">
-      {/* Filter section */}
+      {/* Filter section - simplified and positioned left */}
       <div className="filter-section">
-        <div className="comment-count">
-          <h3>{comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}</h3>
-        </div>
         <div className="comment-filter" ref={filterRef}>
           <button
             className="filter-toggle"
             onClick={() => setShowFilters(!showFilters)}
           >
-            {commentFilter} <FaCaretDown />
+            Filter: {commentFilter} <FaCaretDown />
           </button>
           {showFilters && (
             <div className="filter-options">
@@ -291,7 +293,7 @@ const CommentSection = ({
       <QuickReplies onSelectReply={handleQuickReplySelect} />
 
       {/* Add comment form - replace img with ProfileAvatar */}
-      <form className="comment-form" onSubmit={handleCommentSubmit}>
+      <form className={`comment-form ${newComment.trim() || isInputFocused ? 'expanded' : ''}`} onSubmit={handleCommentSubmit}>
         <ProfileAvatar
           userId={currentUserId}
           size="micro"
@@ -307,6 +309,8 @@ const CommentSection = ({
             placeholder="Add a comment..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
             className="comment-input"
           />
           <div className="input-actions">
@@ -324,13 +328,15 @@ const CommentSection = ({
                 </div>
               )}
             </div>
-            <button
-              type="submit"
-              className="comment-submit-btn"
-              disabled={!newComment.trim()}
-            >
-              Post
-            </button>
+            {(newComment.trim() || isInputFocused) && (
+              <button
+                type="submit"
+                className="comment-submit-btn"
+                disabled={!newComment.trim()}
+              >
+                Post
+              </button>
+            )}
           </div>
         </div>
       </form>
