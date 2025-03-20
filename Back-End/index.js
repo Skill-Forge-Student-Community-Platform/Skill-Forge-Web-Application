@@ -114,9 +114,6 @@ app.use(cookieParser()); // to allow us parse incoming cookies
 
 
 
-
-
-
 app.use(fileUpload({
   createParentPath: true,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
@@ -130,7 +127,6 @@ app.use('/uploads', uploadMiddleware);
 
 
 
-
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -139,6 +135,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/teams", teamRoutes);
 
 
 
