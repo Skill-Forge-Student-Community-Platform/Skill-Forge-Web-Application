@@ -48,7 +48,7 @@ const EventList = ({ userId }) => {
                 <div className="space-y-2 mb-4">
                   <p className="text-gray-600 flex items-center text-sm">
                     <FaCalendarAlt className="mr-2 text-blue-500" /> 
-                    <span className="font-medium">{event.date}</span>
+                    <span className="font-medium">{new Date(event.date).toLocaleDateString()}</span>
                     <span className="mx-2 text-gray-400">|</span>
                     <FaClock className="mr-2 text-blue-500" /> 
                     <span>{event.time}</span>

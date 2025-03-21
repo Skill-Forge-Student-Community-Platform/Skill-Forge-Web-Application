@@ -17,6 +17,7 @@ import Friendspage from '../Network/Friendspage';
 import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
+import RegisterEvents from '../Events/Student/RegisterEvents';
 
 
 
@@ -140,7 +141,10 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
-            <Route path="explore-event/:id/*" element={<ExploreDetails userId={userId} user={user} />} />
+
+            <Route path="view-events/registered" element={<RegisterEvents userId={userId} />} />
+            <Route path="explore-event/:id" element={<ExploreDetails userId={userId} user={user} />} />
+
 
             {/* Notifications page */}
             <Route path="notifications/*" element={<NotificationPage userId={userId} />} />
