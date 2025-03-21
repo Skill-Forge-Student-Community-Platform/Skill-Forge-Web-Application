@@ -1,0 +1,68 @@
+/* ✅ Container Styling */
+.add-certificate-container {
+  max-width: 400px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* ✅ Title Styling */
+h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+/* ✅ Label Styling */
+label {
+  display: block;
+  margin-top: 10px;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* ✅ Input & Select Fields */
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* ✅ PDF File Input */
+input[type="file"] {
+  padding: 6px;
+  border: none;
+}
+
+/* ✅ Button Styling */
+button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* ✅ Submit Button */
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+}
+
+/* ✅ Cancel Button */
+button.cancel-btn {
+  background-color: red;
+  color: white;
+}
+
+/* ✅ Hover Effect */
+button:hover {
+  opacity: 0.8;
+}
