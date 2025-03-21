@@ -16,7 +16,7 @@ import Home from '../Home_page/Home';
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
-
+import { Teams } from '../Team_Collaboration/sub components for teams/Teams.jsx';
 
 
 // TODO: Uncomment these imports when the components are implemented
@@ -157,7 +157,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             )}
 
             {/* Team routes */}
-            <Route path="teams" element={<TeamPage userId={userId} />} />
+            <Route path="teams" element={<Teams />} />
             <Route path="teams/management" element={<TeamManagement userId={userId} />} />
             <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
             <Route path="teams/inbox" element={<Inbox userId={userId} />} />
