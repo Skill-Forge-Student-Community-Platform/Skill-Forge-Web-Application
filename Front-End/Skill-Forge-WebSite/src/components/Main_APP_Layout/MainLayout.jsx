@@ -18,6 +18,7 @@ import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingFor
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
+import RegisterEvents from '../Events/Student/RegisterEvents';
 
 
 
@@ -149,6 +150,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
+            <Route path="view-events/registered" element={<RegisterEvents userId={userId} />} />
             <Route path="explore-event/:id" element={<ExploreDetails userId={userId} user={user} />} />
 
 

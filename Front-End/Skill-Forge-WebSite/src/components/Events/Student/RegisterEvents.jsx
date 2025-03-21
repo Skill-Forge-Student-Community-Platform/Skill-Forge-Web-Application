@@ -1,0 +1,56 @@
+// In a new file RegisteredEvents.jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const RegisteredEvents = ({ userId }) => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchRegisteredEvents = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/registered-events-by-user/${userId}`);
+        setEvents(response.data);
+      } catch (error) {
+        console.error("Error fetching registered events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchRegisteredEvents();
+  }, [userId]);
+  
+  if (loading) return <div>Loading registered events...</div>;
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-16 px-6">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">My Registered Events</h2>
+        
+        {events.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-md p-8 text-center">
+            <p>You haven't registered for any events yet.</p>
+            <button className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg">
+              Explore Events
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {events.map(event => (
+              <div key={event._id} className="bg-white rounded-xl shadow-md overflow-hidden">
+                {/* Event card content */}
+                <div className="p-6">
+                  <h3 className="font-bold text-lg">{event.title}</h3>
+                  <p className="text-gray-600">{event.date}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default RegisteredEvents;
