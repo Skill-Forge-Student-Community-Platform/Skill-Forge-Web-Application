@@ -6,6 +6,15 @@
   box-sizing: border-box;
   overflow: visible; /* Allow badges to overflow */
   z-index: 11; /* Add base z-index */
+  /* overflow: hidden; */
+  /* display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f4f8; */
+}
+
+.dark .avatar-container {
+  background-color: #2d3748;
 }
 
 /* Size variants - made more consistent */
@@ -28,13 +37,54 @@
 .avatar-container.size-medium {
   width: 120px;
   height: 120px;
-  padding: 3px; /* Medium border */
 }
 
 .avatar-container.size-large {
   width: 160px;
   height: 160px;
   padding: 4px; /* Larger border */
+}
+
+.avatar-container.size-custom {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+}
+
+.size-large {
+  width: 100%;
+  height: 100%;
+  min-width: 64px;
+  min-height: 64px;
+}
+
+.size-medium {
+  width: 100%;
+  height: 100%;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.size-small {
+  width: 100%;
+  height: 100%;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.size-tiny {
+  width: 100%;
+  height: 100%;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.size-micro {
+  width: 100%;
+  height: 100%;
+  min-width: 20px;
+  min-height: 20px;
 }
 
 /* Membership borders - apply based on container class */
@@ -46,11 +96,13 @@
 .membership-border-plus {
   background: linear-gradient(135deg, #0ea5e9, #38bdf8);
   box-shadow: 0 0 5px rgba(14, 165, 233, 0.5);
+
 }
 
 .membership-border-pro {
   background: linear-gradient(135deg, #8b5cf6, #c084fc);
   box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+
 }
 
 /* Ensure avatar image fills container properly */
@@ -64,11 +116,17 @@
   overflow: hidden; /* Keep the image contained */
   opacity: 0; /* Start invisible for fade-in effect */
   transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 
-/* Show image when loaded */
 .avatar-image.loaded {
   opacity: 1;
+}
+
+.avatar-container.size-custom .avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Level Badge */
@@ -88,6 +146,16 @@
   font-size: 14px;
   border: 2px solid #ffffff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  /* background-color: #4299e1;
+  color: white;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  border: 2px solid white; */
+}
+
+.dark .level-badge {
+  border-color: #1a202c;
 }
 
 /* Adjust level badge size for different avatar sizes */
@@ -103,6 +171,14 @@
   font-size: 16px;
 }
 
+.avatar-container.size-custom .level-badge {
+  bottom: 0;
+  right: 0;
+  font-size: 0.8rem;
+  width: 1rem;
+  height: 1rem;
+}
+
 /* Membership Tag - Fix positioning and overflow issues */
 .membership-tag {
   position: absolute;
@@ -113,11 +189,32 @@
   font-weight: bold;
   border-radius: 4px;
   color: #ffffff;
-  transform: rotate(20deg);
+  transform: rotate(25deg);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   z-index: 10; /* Increase z-index to ensure visibility */
   white-space: nowrap; /* Prevent text wrapping */
   overflow: visible; /* Allow content to overflow */
+  top: -8px;
+  transform: translateX(-50%);
+  font-size: 9px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.membership-tag-plus {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  background-color: #38b2ac;
+  color: white;
+}
+
+.membership-tag-pro {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+  background-color: #805ad5;
+  color: white;
 }
 
 /* Adjust tag for different sizes */
@@ -150,12 +247,11 @@
   top: -8px;
 }
 
-.membership-tag-plus {
-  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-}
-
-.membership-tag-pro {
-  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+.avatar-container.size-custom .membership-tag {
+  top: 0;
+  right: 0;
+  font-size: 0.6rem;
+  padding: 0.1rem 0.3rem;
 }
 
 /* Add these CSS rules for loading and error states */
@@ -174,6 +270,15 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+  background-color: #e2e8f0;
+}
+
+.dark .avatar-skeleton {
+  background-color: #4a5568;
+}
+
+.pulse-animation {
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes shimmer {

@@ -2,7 +2,6 @@
 
 .main-comment-wrapper {
   position: relative;
-  background-color: #fff;
   border-radius: 8px;
   margin-bottom: 12px;
   transition: transform 0.2s ease;
@@ -17,22 +16,30 @@
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   padding: 12px 16px;
-
-  display: flex;
-  gap: 12px;
   position: relative;
+}
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.comment-avatar {
+  margin-right: 12px;
+  flex-shrink: 0;
 }
 
 .comment-content {
   flex: 1;
-  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .comment-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .comment-user-info {
@@ -43,41 +50,39 @@
 .name-badge-container {
   display: flex;
   align-items: center;
-  gap: 6px;
 }
 
 .comment-author {
   font-weight: 600;
   font-size: 14px;
-  color: var(--linkedin-text);
+  color: #050505;
+  margin-right: 6px;
 }
 
 .author-badge {
-  background-color: var(--linkedin-light-blue);
-  color: var(--linkedin-blue);
-  font-size: 11px;
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  background-color: #f0f2f5;
+  color: #65676B;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 500;
 }
 
 .user-profession {
+  color: #65676B;
   font-size: 12px;
-  color: var(--linkedin-light-text);
-  line-height: 1.4;
+  margin-top: 1px;
 }
 
 .comment-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
 .comment-time {
+  color: #65676B;
   font-size: 12px;
-  color: var(--linkedin-light-text);
+  margin-right: 12px;
 }
 
 .comment-options {
@@ -87,19 +92,14 @@
 .comment-options-btn {
   background: none;
   border: none;
-  color: var(--linkedin-light-text);
-  padding: 4px;
+  color: #65676B;
   cursor: pointer;
+  padding: 4px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
 }
 
 .comment-options-btn:hover {
-  background-color: var(--linkedin-bg);
-  color: var(--linkedin-blue);
+  background-color: #f2f3f5;
 }
 
 .comment-options-dropdown {
@@ -108,67 +108,80 @@
   right: 0;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   z-index: 10;
   min-width: 180px;
+  margin-top: 4px;
   overflow: hidden;
-  border: 1px solid var(--linkedin-border);
 }
 
 .comment-option-item {
   display: flex;
   align-items: center;
-  gap: 8px;
   width: 100%;
   text-align: left;
-  padding: 10px 16px;
+  padding: 8px 16px;
   border: none;
   background: none;
-  font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+}
+
+.comment-option-item svg {
+  margin-right: 8px;
+  font-size: 16px;
 }
 
 .comment-option-item:hover {
-  background-color: var(--linkedin-bg);
+  background-color: #f2f3f5;
+}
+
+.comment-option-item.text-danger {
+  color: #e41e3f;
+}
+
+.comment-option-item.text-danger:hover {
+  background-color: #ffebee;
 }
 
 .comment-text {
-  font-size: 14px;
-  margin: 0 0 8px 0;
-  word-wrap: break-word;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 0;
+  color: #050505;
+  white-space: pre-wrap;
 }
 
 .comment-actions {
   display: flex;
   gap: 16px;
-  margin-top: 6px;
+  margin-top: 8px;
+  justify-content: flex-start;
 }
 
 .comment-action-btn {
   background: none;
   border: none;
+  color: #65676B;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: var(--linkedin-light-text);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 4px 0;
-  transition: color 0.2s;
 }
 
 .comment-action-btn:hover {
-  color: var(--linkedin-blue);
+  text-decoration: underline;
 }
 
 .comment-action-btn.liked {
-  color: var(--linkedin-blue);
+  color: #1877f2;
 }
 
 .like-count {
-  font-size: 12px;
+  margin-left: 4px;
 }
 
 .reply-count {
@@ -179,41 +192,38 @@
 
 /* Edit form */
 .edit-form {
-  margin-bottom: 8px;
+  position: relative;
+  margin-bottom: 12px;
 }
 
 .edit-input {
   width: 100%;
-  border: 1px solid var(--linkedin-border);
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 14px;
-  resize: none;
-  outline: none;
-  margin-bottom: 8px;
+  border: 1px solid #dddfe2;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 15px;
+  resize: vertical;
   min-height: 60px;
-  font-family: inherit;
+  outline: none;
 }
 
 .edit-input:focus {
-  border-color: var(--linkedin-blue);
+  border-color: #1877f2;
+  box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
 }
 
 .edit-actions {
   display: flex;
   justify-content: flex-end;
+  margin-top: 8px;
   gap: 8px;
 }
 
 .cancel-edit-btn,
 .save-edit-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  border-radius: 16px;
   padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 4px;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -242,44 +252,47 @@
 .reply-input-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  border: 1px solid var(--linkedin-border);
-  border-radius: 8px;
-  overflow: hidden;
-  background: white;
+  background-color: #f0f2f5;
+  border-radius: 18px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.reply-input-container.expanded {
+  padding-bottom: 12px;
 }
 
 .reply-input {
   width: 100%;
   border: none;
+  background: transparent;
   outline: none;
-  padding: 10px 12px;
   font-size: 14px;
-  resize: none;
-  font-family: inherit;
+  color: #050505;
 }
 
 .reply-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 4px 8px 8px;
-  border-top: 1px solid var(--linkedin-border);
+  justify-content: space-between;
+  margin-top: 8px;
 }
 
 .reply-submit-btn {
-  background-color: var(--linkedin-blue);
+  background-color: #1877f2;
   color: white;
   border: none;
-  border-radius: 16px;
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-weight: 500;
   cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
 }
 
 .reply-submit-btn:disabled {
-  background-color: #cccccc;
+  background-color: #e4e6eb;
+  color: #bec3c9;
   cursor: not-allowed;
 }
 

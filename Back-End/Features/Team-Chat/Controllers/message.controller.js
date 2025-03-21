@@ -1,4 +1,3 @@
-
 import { User } from "../../User-Authentication/models/User.js"
 
 import Message from "../models/message.model.js";
@@ -72,3 +71,4 @@ export const sendMessages = async(req, res)=>{
       res.status(500).json({message:"Internal Sever Error"});
    }
 }
+
