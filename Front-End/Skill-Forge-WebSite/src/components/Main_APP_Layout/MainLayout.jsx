@@ -11,9 +11,13 @@ import Home from '../Home_page/Home';
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
+
+import Friendspage from '../Network/Friendspage';
+
 import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
+
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -154,10 +158,11 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             )}
 
             {/* Team routes */}
-            <Route path="teams/*" element={<TeamPage userId={userId} />} />
-            <Route path="teams/management/*" element={<TeamManagement userId={userId} />} />
-            <Route path="teams/activity/*" element={<TeamActivity userId={userId} />} />
-            <Route path="teams/inbox/*" element={<Inbox userId={userId} />} />
+
+            <Route path="teams" element={<TeamPage userId={userId} />} />
+            <Route path="teams/management" element={<Friendspage />} />
+            <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
+            <Route path="teams/inbox" element={<Inbox userId={userId} />} />
 
             {/* Default route */}
             <Route path="*" element={<Navigate to="home" replace />} />

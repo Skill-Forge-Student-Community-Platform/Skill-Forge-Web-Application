@@ -29,7 +29,11 @@ import registerRoutes from "./Features/EventRegister/routes/registerRoutes.js";
 import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
 
 import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
+
+import friendRoutes from "./Features/Network/routers/friendRoutes.js";
+
 import notificationRoutes from './Features/Notifications/routes/Notification.route.js';
+
 
 
 // Environment configuration
@@ -151,7 +155,7 @@ app.use("/api", registerRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
 
-
+app.use("/api/friends", friendRoutes);
 
 
 app.get("/api", (req, res) => {
@@ -194,3 +198,6 @@ server.listen(port, () => {
   console.log(`Server is now running on port ${port}`);
   console.log(`Socket.IO server is ready`);
 });
+
+
+
