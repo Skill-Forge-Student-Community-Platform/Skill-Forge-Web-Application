@@ -46,7 +46,6 @@ const OrganizerDashboard = ({ userId }) => (
   <PlaceholderPage title={`Organizer Dashboard for user ${userId}`} />
 );
 
-
 const ViewEvent = ({ userId, isStudent }) => (
   <PlaceholderPage title={`Event Viewer (${isStudent ? 'Student' : 'Organizer'} View)`} />
 );
@@ -58,7 +57,6 @@ const AddEvent = ({ userId }) => (
 const ManageEvents = ({ userId }) => (
   <PlaceholderPage title={`Manage Events for user ${userId}`} />
 );
-
 
 const TeamPage = ({ userId }) => (
   <PlaceholderPage title={`Teams Page for user ${userId}`} />
@@ -89,7 +87,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   // Extract the current section from the URL path
   const pathParts = location.pathname.split('/');
   const currentSection = pathParts[3] || 'home'; // [0]=empty, [1]=role, [2]=userId, [3]=section
-
 
   // Validate user matches URL parameters
   useEffect(() => {
