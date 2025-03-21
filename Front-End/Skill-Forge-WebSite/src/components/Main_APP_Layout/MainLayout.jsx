@@ -17,6 +17,7 @@ import Friendspage from '../Network/Friendspage';
 import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
+import RegisterEvents from '../Events/Student/RegisterEvents';
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -205,15 +206,17 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="achievements/*" element={<AchievementsPage userId={userId} />} />
 
             {/* Event routes */}
-            <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
+            <Route path="view-events/*" element={<ExplorePage userId={userId} user={user} isStudent={roleType === 'student'} />} />
+
             <Route path="explore-event/:id/*" element={<ExploreDetails userId={userId} user={user} />} />
             <Route path="view-events/categories/*" element={<EventCategoriesPage userId={userId} />} />
-            <Route path="view-events/registered/*" element={<MyEventsPage userId={userId} />} />
+            <Route path="view-events/registered" element={<RegisterEvents userId={userId} />} />
 
             {/* Additional event routes */}
             <Route path="view-events/upcoming/*" element={<UpcomingEventsPage userId={userId} />} />
             <Route path="view-events/updates/*" element={<EventUpdatesPage userId={userId} />} />
             <Route path="saved-events" element={<SavedEventsPage userId={userId} />} />
+
 
             {/* Notifications page */}
             <Route path="notifications/*" element={<NotificationPage userId={userId} />} />

@@ -1,5 +1,36 @@
 import RegisteredUser from "../Models/RegisteredUser.js";
 
+import Event from "../../EventListing/models/Event.js"; // Add this import
+
+export const getRegisteredEventList = async (req, res) => { 
+  try {
+    const { userId } = req.params;
+    console.log(userId + " is the user ID");
+    
+    // Get all event IDs this user has registered for
+    const registrations = await RegisteredUser.find({ userId });
+    
+    if (registrations.length === 0) {
+      // Return empty array if user hasn't registered for any events
+      return res.json([]);
+    }
+    
+    const eventIds = registrations.map(reg => reg.eventId);
+    console.log("Found event IDs:", eventIds);
+    
+    // Get the full event details from the Event collection
+    const events = await Event.find({
+      _id: { $in: eventIds }
+    });
+    
+    console.log(`Found ${events.length} events for user ${userId}`);
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching registered events:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 
 export const getRegisteredUser = async (req, res) => {
