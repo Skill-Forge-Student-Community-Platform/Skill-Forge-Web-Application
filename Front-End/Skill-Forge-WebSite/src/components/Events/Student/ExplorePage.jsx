@@ -141,7 +141,7 @@ const ExplorePage = () => {
                   <p className="flex items-center">
                     <FaCalendarAlt className="mr-2" />
                     <span>{events.find(e => e.is_featured)?.date} | {events.find(e => e.is_featured)?.time}</span>
-                  </p>
+                  </p>           
                   <p className="flex items-center">
                     <FaMapMarkerAlt className="mr-2" />
                     <span>{events.find(e => e.is_featured)?.location}</span>
@@ -214,7 +214,13 @@ const ExplorePage = () => {
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                   <div className="flex items-center text-white">
                     <FaCalendarAlt className="mr-2" />
-                    <span className="font-medium">{event.date}</span>
+                    <span className="font-medium">
+                      {new Date(event.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </span>
                     <span className="mx-2">•</span>
                     <FaClock className="mr-1" />
                     <span>{event.time}</span>
