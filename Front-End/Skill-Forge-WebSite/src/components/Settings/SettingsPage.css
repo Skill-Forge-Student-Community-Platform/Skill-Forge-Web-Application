@@ -445,7 +445,8 @@
   flex-direction: column;
 }
 
-.user-name {
+/* Renamed from .user-name to .settings-user-name to prevent conflicts */
+.settings-user-name {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);

@@ -19,6 +19,8 @@ import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 
 
+
+
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
 // import OrganizerDashboard from '../Dashboard/OrganizerDashboard';
@@ -105,11 +107,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
     return <Navigate to={correctPath} replace />;
   }
 
-  // Check if this is a settings route and redirect if needed
-  if (currentSection === 'settings') {
-    return <Navigate to={`/${roleType}/${userId}/settings`} replace />;
-  }
-
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
@@ -158,7 +155,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             )}
 
             {/* Team routes */}
-
             <Route path="teams" element={<TeamPage userId={userId} />} />
             <Route path="teams/management" element={<Friendspage />} />
             <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
