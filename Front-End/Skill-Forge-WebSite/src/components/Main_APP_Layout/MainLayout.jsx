@@ -15,8 +15,6 @@ import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 
-
-
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
 // import OrganizerDashboard from '../Dashboard/OrganizerDashboard';
@@ -103,6 +101,11 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
     return <Navigate to={correctPath} replace />;
   }
 
+  // Check if this is a settings route and redirect if needed
+  if (currentSection === 'settings') {
+    return <Navigate to={`/${roleType}/${userId}/settings`} replace />;
+  }
+
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
@@ -125,10 +128,10 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
         <EventProvider>
           <Routes>
-            <Route path="home" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
+            <Route path="home/*" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
             {/* Dashboard routes based on role */}
-            <Route path="dashboard" element={
+            <Route path="dashboard/*" element={
               roleType === 'student'
                 ? <StudentDashboard userId={userId} />
                 : <OrganizerDashboard userId={userId} />
@@ -136,26 +139,25 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
-            <Route path="explore-event/:id" element={<ExploreDetails userId={userId} user={user} />} />
-
+            <Route path="explore-event/:id/*" element={<ExploreDetails userId={userId} user={user} />} />
 
             {/* Notifications page */}
-            <Route path="notifications" element={<NotificationPage userId={userId} />} />
+            <Route path="notifications/*" element={<NotificationPage userId={userId} />} />
 
             {/* Organizer-specific routes */}
             {roleType === 'organizer' && (
               <>
                 <Route path="add-events/*" element={<OrgnizerEventAddingForm userId={userId} />} />
                 <Route path="manage-events/*" element={<OrganizerEventList userId={userId} />} />
-                <Route path="view-event/:id" element={<OrganizerEventDetails />} />
+                <Route path="view-event/:id/*" element={<OrganizerEventDetails />} />
               </>
             )}
 
             {/* Team routes */}
-            <Route path="teams" element={<TeamPage userId={userId} />} />
-            <Route path="teams/management" element={<TeamManagement userId={userId} />} />
-            <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
-            <Route path="teams/inbox" element={<Inbox userId={userId} />} />
+            <Route path="teams/*" element={<TeamPage userId={userId} />} />
+            <Route path="teams/management/*" element={<TeamManagement userId={userId} />} />
+            <Route path="teams/activity/*" element={<TeamActivity userId={userId} />} />
+            <Route path="teams/inbox/*" element={<Inbox userId={userId} />} />
 
             {/* Default route */}
             <Route path="*" element={<Navigate to="home" replace />} />
