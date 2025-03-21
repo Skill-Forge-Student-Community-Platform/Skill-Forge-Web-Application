@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import SettingsLayout from '../components/SettingsLayout';
-import { 
-  FaLinkedin, 
-  FaGithub, 
-  FaTwitter, 
-  FaGlobe 
+import SettingsLayout from './components/SettingsLayout';
+import {
+  FaLinkedin,
+  FaGithub,
+  FaTwitter,
+  FaGlobe,
+  FaShareAlt
 } from 'react-icons/fa';
 import { settingsAPI, userAPI } from '../services/api';
 
@@ -50,12 +51,12 @@ const SocialLinksSettings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Reset messages
     setError('');
     setSuccess('');
     setLoading(true);
-    
+
     try {
       // Call API to update social links
       await settingsAPI.updateSocialLinks({ socialLinks });
@@ -98,8 +99,11 @@ const SocialLinksSettings = () => {
   if (initialLoading) {
     return (
       <SettingsLayout title="Social Links">
-        <div className="settings-section">
-          <div className="loading-screen">Loading your social links...</div>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="flex justify-center items-center h-48">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
+            <span className="ml-3 text-gray-700 dark:text-gray-300">Loading your social links...</span>
+          </div>
         </div>
       </SettingsLayout>
     );
@@ -107,40 +111,62 @@ const SocialLinksSettings = () => {
 
   return (
     <SettingsLayout title="Social Links">
-      <div className="settings-section">
-        {error && <div className="error-message">{error}</div>}
-        {success && <div className="success-message">{success}</div>}
-        
-        <form onSubmit={handleSubmit} className="social-links-form">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        {error && (
+          <div className="mb-6 p-4 rounded-md bg-red-50 dark:bg-red-900 dark:bg-opacity-20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="mb-6 p-4 rounded-md bg-green-50 dark:bg-green-900 dark:bg-opacity-20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800">
+            {success}
+          </div>
+        )}
+
+        <div className="flex items-center mb-6">
+          <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-500 dark:text-blue-300 mr-3 transition-transform duration-300 ease-in-out transform hover:scale-110">
+            <FaShareAlt className="h-5 w-5" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Connect Your Social Profiles</h3>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           {socialInputs.map((input) => (
-            <div key={input.name} className="form-group">
-              <label htmlFor={input.name}>{input.label}</label>
-              <div className="social-input-group">
-                <span className="social-icon">{input.icon}</span>
+            <div key={input.name} className="group">
+              <label htmlFor={input.name} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {input.label}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-blue-500 dark:text-blue-400 group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors duration-300">
+                  {input.icon}
+                </div>
                 <input
                   type="url"
                   id={input.name}
                   name={input.name}
                   value={socialLinks[input.name]}
                   onChange={handleChange}
-                  className="form-input"
+                  className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent hover:border-blue-300 dark:hover:border-blue-500 transition-colors duration-300"
                   placeholder={input.placeholder}
                 />
               </div>
             </div>
           ))}
-          
-          <button 
-            type="submit" 
-            className="save-button"
-            disabled={loading}
-          >
-            {loading ? 'Saving...' : 'Save Links'}
-          </button>
+
+          <div className="pt-4 flex justify-end">
+            <button
+              type="submit"
+              className="px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              disabled={loading}
+            >
+              {loading ? 'Saving...' : 'Save Links'}
+            </button>
+          </div>
         </form>
       </div>
     </SettingsLayout>
   );
 };
 
-export default SocialLinksSettings; 
+export default SocialLinksSettings;

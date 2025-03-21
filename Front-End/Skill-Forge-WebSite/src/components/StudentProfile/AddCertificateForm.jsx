@@ -6,7 +6,7 @@ const AddCertificateForm = () => {
   const navigate = useNavigate();
   const [certificate, setCertificate] = useState({
     type: "",
-    degree: "",
+    file: null, // ✅ New field for PDF upload
     status: "Pending",
   });
 
@@ -15,9 +15,20 @@ const AddCertificateForm = () => {
     setCertificate({ ...certificate, [e.target.name]: e.target.value });
   };
 
+  // ✅ Handle file selection
+  const handleFileChange = (e) => {
+    setCertificate({ ...certificate, file: e.target.files[0] });
+  };
+
   // ✅ Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // ✅ Validate inputs
+    if (!certificate.type || !certificate.file) {
+      alert("Please select a document type and upload a PDF file.");
+      return;
+    }
 
     // ✅ Get existing qualifications from localStorage
     const savedQualifications = JSON.parse(localStorage.getItem("qualifications")) || [];
@@ -36,6 +47,7 @@ const AddCertificateForm = () => {
     <div className="add-certificate-container">
       <h2>Add New Qualification</h2>
       <form onSubmit={handleSubmit}>
+        {/* ✅ Document Type Dropdown */}
         <label>Document Type</label>
         <select name="type" value={certificate.type} onChange={handleChange} required>
           <option value="">Select Type</option>
@@ -43,11 +55,15 @@ const AddCertificateForm = () => {
           <option value="Job Experience">Job Experience</option>
         </select>
 
-        <label>Degree / Position</label>
-        <input type="text" name="degree" value={certificate.degree} onChange={handleChange} required />
+        {/* ✅ PDF Upload Field */}
+        <label>Upload Supporting Document (PDF)</label>
+        <input type="file" accept=".pdf" onChange={handleFileChange} required />
 
+        {/* ✅ Buttons */}
         <button type="submit">Add Qualification</button>
-        <button type="button" className="cancel-btn" onClick={() => navigate("/")}>Cancel</button>
+        <button type="button" className="cancel-btn" onClick={() => navigate("/")}>
+          Cancel
+        </button>
       </form>
     </div>
   );
