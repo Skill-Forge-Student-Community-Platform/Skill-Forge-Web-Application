@@ -10,7 +10,6 @@ import MainLayout from './components/Main_APP_Layout/MainLayout';
 import HomeRedirect from './components/Main_APP_Layout/HomeRedirect';
 import SettingsPage from './components/Settings/SettingsPage';
 
-
 import { useAuthStore } from './store/authStore';
 import { Toaster } from 'react-hot-toast';
 
@@ -50,16 +49,17 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Dedicated Settings routes outside MainLayout - with higher priority */}
+        <Route path="/:roleType/:userId/settings/*" element={
+          <ProtectedRoute>
+            <SettingsPage isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+          </ProtectedRoute>
+        } />
+
         {/* Student routes - using MainLayout */}
         <Route path="/Student/:userId/*" element={
           <ProtectedRoute>
             <MainLayout isDarkMode={isDarkMode} toggleTheme={toggleTheme} roleType="student" />
-          </ProtectedRoute>
-        } />
-
-        <Route path="/Student/:userId/settings/*" element={
-          <ProtectedRoute>
-            <SettingsPage />
           </ProtectedRoute>
         } />
 
@@ -69,14 +69,6 @@ function App() {
             <MainLayout isDarkMode={isDarkMode} toggleTheme={toggleTheme} roleType="organizer" />
           </ProtectedRoute>
         } />
-
-
-        <Route path="/Organizer/:userId/settings/*" element={
-          <ProtectedRoute>
-            <SettingsPage />
-          </ProtectedRoute>
-        } />
-
 
         {/* Root redirect */}
         <Route path="/" element={
