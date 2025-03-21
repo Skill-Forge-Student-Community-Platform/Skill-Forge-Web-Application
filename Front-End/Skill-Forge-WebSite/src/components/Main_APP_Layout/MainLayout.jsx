@@ -2,23 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 
-
 import { EventProvider } from '../../context/EventContext';
-
-
 
 import NavBar from '../Navigation/NavBar';
 
 // Page components
 import Home from '../Home_page/Home';
-
-
 import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
+
+import Friendspage from '../Network/Friendspage';
+
+import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
+
 
 
 
@@ -84,15 +84,11 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const { userId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-
-  
-
   const location = useLocation();
 
   // Extract the current section from the URL path
   const pathParts = location.pathname.split('/');
   const currentSection = pathParts[3] || 'home'; // [0]=empty, [1]=role, [2]=userId, [3]=section
-
 
   // Validate user matches URL parameters
   useEffect(() => {
@@ -114,9 +110,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
-
-
-
   };
 
   return (
@@ -132,17 +125,15 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
         roleType={roleType}
       />
 
-
-
       {/* Main Content - full width */}
       <main className="w-full overflow-auto p-4 pt-20">
 
         <EventProvider>
           <Routes>
-            <Route path="home" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
+            <Route path="home/*" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
             {/* Dashboard routes based on role */}
-            <Route path="dashboard" element={
+            <Route path="dashboard/*" element={
               roleType === 'student'
                 ? <StudentDashboard userId={userId} />
                 : <OrganizerDashboard userId={userId} />
@@ -150,22 +141,26 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} isStudent={roleType === 'student'} />} />
+
             <Route path="view-events/registered" element={<RegisterEvents userId={userId} />} />
             <Route path="explore-event/:id" element={<ExploreDetails userId={userId} user={user} />} />
 
+
+            {/* Notifications page */}
+            <Route path="notifications/*" element={<NotificationPage userId={userId} />} />
 
             {/* Organizer-specific routes */}
             {roleType === 'organizer' && (
               <>
                 <Route path="add-events/*" element={<OrgnizerEventAddingForm userId={userId} />} />
                 <Route path="manage-events/*" element={<OrganizerEventList userId={userId} />} />
-                <Route path="view-event/:id" element={<OrganizerEventDetails />} />
+                <Route path="view-event/:id/*" element={<OrganizerEventDetails />} />
               </>
             )}
 
             {/* Team routes */}
             <Route path="teams" element={<TeamPage userId={userId} />} />
-            <Route path="teams/management" element={<TeamManagement userId={userId} />} />
+            <Route path="teams/management" element={<Friendspage />} />
             <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
             <Route path="teams/inbox" element={<Inbox userId={userId} />} />
 
@@ -173,8 +168,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="*" element={<Navigate to="home" replace />} />
           </Routes>
         </EventProvider>
-
-
 
       </main>
     </div>

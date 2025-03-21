@@ -1,77 +1,77 @@
+/* ✅ Center the Entire Page */
 .all-projects-container {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .projects-grid {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-  }
-  
-  .project-card {
-    width: 280px;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    background: white;
-    text-align: center;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .project-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .project-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  .project-title {
-    font-weight: bold;
-    margin: 10px 0;
-  }
-  
-  .project-location {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .project-rating {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 0;
-    font-weight: bold;
-    color: #ffcc00;
-  }
-  
-  .project-price {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-top: 5px;
-  }
-  
-  .back-btn {
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    margin-top: 20px;
-  }
-  
-  .back-btn:hover {
-    background-color: #dc3545;
-    transform: scale(1.05);
-  }
-  
+  text-align: center;
+  margin-top: 20px;
+  padding: 40px 20px;
+  width: 100%;
+}
+
+/* ✅ Page Title */
+.all-projects-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+/* ✅ Horizontal Scrollable Layout */
+.projects-grid {
+  display: flex;
+  flex-direction: row; /* Forces horizontal alignment */
+  gap: 20px;
+  overflow-x: auto; /* Enables scrolling */
+  white-space: nowrap; /* Prevents wrapping */
+  max-width: 90%;
+  padding: 20px;
+}
+
+/* ✅ Project Card */
+.project-card {
+  width: 300px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ✅ Project Image */
+.project-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* ✅ Project Details */
+.project-title {
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.project-description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+/* ✅ Fix "Back to Profile" Button */
+.back-btn {
+  width: 200px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+  margin-top: 20px;
+}
+
+.back-btn:hover {
+  background-color: #dc3545;
+  transform: scale(1.05);
+}

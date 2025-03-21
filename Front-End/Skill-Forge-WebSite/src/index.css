@@ -20,3 +20,54 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Animation for notification panel */
+@keyframes slideInDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.notifications-panel {
+  animation: slideInDown 0.25s ease-out forwards;
+}
+
+.notification-item {
+  animation: fadeIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+/* Pulsing animation for notification badge */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.notification-badge:not(:empty) {
+  animation: pulse 2s infinite;
+}
+
+.no-notifications {
+  animation: fadeIn 0.5s ease-out forwards;
+}
