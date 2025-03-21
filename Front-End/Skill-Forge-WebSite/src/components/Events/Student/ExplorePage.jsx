@@ -1,16 +1,60 @@
-import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaTrophy, FaFilter, FaSearch, FaHeart, FaShare, FaTicketAlt, FaStar, FaBell } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaTrophy, FaSearch, FaHeart, FaShare, FaTicketAlt, FaStar, FaBell } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import { useEvents } from "../../../context/EventContext";
 
 const ExplorePage = () => {
-  const [showFilters, setShowFilters] = useState(false);
+ 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All Events");
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const { events, loading, error } = useEvents();
+  
+  // Filter events whenever search term, selected category, or events list changes
+  useEffect(() => {
+    if (!events) return;
+    
+    const filtered = events.filter(event => {
+      // Filter by search term
+      const matchesSearch = searchTerm === "" || 
+        (event.title && event.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (event.location && event.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (event.description && event.description.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      // Filter by category (if not "All Events")
+      const matchesCategory = selectedCategory === "All Events" || 
+        (event.category && event.category === selectedCategory);
+      
+      return matchesSearch && matchesCategory;
+    });
+    
+    setFilteredEvents(filtered);
+  }, [events, searchTerm, selectedCategory]);
+  
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  
+  // Handle search button click
+  const handleSearch = () => {
+    // The filtering happens automatically in the useEffect
+    // This function just improves UX by removing focus from the input
+    document.activeElement.blur();
+  };
+  
+  // Clear search
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
+  
+  // Handle category selection
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
   
   if (loading) return <div className="text-center my-8">Loading events...</div>;
   if (error) return <div className="text-center my-8 text-red-600">{error}</div>;
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-16 px-6">
@@ -25,23 +69,37 @@ const ExplorePage = () => {
             Find and join exciting competitions, workshops, and conferences happening near you.
           </p>
           
-          {/* Search Bar */}
+          {/* Search Bar - Updated with connected state */}
           <div className="relative max-w-2xl mx-auto mb-8">
             <input 
               type="text" 
               placeholder="Search events by name, location, or category..." 
               className="w-full py-4 pl-12 pr-4 bg-white border border-gray-200 rounded-xl shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
             <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <button className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-indigo-600 text-white px-4 py-1 rounded-lg hover:bg-indigo-700 transition-colors">
-              Search
+            <button 
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-indigo-600 text-white px-4 py-1 rounded-lg hover:bg-indigo-700 transition-colors"
+              onClick={searchTerm ? clearSearch : handleSearch}
+            >
+              {searchTerm ? "Clear" : "Search"}
             </button>
           </div>
           
           {/* Quick Category Pills */}
           <div className="flex flex-wrap justify-center gap-2 mb-4">
             {["All Events", "Competitions", "Workshops", "Conferences", "Virtual Events", "Free Events"].map((cat) => (
-              <button key={cat} className="bg-white hover:bg-indigo-50 text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-full border border-gray-200 hover:border-indigo-300 transition-all duration-200 text-sm font-medium">
+              <button 
+                key={cat} 
+                className={`px-4 py-2 rounded-full border transition-all duration-200 text-sm font-medium ${
+                  selectedCategory === cat 
+                    ? "bg-indigo-600 text-white border-indigo-600" 
+                    : "bg-white text-gray-700 border-gray-200 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300"
+                }`}
+                onClick={() => handleCategorySelect(cat)}
+              >
                 {cat}
               </button>
             ))}
@@ -53,68 +111,14 @@ const ExplorePage = () => {
           <div className="flex flex-wrap justify-between items-center mb-4">
             <div className="flex items-center space-x-2">
               <p className="text-gray-600 font-medium">
-                <span className="text-indigo-600 font-bold">{events.length}</span> events available
+                <span className="text-indigo-600 font-bold">{filteredEvents.length}</span> events available
               </p>
-              <button 
-                className="flex items-center text-indigo-600 hover:text-indigo-800 transition-colors px-3 py-1 rounded-lg hover:bg-indigo-50 font-medium text-sm"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <FaFilter className="mr-2" />
-                {showFilters ? "Hide Filters" : "Show Filters"}
-              </button>
+              
             </div>
-            <div className="flex space-x-2">
-              <select className="px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow hover:shadow-md">
-                <option>All Categories</option>
-                <option>Competitions</option>
-                <option>Workshops</option>
-                <option>Conferences</option>
-              </select>
-              <select className="px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow hover:shadow-md">
-                <option>Sort by Date</option>
-                <option>Sort by Popularity</option>
-                <option>Sort by Prize Value</option>
-              </select>
-            </div>
+           
           </div>
           
-          {/* Advanced Filters - Expandable */}
-          {showFilters && (
-            <div className="bg-white p-6 rounded-xl shadow-md mb-8 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">Date Range</label>
-                <div className="flex space-x-2">
-                  <input type="date" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
-                  <input type="date" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">Location</label>
-                <input type="text" placeholder="City or region" className="w-full px-3 py-2 border border-gray-200 rounded-lg" />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">Price Range</label>
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center">
-                    <input type="checkbox" id="free" className="mr-2" />
-                    <label htmlFor="free">Free</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input type="checkbox" id="paid" className="mr-2" />
-                    <label htmlFor="paid">Paid</label>
-                  </div>
-                </div>
-              </div>
-              <div className="md:col-span-3 flex justify-end">
-                <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg mr-2 transition-colors">
-                  Reset
-                </button>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
-                  Apply Filters
-                </button>
-              </div>
-            </div>
-          )}
+          
         </div>
 
         {/* Featured Event (Optional) */}
@@ -159,9 +163,9 @@ const ExplorePage = () => {
           </div>
         )}
 
-        {/* Event Grid */}
+        {/* Event Grid - Now using filteredEvents instead of events */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => (
+          {filteredEvents.length > 0 ? filteredEvents.map((event) => (
             <div
               key={event._id}
               className="group bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100 hover:border-indigo-200 transform hover:-translate-y-1"
@@ -311,9 +315,31 @@ const ExplorePage = () => {
                 </div>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="col-span-3 bg-white rounded-xl shadow-md p-8 text-center">
+              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FaCalendarAlt className="text-indigo-600 text-xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">No Events Found</h3>
+              <p className="text-gray-600 mb-6">
+                {searchTerm || selectedCategory !== "All Events" 
+                  ? "No events match your search criteria. Try adjusting your search or filters."
+                  : "There are no upcoming events scheduled at this time."}
+              </p>
+              {(searchTerm || selectedCategory !== "All Events") && (
+                <button 
+                  className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors duration-300"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCategory("All Events");
+                  }}
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
+          )}
         </div>
-        
         
         {/* Load More Button */}
         {events.length > 0 && (

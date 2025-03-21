@@ -413,7 +413,7 @@ const ExploreDetails = ({userId, user}) => {
                           <FaTrophy className="text-yellow-600" />
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Prize</p>
+                          <p className="text-sm text-gray-500"> Winning Prize</p>
                           <p className="font-medium text-yellow-600">${Number(event.win_price).toLocaleString()}</p>
                         </div>
                       </div>
