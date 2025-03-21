@@ -31,6 +31,8 @@ const ExploreDetails = ({userId, user}) => {
   const [showModal, setShowModal] = useState(false);
   const pageUrl = window.location.href;
   const [regloading, setRegLoading] = useState(false);
+
+  const isStudent = user && user.role === 'student';
   
   // Add state for organizer ID and fetch organizer profile data
   const [organizerId, setOrganizerId] = useState(null);
@@ -445,13 +447,16 @@ const ExploreDetails = ({userId, user}) => {
                     </div>
                     
                     {/* Register Button */}
+                    {isStudent && (
                     <button 
-                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition-colors duration-300 flex items-center justify-center shadow-sm"
-                      onClick={handleRegister} 
-                      disabled={regloading}
-                    >
-                      <FaTicketAlt className="mr-2" />  {regloading ? "Registering..." : "Register"}
-                    </button>
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition-colors duration-300 flex items-center justify-center shadow-sm"
+                    onClick={handleRegister} 
+                    disabled={regloading}
+                  >
+                    <FaTicketAlt className="mr-2" />  {regloading ? "Registering..." : "Register"}
+                  </button>  
+                    )}
+                    
                      
                     {/* Action Buttons */}
                     <div className="flex mt-4 space-x-2">
@@ -469,12 +474,14 @@ const ExploreDetails = ({userId, user}) => {
                         <FaShareAlt className="mr-2" /> Share
                       </button>
 
+                    {isStudent && (
                       <button 
-                        onClick={handleWhatsapp}
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center"
-                      >
-                        <FaWhatsapp className="mr-2" /> Contact
-                      </button>
+                      onClick={handleWhatsapp}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center"
+                    >
+                      <FaWhatsapp className="mr-2" /> Contact
+                    </button>)}
+                      
                     </div>
 
                     {/* Display saved events */}
