@@ -3,8 +3,7 @@ import { User } from '../../User-Authentication/models/User.js';
 
 export const sendFriendRequest = async (req, res) => {
     try {
-        // Fix how we get userId from token to match the middleware
-        const senderId = req.user.id || req.user._id;
+        const senderId = req.user.id;
         const receiverId = req.params.userId;
 
         // Add ObjectId validation
@@ -60,10 +59,9 @@ export const sendFriendRequest = async (req, res) => {
     }
 };
 
-// Apply the same fix to other functions
 export const acceptFriendRequest = async (req, res) => {
     try {
-        const receiverId = req.user.id || req.user._id;
+        const receiverId = req.user.id;
         const senderId = req.params.userId;
 
         const receiver = await User.findById(receiverId);
@@ -96,7 +94,7 @@ export const acceptFriendRequest = async (req, res) => {
 
 export const rejectFriendRequest = async (req, res) => {
     try {
-        const receiverId = req.user.id || req.user._id;
+        const receiverId = req.user.id;
         const senderId = req.params.userId;
 
         const receiver = await User.findById(receiverId);
@@ -121,7 +119,7 @@ export const rejectFriendRequest = async (req, res) => {
 
 export const removeFriend = async (req, res) => {
     try {
-        const userId = req.user.id || req.user._id;
+        const userId = req.user.id;
         const friendId = req.params.userId;
 
         const user = await User.findById(userId);
@@ -146,9 +144,7 @@ export const removeFriend = async (req, res) => {
 
 export const getFriendRequests = async (req, res) => {
     try {
-        const userId = req.user.id || req.user._id;
-        // Use correct field names for the User model
-        const user = await User.findById(userId).populate('friendRequests', 'Username email coverImg');
+        const user = await User.findById(req.user.id).populate('friendRequests', 'name email profileImage');
         res.status(200).json(user.friendRequests);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -157,9 +153,7 @@ export const getFriendRequests = async (req, res) => {
 
 export const getFriends = async (req, res) => {
     try {
-        const userId = req.user.id || req.user._id;
-        // Use correct field names for the User model
-        const user = await User.findById(userId).populate('friends', 'Username email coverImg');
+        const user = await User.findById(req.user.id).populate('friends', 'name email profileImage');
         res.status(200).json(user.friends);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -168,32 +162,20 @@ export const getFriends = async (req, res) => {
 
 export const getSuggestedFriends = async (req, res) => {
     try {
-        const userId = req.user.id || req.user._id;
-        const user = await User.findById(userId);
-        
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        
-        // Initialize arrays to empty if they don't exist
-        const friends = user.friends || [];
-        const friendRequests = user.friendRequests || [];
-        const sentRequests = user.sentRequests || [];
-        
+        const user = await User.findById(req.user.id);
         const allUsers = await User.find({
             _id: { 
                 $nin: [
-                    userId,
-                    ...friends,
-                    ...friendRequests,
-                    ...sentRequests
+                    req.user.id,
+                    ...user.friends,
+                    ...user.friendRequests,
+                    ...user.sentRequests
                 ]
             }
-        }).select('Username email coverImg');
+        }).select('name email profileImage');
         
         res.status(200).json(allUsers);
     } catch (error) {
-        console.error('Error in getSuggestedFriends:', error);
         res.status(500).json({ message: error.message });
     }
 };
