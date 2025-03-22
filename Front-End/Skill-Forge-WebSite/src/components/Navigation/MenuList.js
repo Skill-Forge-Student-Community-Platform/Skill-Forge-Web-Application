@@ -4,9 +4,7 @@ import { Users, MessageSquare, Activity } from "lucide-react";
 import { BookOpenText } from "lucide-react";
 import { BellDot } from "lucide-react";
 import { CircleHelp } from "lucide-react";
-import { MessageCircle } from "lucide-react";
 import { BarChart } from "lucide-react";
-import { Play } from "lucide-react";
 import { MapPin } from "lucide-react";
 import { User } from "lucide-react";
 import { Bookmark, DollarSign } from "lucide-react";
@@ -199,7 +197,7 @@ export const getMenus = (roleType, userId) => {
           name: "My Profile",
           desc: "View and edit",
           icon: User,
-          path: `${baseUrl}/profile`  // This will be handled in MainLayout to route to the correct profile page
+          path: `${baseUrl}/profile`
         },
         {
           name: "Account Settings",
