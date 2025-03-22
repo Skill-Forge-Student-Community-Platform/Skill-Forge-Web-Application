@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import friendService from "../../../services/friendService";
 import { toast } from 'react-hot-toast';
 import "./AllFriends.css";
-import FriendRequests from "./FriendRequests";
 
 const AllFriends = () => {
     const [friends, setFriends] = useState([]);
