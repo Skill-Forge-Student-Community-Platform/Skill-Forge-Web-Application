@@ -21,11 +21,11 @@
 /* Container for all people cards - Horizontal Scroll */
 .people-you-may-know {
   display: flex;
-  gap: 20px; 
-  overflow-x: auto; 
-  white-space: nowrap; 
+  gap: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
   padding: 10px;
-  scroll-behavior: smooth; 
+  scroll-behavior: smooth;
 }
 
 /* Individual person card */
@@ -34,17 +34,30 @@
   padding: 20px;
   border-radius: 15px;
   text-align: center;
-  width: 200px; 
+  width: 200px;
   flex: 0 0 auto;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dark .person-card {
+  border-color: #334155;
 }
 
 .person-card:hover {
   background: #ececec;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Avatar styling */
@@ -53,6 +66,10 @@
   height: 70px;
   border-radius: 50%;
   margin-bottom: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 /* Name, role, and location */
@@ -60,6 +77,14 @@
   font-size: 18px;
   font-weight: bold;
   margin: 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+  color: #333;
+}
+
+.dark .person-name {
+  color: #e4e4e4;
 }
 
 .person-role,
@@ -67,6 +92,16 @@
   font-size: 13px;
   color: gray;
   margin: 4px 0;
+}
+
+.person-details {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+.dark .person-details {
+  color: #94a3b8;
 }
 
 /* Friend Request Buttons */
@@ -111,6 +146,72 @@
   border-radius: 10px;
 }
 
+
 .people-you-may-know::-webkit-scrollbar-track {
   background: transparent;
+}
+
+.suggestions-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.dark .suggestions-container {
+  background-color: #1e293b;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.dark .section-title {
+  color: #e4e4e4;
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.person-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.mutual-connections {
+  margin-left: 4px;
+}
+
+.request-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.request-button:hover {
+  background-color: #0958a3;
+}
+
+.request-button.pending {
+  background-color: #f0f0f0;
+  color: #666;
 }
