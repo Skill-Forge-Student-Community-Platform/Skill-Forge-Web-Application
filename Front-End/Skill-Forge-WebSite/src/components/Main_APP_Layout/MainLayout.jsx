@@ -18,6 +18,7 @@ import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
+import OrganizerProfilePage from '../OrganizerProfile/OrganizerProfilePage';
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -132,9 +133,6 @@ const StudentProfilePage = ({ userId }) => (
   <PlaceholderPage title={`Student Profile for user ${userId}`} />
 );
 
-const OrganizerProfilePage = ({ userId }) => (
-  <PlaceholderPage title={`Organizer Profile for user ${userId}`} />
-);
 
 const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const { user, logout } = useAuthStore();
