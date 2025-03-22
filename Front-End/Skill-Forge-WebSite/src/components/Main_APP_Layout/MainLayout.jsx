@@ -12,7 +12,12 @@ import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 
+
 import Friendspage from '../Network/Friendspage';
+
+import { Teams } from '../Team_Collaboration/sub components for teams/Teams.jsx';
+import { Inbox } from '../Team_Collaboration/sub-components/Inbox.jsx';
+
 
 import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
@@ -72,9 +77,9 @@ const TeamActivity = ({ userId }) => (
   <PlaceholderPage title={`Team Activity for user ${userId}`} />
 );
 
-const Inbox = ({ userId }) => (
-  <PlaceholderPage title={`Inbox for user ${userId}`} />
-);
+// const Inbox = ({ userId }) => (
+//   <PlaceholderPage title={`Inbox for user ${userId}`} />
+// );
 
 // New placeholder components
 const NetworkPage = ({ userId }) => (
@@ -232,10 +237,11 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* Team routes */}
 
-            <Route path="teams" element={<TeamPage userId={userId} />} />
+
+            <Route path="teams" element={<Teams/>} />
             <Route path="teams/management" element={<TeamManagement userId={userId} />} />
             <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
-            <Route path="teams/inbox" element={<Inbox userId={userId} />} />
+            <Route path="teams/inbox" element={<Inbox/>} />
             <Route path="teams/create" element={<CreateTeamPage userId={userId} />} />
             <Route path="teams/find" element={<FindTeamsPage userId={userId} />} />
 
@@ -246,6 +252,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             {/* other routes */}
             <Route path="bookmarks" element={<BookmarksPage userId={userId} />} />
             <Route path="pricing" element={<PricingPage userId={userId} />} />
+
 
             {/* Default route */}
             <Route path="*" element={<Navigate to="home" replace />} />

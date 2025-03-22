@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosIntance } from "../lib/axios";
+import { axiosIntance } from ".././utils/axios.js";
 
 const useCompetitionStore = create((set) => ({
     trendingCompetitions: [],

@@ -36,6 +36,7 @@ import notificationRoutes from './Features/Notifications/routes/Notification.rou
 
 
 
+
 // Environment configuration
 dotenv.config();
 
@@ -149,6 +150,7 @@ app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/teams", teamRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Notification routes
  app.use("/api/notifications", notificationRoutes);
@@ -161,6 +163,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
 
 app.use("/api/friends", friendRoutes);
+
 
 
 app.get("/api", (req, res) => {

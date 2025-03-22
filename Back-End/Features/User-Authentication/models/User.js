@@ -74,6 +74,13 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  // For Team Collaboration
+  teams: [
+    { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Team' 
+    }
+  ],
   resetPasswordToken: String,
   resetPasswordExpiresAt: Date,
   verificationToken: String,
