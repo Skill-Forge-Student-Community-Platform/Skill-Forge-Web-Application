@@ -1,37 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./AddProjectPage.css";
+import "./AddProjectPage.css"; // Make sure to create this CSS file
 
-const AddProject = () => {
+const AddProjectPage = () => {
   const navigate = useNavigate();
   const [project, setProject] = useState({
     title: "",
     location: "",
-    rating: "",
-    price: "",
     image: "",
   });
 
-  // ✅ Handle Input Changes
   const handleChange = (e) => {
     setProject({ ...project, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle Form Submission
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProject({ ...project, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // ✅ Retrieve Existing Projects
     const savedProjects = JSON.parse(localStorage.getItem("projects")) || [];
-
-    // ✅ Add New Project
     const updatedProjects = [...savedProjects, project];
-
-    // ✅ Save Updated Projects to localStorage
     localStorage.setItem("projects", JSON.stringify(updatedProjects));
-
-    // ✅ Navigate Back to Projects Section
-    navigate("/view-projects");
+    navigate("/"); // Redirect back to profile page
   };
 
   return (
@@ -39,19 +38,27 @@ const AddProject = () => {
       <h2>Add New Project</h2>
       <form onSubmit={handleSubmit}>
         <label>Project Title</label>
-        <input type="text" name="title" value={project.title} onChange={handleChange} required />
+        <input
+          type="text"
+          name="title"
+          value={project.title}
+          onChange={handleChange}
+          required
+        />
 
         <label>Location</label>
-        <input type="text" name="location" value={project.location} onChange={handleChange} required />
+        <input
+          type="text"
+          name="location"
+          value={project.location}
+          onChange={handleChange}
+          required
+        />
 
-        <label>Rating</label>
-        <input type="number" step="0.1" name="rating" value={project.rating} onChange={handleChange} required />
+        <label>Upload Image</label>
+        <input type="file" accept="image/*" onChange={handleImageUpload} required />
 
-        <label>Price</label>
-        <input type="text" name="price" value={project.price} onChange={handleChange} required />
-
-        <label>Image URL</label>
-        <input type="text" name="image" value={project.image} onChange={handleChange} required />
+        {project.image && <img src={project.image} alt="Preview" className="image-preview" />}
 
         <button type="submit">Add Project</button>
         <button type="button" className="cancel-btn" onClick={() => navigate("/")}>Cancel</button>
@@ -60,4 +67,4 @@ const AddProject = () => {
   );
 };
 
-export default AddProject;
+export default AddProjectPage;

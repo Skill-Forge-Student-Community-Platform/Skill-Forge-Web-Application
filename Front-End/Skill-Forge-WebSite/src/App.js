@@ -8,6 +8,7 @@ import LoadingSpinner from '../src/components/Registration/shared/LoadingSpinner
 import { ProtectedRoute } from './components/Registration/AuthGuard';
 import MainLayout from './components/Main_APP_Layout/MainLayout';
 import HomeRedirect from './components/Main_APP_Layout/HomeRedirect';
+import SettingsPage from './components/Settings/SettingsPage';
 
 import { useAuthStore } from './store/authStore';
 import { Toaster } from 'react-hot-toast';
@@ -45,6 +46,13 @@ function App() {
         <Route path="/profile/setup/*" element={
           <ProtectedRoute>
             <ProfileSetupRoute />
+          </ProtectedRoute>
+        } />
+
+        {/* Dedicated Settings routes outside MainLayout - with higher priority */}
+        <Route path="/:roleType/:userId/settings/*" element={
+          <ProtectedRoute>
+            <SettingsPage isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
           </ProtectedRoute>
         } />
 

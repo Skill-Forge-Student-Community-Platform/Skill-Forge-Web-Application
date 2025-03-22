@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./AllProjectsPage.css";
+import "./AllProjects.css";
 
-const AllProjectsPage = () => {
+const AllProjects = () => {
   const navigate = useNavigate();
-  const projects = JSON.parse(localStorage.getItem("projects")) || [];
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    // ✅ Get Projects from localStorage
+    const savedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    setProjects(savedProjects);
+  }, []);
 
   return (
     <div className="all-projects-container">
-      <h2>All Projects</h2>
+      <h2 className="all-projects-title">All Projects</h2>
+
+      {/* ✅ Horizontal Scrollable Row */}
       <div className="projects-grid">
         {projects.map((project, index) => (
           <div key={index} className="project-card">
-            <img src={project.image} alt={project.title} />
+            <img src={project.image} alt={project.title} className="project-image" />
             <p className="project-title">{project.title}</p>
             <p className="project-location">{project.location}</p>
             <div className="project-rating">⭐ {project.rating}</div>
@@ -21,10 +29,12 @@ const AllProjectsPage = () => {
         ))}
       </div>
 
-      {/* ✅ Back Button */}
-      <button className="back-btn" onClick={() => navigate("/")}>Back to Profile</button>
+      {/* ✅ Back to Profile Button */}
+      <button className="back-btn" onClick={() => navigate("/")}>
+        Back to Profile
+      </button>
     </div>
   );
 };
 
-export default AllProjectsPage;
+export default AllProjects;
