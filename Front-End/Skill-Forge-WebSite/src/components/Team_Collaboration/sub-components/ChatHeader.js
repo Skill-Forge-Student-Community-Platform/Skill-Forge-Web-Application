@@ -1,6 +1,6 @@
 import React from 'react'
-import { useAuthStore } from '../store/useAuthStore';
-import { useChatStore } from '../store/useChatStore';
+import { useChatStore } from '../../../store/useChatStore.js'
+import { useAuthStore } from "../../../store/authStore.js";
 import { X } from "lucide-react";
 
 function ChatHeader() {
@@ -20,7 +20,7 @@ function ChatHeader() {
 
           {/* User info */}
           <div>
-            <h3 className="font-medium">{selectedUser.fullName}</h3>
+            <h3 className="font-medium">{selectedUser.Username}</h3>
             <p className="text-sm text-base-content/70">
               {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
             </p>
