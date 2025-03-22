@@ -50,7 +50,7 @@ export const markAllAsRead = async () => {
 };
 
 /**
- * Delete a specific notification
+ * Delete a notification
  */
 export const deleteNotification = async (notificationId) => {
   try {
@@ -79,51 +79,45 @@ export const deleteAllNotifications = async () => {
  * Format notification message based on type
  */
 export const formatNotificationMessage = (notification) => {
-  const { type, message } = notification;
-
-  // If there's already a custom message, use it
-  if (message) return message;
-
-  // Username of the person who triggered the notification
-  const username = notification.from?.Username || 'Someone';
+  const { type } = notification;
 
   switch (type) {
-    case 'follow':
-      return `started following you`;
     case 'like':
-      return `liked your post`;
+      return 'liked your post';
     case 'comment':
-      return `commented on your post`;
+      return 'commented on your post';
+    case 'follow':
+      return 'started following you';
+    case 'friend_request':
+      return 'sent you a friend request';
+    case 'friend_accept':
+      return 'accepted your friend request';
+    case 'share':
+      return 'shared your post';
     case 'mention':
-      return `mentioned you in a post`;
+      return 'mentioned you in a post';
     case 'team_invite':
-      return `invited you to join their team`;
-    case 'event_updates':
-      return `There's an update on an event you're following`;
-    case 'workshop_updates':
-      return `There's an update on a workshop you're enrolled in`;
+      return 'invited you to join a team';
     case 'direct_message':
-      return `sent you a message`;
-    case 'group_message':
-      return `sent a message in a group you're part of`;
-    case 'portfolio_view':
-      return `viewed your portfolio`;
+      return 'sent you a message';
     default:
-      return `interacted with your content`;
+      return 'interacted with your content';
   }
 };
 
 /**
- * Determine if a notification type should show action buttons
+ * Get notification actions based on type
  */
 export const getNotificationActions = (type) => {
   switch (type) {
     case 'follow':
       return ['View Profile'];
-    case 'team_invite':
-      return ['Accept', 'Decline'];
     case 'direct_message':
       return ['Reply'];
+    case 'friend_request':
+      return ['accept', 'decline'];
+    case 'team_invite':
+      return ['accept', 'decline'];
     default:
       return null;
   }
@@ -131,78 +125,28 @@ export const getNotificationActions = (type) => {
 
 /**
  * Get notification icon based on type
- * This is useful if you want to show different icons for different notification types
  */
 export const getNotificationIcon = (type) => {
   switch (type) {
-    case 'follow':
-      return 'user-plus';
     case 'like':
-      return 'heart';
+      return '👍';
     case 'comment':
-      return 'message-square';
+      return '💬';
+    case 'follow':
+      return '👤';
+    case 'friend_request':
+      return '🤝';
+    case 'friend_accept':
+      return '✅';
+    case 'share':
+      return '🔄';
     case 'mention':
-      return 'at-sign';
+      return '@';
     case 'team_invite':
-      return 'users';
-    case 'event_updates':
-      return 'calendar';
-    case 'workshop_updates':
-      return 'book-open';
+      return '👥';
     case 'direct_message':
-      return 'mail';
-    case 'group_message':
-      return 'message-circle';
-    case 'portfolio_view':
-      return 'eye';
-
+      return '✉️';
     default:
-      return 'bell';
+      return '🔔';
   }
-};
-
-/**
- * Mock function for testing: generate random notifications
- * In production, you'd remove this function
- */
-export const generateMockNotifications = (count = 10) => {
-  const types = [
-    'follow', 'like', 'comment', 'mention', 'team_invite',
-    'event_updates', 'workshop_updates', 'direct_message',
-    'group_message', 'portfolio_view'
-  ];
-
-  const usernames = [
-    'John Smith', 'Sophia Rodriguez', 'Ahmed Khan',
-    'Emma Wilson', 'David Lee', 'Jane Doe'
-  ];
-
-  const notifications = [];
-
-  for (let i = 0; i < count; i++) {
-    const type = types[Math.floor(Math.random() * types.length)];
-    const username = usernames[Math.floor(Math.random() * usernames.length)];
-    const hours = Math.floor(Math.random() * 72); // Random time within last 72 hours
-
-    notifications.push({
-      _id: `mock-${i}`,
-      from: {
-        _id: `user-${i}`,
-        Username: username,
-        profilePicture: `https://i.pravatar.cc/150?img=${i + 10}`
-      },
-      to: 'current-user',
-      type,
-      createdAt: new Date(Date.now() - hours * 60 * 60 * 1000).toISOString(),
-      read: Math.random() > 0.5, // Random read status
-      post: type === 'like' || type === 'comment' ? `post-${i}` : undefined,
-      team: type === 'team_invite' ? `team-${i}` : undefined
-    });
-  }
-
-  return {
-    success: true,
-    notifications: notifications.sort((a, b) =>
-      new Date(b.createdAt) - new Date(a.createdAt))
-  };
 };

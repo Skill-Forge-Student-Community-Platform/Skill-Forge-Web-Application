@@ -9,10 +9,10 @@ const QualificationsSection = () => {
   useEffect(() => {
     // ✅ Default qualifications (Preloaded)
     const defaultQualifications = [
-      { type: "Academic", degree: "B.Sc", status: "Verified" },
-      { type: "Job Experience", degree: "Senior HR Manager", status: "Verified" },
-      { type: "Academic", degree: "M.Sc", status: "Verified" },
-      { type: "Job Experience", degree: "Software Engineer", status: "Verified" },
+      { type: "Academic", status: "Verified" },
+      { type: "Job Experience", status: "Verified" },
+      { type: "Academic", status: "Verified" },
+      { type: "Job Experience", status: "Verified" },
     ];
 
     // ✅ Load saved qualifications from localStorage
@@ -20,9 +20,7 @@ const QualificationsSection = () => {
 
     // ✅ Prevent duplicates by checking if defaultQualifications already exist
     const isDefaultAlreadyAdded = savedQualifications.some((q) =>
-      defaultQualifications.some(
-        (defaultQ) => defaultQ.type === q.type && defaultQ.degree === q.degree
-      )
+      defaultQualifications.some((defaultQ) => defaultQ.type === q.type)
     );
 
     // ✅ If default qualifications are not already stored, add them once
@@ -43,12 +41,11 @@ const QualificationsSection = () => {
 
   return (
     <div className="qualifications-container">
-      <h2>Qualifications</h2>
+      <h2>Certifications</h2>
       <table>
         <thead>
           <tr>
             <th>Document Type</th>
-            <th>Degree / Position</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -56,7 +53,6 @@ const QualificationsSection = () => {
           {qualifications.map((q, index) => (
             <tr key={index}>
               <td>{q.type}</td>
-              <td>{q.degree}</td>
               <td className="status-text verified">Verified</td> {/* ✅ Always Show Verified */}
             </tr>
           ))}

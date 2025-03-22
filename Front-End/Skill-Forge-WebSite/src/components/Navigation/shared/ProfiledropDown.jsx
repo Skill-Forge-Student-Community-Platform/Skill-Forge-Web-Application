@@ -76,7 +76,7 @@ const ProfileDropDown = ({ user, baseUrl, onLogout, roleType }) => {
             </Link>
 
             <Link
-              to={`${baseUrl}/settings/${user?._id}`}  // This should now point to /Student/:userId/settings or /Organizer/:userId/settings
+              to={`${baseUrl}/settings`}
               className="dropdown-item"
               onClick={() => setDropdownOpen(false)}
             >

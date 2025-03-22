@@ -258,4 +258,5 @@ const postServices = {
   }
 };
 
+// Export the post services for use in components
 export default postServices;

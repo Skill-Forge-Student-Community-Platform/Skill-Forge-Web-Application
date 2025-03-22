@@ -1,15 +1,12 @@
 import express from 'express'
-
-// import {protectRoute} from "../../User-Authentication/middleware/auth.middleware.js";
-
-import { createTeam, sendInvite, acceptInvite, getTeamsByUser} from '../controllers/team.controller.js'
+import { verifyToken } from '../../User-Authentication/middleware/auth.middleware.js';
+import { createTeam, sendInvite, getTeamsByUser} from '../Controllers/team.controller.js';
 
 const router = express.Router();
 
-// router.post("/createTeam", protectRoute, createTeam);
-// router.get("/getTeams", protectRoute, getTeamsByUser);
-// router.post('/invite', sendInvite);
-// router.post('/acceptInvite', acceptInvite);
-// router.get('/by-interest/:technology', getTeamsByInterest);
+router.post("/createTeam", verifyToken, createTeam);
+router.get("/getTeams", verifyToken, getTeamsByUser);
+router.post('/invite', verifyToken, sendInvite);
+
 
 export default router;

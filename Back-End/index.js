@@ -72,6 +72,14 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Listen for join event (called after authentication)
+  socket.on('join', ({ userId }) => {
+    if (userId) {
+      socket.join(`user:${userId}`);
+      console.log(`User ${userId} joined personal room`);
+    }
+  });
+
   // Listen for post creation
   socket.on('createPost', (post) => {
     // Broadcast to all connected clients except sender
@@ -119,9 +127,6 @@ app.use(cookieParser()); // to allow us parse incoming cookies
 
 
 
-
-
-
 app.use(fileUpload({
   createParentPath: true,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
@@ -135,7 +140,6 @@ app.use('/uploads', uploadMiddleware);
 
 
 
-
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -144,6 +148,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/teams", teamRoutes);
 
 // Notification routes
  app.use("/api/notifications", notificationRoutes);
@@ -198,6 +203,3 @@ server.listen(port, () => {
   console.log(`Server is now running on port ${port}`);
   console.log(`Socket.IO server is ready`);
 });
-
-
-
