@@ -240,7 +240,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="teams/find" element={<FindTeamsPage userId={userId} />} />
 
             {/* Network routes */}
-            <Route path="network" element={<Friendspage />} />
+            <Route path="network/*" element={<Friendspage />} />
 
 
             {/* other routes */}

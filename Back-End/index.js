@@ -72,6 +72,14 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Listen for join event (called after authentication)
+  socket.on('join', ({ userId }) => {
+    if (userId) {
+      socket.join(`user:${userId}`);
+      console.log(`User ${userId} joined personal room`);
+    }
+  });
+
   // Listen for post creation
   socket.on('createPost', (post) => {
     // Broadcast to all connected clients except sender
@@ -195,6 +203,3 @@ server.listen(port, () => {
   console.log(`Server is now running on port ${port}`);
   console.log(`Socket.IO server is ready`);
 });
-
-
-
