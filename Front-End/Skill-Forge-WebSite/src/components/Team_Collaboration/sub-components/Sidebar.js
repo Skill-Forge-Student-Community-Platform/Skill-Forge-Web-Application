@@ -27,6 +27,7 @@ function Sidebar() {
               All
             </button>
           </div>
+
             {/* <div className="flex items-center gap-2">
                 <User className='size-6'/>
                 <span className="font-medium hidden lg:block">Contacts</span>

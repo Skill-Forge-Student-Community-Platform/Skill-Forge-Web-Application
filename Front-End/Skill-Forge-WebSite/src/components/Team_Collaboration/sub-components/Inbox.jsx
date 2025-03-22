@@ -1,6 +1,7 @@
 import React from 'react'
 import { useChatStore } from '../../../store/useChatStore.js'
 import Sidebar from './Sidebar.js';
+import NoChatSelected from './NoChatSelected.js';
 
 export const Inbox = () => {
   const { selectedUser } = useChatStore();
@@ -12,7 +13,7 @@ export const Inbox = () => {
           <div className="flex h-full rounded-lg overflow-hidden">
             <Sidebar/>
 
-            {/* {!selectedUser ? <NoChatSelected /> : <ChatContainer />} */}
+            {!selectedUser ? <NoChatSelected /> : null}
 
           </div>
         </div>
