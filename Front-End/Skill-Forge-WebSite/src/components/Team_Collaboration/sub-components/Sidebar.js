@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { useChatStore } from '../store/useChatStore'
-import SidebarSkeleton from './skeletons/SidebarSkeleton';
+import { useChatStore } from '../../../store/useChatStore.js'
+import SidebarSkeleton from './skeletons/SidebarSkeleton.js';
+import { useAuthStore } from "../../../store/authStore.js";
 // import { User } from 'lucide-react';
-import { useAuthStore } from '../store/useAuthStore';
 
 function Sidebar() {
     const{ getUsers, users, selectedUsers, setSelectedUser, isUsersLoding }= useChatStore();
@@ -19,12 +19,12 @@ function Sidebar() {
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
         <div className="border-b border-base-300 w-full p-5 ">
-          <div className='inline-flex rounded-lg p-1.5 gap-2 bg-gray-200'>
-            <button className='border-2 border-black-500 rounded-lg w-[110px] text-lg font-bold flex items-center justify-center bg-white'>
-                General
+          <div className='flex flex-col sm:flex-row rounded-lg p-1.5 gap-2 bg-gray-200 w-full sm:w-auto'>
+            <button className='border-2 border-black-500 rounded-lg text-base sm:w-[110px] font-bold flex items-center justify-center bg-white py-2 px-4'>
+              Teams
             </button>
-            <button className=' bg-white border-2 border-black-500 rounded-lg w-[110px] text-lg font-bold flex items-center justify-center'>
-                All
+            <button className='bg-white border-2 border-black-500 rounded-lg text-base sm:w-[110px] font-bold flex items-center justify-center py-2 px-4'>
+              All
             </button>
           </div>
             {/* <div className="flex items-center gap-2">
@@ -61,7 +61,7 @@ function Sidebar() {
 
             {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.fullName}</div>
+              <div className="font-medium truncate">{user.Username}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>

@@ -1,23 +1,36 @@
-
 import { User } from "../../User-Authentication/models/User.js"
-
+import Team from "../../Team-collaboration/models/team.model.js";
 import Message from "../models/message.model.js";
 import { v2 as cloudinary } from "cloudinary";
-
-
-
 
 // this route is being protected
 export const getUsersForSidebar = async(req, res)=>{
      try {
-      // grabs the user id from this request
-        const loggedInUserId = req.user._id;
+         // grabs the user id from this request
+        const loggedInUserId = req.user.id;
 
-      //   find all the users except current user and -
-      // -this fetches evering except tha password
+         //   find all the users except current user and -
+         // -this fetches evering except tha password
         const filteredUsers = await User.find({_id:{$ne:loggedInUserId}}).select("-password");
 
-        res.status(200).json(filteredUsers)
+         // Fetch teams created by or joined by the logged-in user
+         const teams = await Team.find({
+            $or: [
+            { creator: loggedInUserId },
+            { members: loggedInUserId }
+            ]
+         }).populate("members", "Username email");
+
+         // Exclude the logged-in user from the `members` list
+         const filteredTeams = teams.map(team => ({
+            ...team.toObject(),
+            members: team.members.filter(member => member._id.toString() !== loggedInUserId)
+         }));
+
+        res.status(200).json({
+            filteredUsers,
+            teams:filteredTeams
+        })
      } catch (error) {
         console.log("Error in getUsersForSidebar: ", error.message);
         res.status(500).json({message:"Internal Server Error"});
