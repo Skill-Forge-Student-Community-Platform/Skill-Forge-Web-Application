@@ -10,7 +10,7 @@ import './ReplyComment.css';
 
 const ReplyComment = ({
   reply,
-  postId, // Add the missing postId prop
+  postId,
   onReply,
   onLike,
   onDelete,
@@ -22,13 +22,13 @@ const ReplyComment = ({
 }) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyText, setReplyText] = useState('');
-
   const [showOptions, setShowOptions] = useState(false);
   const [liked, setLiked] = useState(reply.likes?.includes(currentUserId) || false);
   const [likeCount, setLikeCount] = useState(reply.likes?.length || 0);
   const [showEmoji, setShowEmoji] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(reply.text);
+  const [isReplyFocused, setIsReplyFocused] = useState(false);
 
   const optionsRef = useRef(null);
   const emojiRef = useRef(null);
@@ -90,7 +90,7 @@ const ReplyComment = ({
     const newLiked = !liked;
     setLiked(newLiked);
     setLikeCount(prev => newLiked ? prev + 1 : Math.max(0, prev - 1));
-    onLike(reply._id, newLiked);
+    onLike(postId, reply._id, newLiked);
   };
 
   const handleEmojiClick = (event, emojiObject) => {
@@ -259,17 +259,25 @@ const ReplyComment = ({
               {liked ? <FaThumbsUp /> : <FaRegThumbsUp />}
               {likeCount > 0 && <span className="like-count">{likeCount}</span>}
             </button>
+            <button
+              className="comment-action-btn"
+              onClick={() => setShowReplyForm(!showReplyForm)}
+            >
+              <FaReply /> Reply
+            </button>
           </div>
 
           {showReplyForm && (
             <form className="reply-form" onSubmit={handleReplySubmit}>
-              <div className="reply-input-container">
+              <div className={`reply-input-container ${replyText.trim() || isReplyFocused ? 'expanded' : ''}`}>
                 <input
                   ref={replyInputRef}
                   type="text"
                   placeholder="Write a reply..."
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
+                  onFocus={() => setIsReplyFocused(true)}
+                  onBlur={() => setIsReplyFocused(false)}
                   className="reply-input"
                 />
                 <div className="reply-actions">
@@ -287,13 +295,15 @@ const ReplyComment = ({
                       </div>
                     )}
                   </div>
-                  <button
-                    type="submit"
-                    className="reply-submit-btn"
-                    disabled={!replyText.trim()}
-                  >
-                    Reply
-                  </button>
+                  {(replyText.trim() || isReplyFocused) && (
+                    <button
+                      type="submit"
+                      className="reply-submit-btn"
+                      disabled={!replyText.trim()}
+                    >
+                      Reply
+                    </button>
+                  )}
                 </div>
               </div>
             </form>

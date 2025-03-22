@@ -28,11 +28,14 @@ const ProfileAvatar = ({
   // Check for direct cache hit first (synchronous) to prevent flickering
   useEffect(() => {
     if (userId) {
+      console.log('Fetching avatar for userId:', userId); // Debugging
       const cachedUrl = imageCache.getCachedImage(userId);
       if (cachedUrl) {
+        console.log('Found cached image URL:', cachedUrl); // Debugging
         setImageUrl(cachedUrl);
       }
     } else if (staticImageUrl) {
+      console.log('Using static image URL:', staticImageUrl); // Debugging
       setImageUrl(staticImageUrl);
     }
   }, [userId, staticImageUrl]);
@@ -109,6 +112,11 @@ const ProfileAvatar = ({
 
   // Enhance the size determination
   const getSizeClass = () => {
+    // Special case for ProfileSettings component
+    if (className.includes('w-full h-full')) {
+      return 'size-custom'; // Add this class in ProfileAvatar.css
+    }
+
     // If a custom classname is provided for a specific context, make sure
     // we honor the requested size rather than hardcoding it
     if (className.includes('post-author-avatar')) {
@@ -140,6 +148,7 @@ const ProfileAvatar = ({
     <div
       className={`avatar-container ${getMembershipBorderClass()} ${getSizeClass()} ${isLoading ? 'loading-avatar' : ''} ${className}`}
       onClick={onClick}
+      style={className.includes('w-full h-full') ? { width: '100%', height: '100%' } : {}}
     >
       {/* Show a loading skeleton while image is loading */}
       {isLoading && <div className="avatar-skeleton pulse-animation"></div>}
@@ -151,7 +160,7 @@ const ProfileAvatar = ({
           alt={imageAlt}
           className={`avatar-image ${imageLoaded ? 'loaded' : ''}`}
           onLoad={() => {
-            console.log(`Image loaded: ${imageUrl}`);
+            console.log(`Image loaded: ${imageUrl} for userId: ${userId}`);
             setImageLoaded(true);
           }}
           onError={handleImageError}

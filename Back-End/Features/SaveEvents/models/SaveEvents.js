@@ -1,6 +1,6 @@
 import mongoose from "mongoose"; 
 
-const savedEventSchema = new mongoose.Schema({
+const SavedEventSchema = new mongoose.Schema({
   userId: { 
     type: String, 
     required: true 
@@ -25,8 +25,8 @@ const savedEventSchema = new mongoose.Schema({
 });
 
 // Create a composite unique index for userId and eventId
-savedEventSchema.index({ userId: 1, eventId: 1 }, { unique: true });
+SavedEventSchema.index({ userId: 1, eventId: 1 }, { unique: true });
 
-const SavedEvent = mongoose.model("SavedEvent", savedEventSchema);
+const SavedEvent = mongoose.model("SavedEvent", SavedEventSchema);
 export default SavedEvent;
 

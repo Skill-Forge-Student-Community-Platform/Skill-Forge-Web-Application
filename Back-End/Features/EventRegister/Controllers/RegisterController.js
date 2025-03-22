@@ -1,5 +1,36 @@
 import RegisteredUser from "../Models/RegisteredUser.js";
 
+import Event from "../../EventListing/models/Event.js"; // Add this import
+
+export const getRegisteredEventList = async (req, res) => { 
+  try {
+    const { userId } = req.params;
+    console.log(userId + " is the user ID");
+    
+    // Get all event IDs this user has registered for
+    const registrations = await RegisteredUser.find({ userId });
+    
+    if (registrations.length === 0) {
+      // Return empty array if user hasn't registered for any events
+      return res.json([]);
+    }
+    
+    const eventIds = registrations.map(reg => reg.eventId);
+    console.log("Found event IDs:", eventIds);
+    
+    // Get the full event details from the Event collection
+    const events = await Event.find({
+      _id: { $in: eventIds }
+    });
+    
+    console.log(`Found ${events.length} events for user ${userId}`);
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching registered events:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 
 export const getRegisteredUser = async (req, res) => {
@@ -7,7 +38,7 @@ export const getRegisteredUser = async (req, res) => {
     const registeredUsers = await RegisteredUser.find();
 
     // Aggregate points by userId
-    const userPointsMap = {};
+    /*const userPointsMap = {};
 
     registeredUsers.forEach(user => {
       const { userId, userName, email, points } = user;
@@ -17,17 +48,17 @@ export const getRegisteredUser = async (req, res) => {
           userId,
           userName,
           email,
-          totalPoints: 0, // Initialize total points
+          //totalPoints: 0, // Initialize total points
         };
       }
 
-      userPointsMap[userId].totalPoints += points; // Sum points
-    });
+      //userPointsMap[userId].totalPoints += points; // Sum points
+    }); */
 
     // Convert object values to an array
-    const consolidatedUsers = Object.values(userPointsMap);
+    //const consolidatedUsers = Object.values(userPointsMap);
 
-    res.json(consolidatedUsers);
+    res.json(registeredUsers);
 
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -37,38 +68,62 @@ export const getRegisteredUser = async (req, res) => {
 
 
 
-  export const registerUser = async (req, res) => {
-    try {
-      const { userId, userName, email, eventId } = req.body;
-  
-      // Check for missing fields
-      if (!userId || !userName || !email || !eventId) {
-        return res.status(400).json({ error: "All fields are required" });
-      }
-
-       // Check if the user has already registered for this event
-        const existingRegistration = await RegisteredUser.findOne({ userId, eventId });
+export const registerUser = async (req, res) => {
+  try {
+    // Log incoming data for debugging
+    console.log("Registration request body:", req.body);
     
-    if (existingRegistration) {
-      return res.status(409).json({ error: "User already registered for this event" });
-    }
-  
-      // Create a new registration record
-      const newRegistration = new RegisteredUser({
-        userId,
-        userName,
-        email,
-        eventId,
+    const { userId, userName, email, eventId } = req.body;
+    
+    // Validate required fields
+    if (!userId || !userName || !email || !eventId) {
+      console.log("Missing required fields:", { userId, userName, email, eventId });
+      return res.status(400).json({ 
+        message: "Missing required fields",
+        received: req.body 
       });
-  
-      await newRegistration.save();
-      res.status(201).json({ message: "User registered successfully" });
-    } catch (error) {
-      console.error("Registration Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
     }
-  };
-
+    
+    // Check for existing registration
+    const existingRegistration = await RegisteredUser.findOne({ userId, eventId });
+    if (existingRegistration) {
+      return res.status(409).json({ message: "User already registered for this event" });
+    }
+    
+    // Create new registration
+    const newRegistration = new RegisteredUser({
+      userId,
+      userName,
+      email,
+      eventId
+    });
+    
+    // Save the registration
+    await newRegistration.save();
+    
+    // Update event participants count - this might be causing the error if Event model isn't imported
+    try {
+      const mongoose = await import('mongoose');
+      const Event = mongoose.default.model('Event');
+      await Event.findByIdAndUpdate(
+        eventId, 
+        { $inc: { current_participants: 1 } }
+      );
+    } catch (eventUpdateError) {
+      // If updating event fails, log but still consider registration successful
+      console.error("Failed to update event participant count:", eventUpdateError);
+    }
+    
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ 
+      message: "Server error during registration", 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+};
   export const getRegisteredUsersByEvent = async (req, res) => {
     try {
       const { eventId } = req.params;
@@ -76,11 +131,7 @@ export const getRegisteredUser = async (req, res) => {
       // Find all users registered for the given eventId
       const registeredUsers = await RegisteredUser.find({ eventId });
   
-      if (registeredUsers.length === 0) {
-        return res.status(404).json({ message: "No users registered for this event" });
-      }
-  
-      res.status(200).json(registeredUsers);
+     return res.json(registeredUsers);
     } catch (error) {
       console.error("Error fetching registered users:", error);
       res.status(500).json({ error: "Internal Server Error" });
@@ -110,7 +161,7 @@ export const removeUserFromEvent = async (req, res) => {
     }
   };
 
-
+/*
   export const updateUserPoints = async (req, res) => {
     try {
       const { userId } = req.params;
@@ -134,4 +185,5 @@ export const removeUserFromEvent = async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   };
+  */
   
