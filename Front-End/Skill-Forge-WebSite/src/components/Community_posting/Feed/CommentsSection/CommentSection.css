@@ -1,0 +1,363 @@
+/* Modern LinkedIn-style comment section */
+
+/* Variables for consistent theming */
+:root {
+  --linkedin-blue: #0a66c2;
+  --linkedin-light-blue: #e8f0fe;
+  --linkedin-hover-blue: #004182;
+  --linkedin-border: #e0e0e0;
+  --linkedin-bg: #f3f6f8;
+  --linkedin-text: #333333;
+  --linkedin-light-text: #666666;
+  --linkedin-ultra-light: #f9fafb;
+  --comment-indent: 24px;
+}
+
+/* Comment section container */
+.comment-section {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--linkedin-text);
+  padding: 12px;
+  background-color: #ffffff;
+  border-top: 1px solid #e4e6eb;
+  margin-top: 8px;
+}
+
+/* Filter section */
+.filter-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px 0;
+  position: relative;
+}
+
+.comment-count {
+  font-size: 15px;
+  color: #65676B;
+  margin-right: auto;
+}
+
+.comment-filter {
+  position: relative;
+}
+
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #65676B;
+  background: none;
+  border: 1px solid #e4e6eb;
+  padding: 6px 12px;
+  border-radius: 16px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.filter-toggle:hover {
+  background-color: #f2f3f5;
+}
+
+.filter-toggle svg {
+  font-size: 12px;
+}
+
+.filter-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  margin-top: 4px;
+  overflow: hidden;
+  min-width: 180px;
+}
+
+.filter-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.filter-option:hover {
+  background-color: #f2f3f5;
+}
+
+.filter-option.active {
+  font-weight: 600;
+  color: #1877f2;
+}
+
+/* Comment form */
+.comment-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.comment-form.expanded {
+  margin-top: 12px;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.comment-input-container {
+  flex: 1;
+  position: relative;
+  border-radius: 35px;
+  border: 1px solid var(--linkedin-border);
+  background: #f0f2f5;
+  transition: border-color 0.2s;
+  display: flex;
+  border-radius: 18px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.comment-input-container:focus-within {
+  border-color: var(--linkedin-blue);
+}
+
+.comment-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 14px;
+  background: transparent;
+  width: 100%;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+  color: #050505;
+  resize: none;
+  min-height: 20px;
+}
+
+.input-actions {
+  display: flex;
+  align-items: center;
+  padding-right: 4px;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.emoji-container {
+  position: relative;
+}
+
+.emoji-btn {
+  background: none;
+  border: none;
+  color: var(--linkedin-light-text);
+  cursor: pointer;
+  padding: 8px;
+  font-size: 16px;
+  color: #65676B;
+  padding: 4px;
+}
+
+.emoji-btn:hover {
+  color: var(--linkedin-blue);
+}
+
+.emoji-picker-container {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 10;
+  margin-bottom: 10px;
+}
+
+.comment-submit-btn {
+  background-color: var(--linkedin-blue);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 4px;
+  transition: background-color 0.2s;
+  background-color: #1877f2;
+  border-radius: 4px;
+  padding: 4px 12px;
+}
+
+.comment-submit-btn:hover {
+  background-color: var(--linkedin-hover-blue);
+}
+
+.comment-submit-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  background-color: #e4e6eb;
+  color: #bec3c9;
+}
+
+/* Quick replies */
+.quick-replies-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  position: relative;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.quick-replies-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 0;
+  flex: 1;
+  padding: 8px 0;
+  scroll-behavior: smooth;
+}
+
+.quick-replies-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-reply-pill {
+  background-color: var(--linkedin-light-blue);
+  color: var(--linkedin-blue);
+  border: none;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  padding: 8px 16px;
+  background: #f0f2f5;
+  margin-right: 10px;
+  color: #050505;
+  font-size: 14px;
+}
+
+.quick-reply-pill:hover {
+  background-color: #d1e2fd;
+  background-color: #e4e6eb;
+}
+
+.quick-reply-scroll-btn {
+  position: absolute;
+  background: white;
+  border: 1px solid var(--linkedin-border);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #dddfe2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #65676B;
+}
+
+.scroll-left {
+  left: 0;
+}
+
+.scroll-right {
+  right: 0;
+}
+
+/* Comments list */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+/* Load more comments button */
+.load-more-comments {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: var(--linkedin-bg);
+  border: none;
+  border-radius: 24px;
+  color: var(--linkedin-blue);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  margin: 12px auto 8px;
+  width: fit-content;
+  transition: background-color 0.2s;
+  background: none;
+  color: #65676B;
+  margin: 8px auto;
+  transition: color 0.2s;
+}
+
+.load-more-comments:hover {
+  background-color: #e1e9f0;
+  color: #1877f2;
+}
+
+/* No comments message */
+.no-comments {
+  color: var(--linkedin-light-text);
+  text-align: center;
+  font-size: 14px;
+  margin: 20px 0;
+  font-style: italic;
+  text-align: center;
+  color: #65676B;
+  padding: 20px 0;
+}
+
+/* Firefox specific fixes for input fields */
+@-moz-document url-prefix() {
+  .comment-input,
+  .reply-input {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+/* Safari specific fixes */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) {
+    .comment-input,
+    .reply-input {
+      line-height: 1.4;
+    }
+  }
+}

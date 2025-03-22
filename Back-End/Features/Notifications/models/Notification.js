@@ -29,7 +29,9 @@ const notificationSchema = new mongoose.Schema({
       'workshop_updates', // Updates to workshops you're enrolled in
       'direct_message',   // New direct message notification
       'group_message',    // New group message notification
-      'portfolio_view'    // When someone views your portfolio
+      'portfolio_view',   // When someone views your portfolio
+      'friend_request',   // New notification type for friend requests
+      'friend_accept'     // New notification type for accepted friend requests
     ]
   },
 
@@ -59,7 +61,14 @@ const notificationSchema = new mongoose.Schema({
 
   // Optional message content for custom notifications
   message: {
-    type: String
+    type: String,
+    default: ''
+  },
+
+  // Additional field for friend request references
+  friendRequest: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FriendRequest'
   },
 
   // Has the notification been read?

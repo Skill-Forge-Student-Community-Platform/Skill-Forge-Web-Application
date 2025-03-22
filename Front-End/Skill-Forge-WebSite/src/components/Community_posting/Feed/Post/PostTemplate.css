@@ -1,0 +1,479 @@
+/* LinkedIn-style post template */
+.post-wrapper {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s;
+}
+
+.post-wrapper:hover {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 16px 8px;
+  border-bottom: none;
+}
+
+.user-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.post-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.9);
+  line-height: 1.4;
+}
+
+.post-details {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 1.33;
+}
+
+.post-time {
+  font-weight: 400;
+}
+
+.privacy-icon {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.post-container {
+  cursor: default;
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+.options-container {
+  position: relative;
+}
+
+.more-options {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-options:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.Post-action-content {
+  padding: 0;
+}
+
+.post-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.left-stats, .right-stats {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.likes-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.emoji-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #0a66c2;
+  color: white;
+}
+
+.like-emoji {
+  font-size: 8px;
+}
+
+.stat-item {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin-top: 4px;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0;
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.75); /* Darker gray for better visibility */
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.9); /* Darker on hover */
+}
+
+.action-btn.liked {
+  color: #0a66c2; /* Keep LinkedIn blue for liked state */
+}
+
+.action-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.action-text {
+  font-size: 13px;
+}
+
+.action-icon.filled {
+  color: #0a66c2;
+}
+
+/* Post content styling */
+.post-content {
+  margin-bottom: 12px;
+}
+
+.post-text-container {
+  margin-bottom: 8px;
+}
+
+.post-text {
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0 0 8px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.toggle-text-btn {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+  padding: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toggle-text-btn:hover {
+  color: #0a66c2;
+  text-decoration: underline;
+}
+
+/* Comment section styling */
+.comments-section {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 8px 16px;
+  background-color: #f3f2ef;
+}
+
+.comment-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.comment-input-container {
+  flex: 1;
+  position: relative;
+}
+
+.comment-input {
+  width: 100%;
+  border-radius: 35px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: #0a66c2;
+}
+
+.send-comment-btn {
+  background: none;
+  border: none;
+  color: #0a66c2;
+  cursor: pointer;
+}
+
+.send-comment-btn:disabled {
+  color: rgba(0, 0, 0, 0.3);
+  cursor: not-allowed;
+}
+
+/* Repost content styling */
+.repost-content {
+  padding: 0;
+  margin-top: 4px;
+}
+
+.repost-text {
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0 0 8px 0;
+}
+
+.original-post {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #f3f2ef;
+  margin-top: 8px;
+}
+
+.original-poster-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.user-avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.original-post-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.original-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.original-content {
+  font-size: 14px;
+}
+
+.original-content.collapsed {
+  max-height: 80px;
+  overflow: hidden;
+  position: relative;
+}
+
+.original-text {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.see-more {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+  padding: 8px 0 0 0;
+  cursor: pointer;
+  font-size: 14px;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.see-more:hover {
+  color: #0a66c2;
+  text-decoration: underline;
+}
+
+/* Media rendering */
+.media-grid {
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.media-grid img,
+.media-grid video {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  background-color: #000;
+}
+
+.media-item {
+  overflow: hidden;
+}
+
+/* Critical icon styles with increased specificity */
+.post-wrapper .action-bar .action-btn .action-icon-wrapper .action-icon {
+  font-size: 24px !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+}
+
+.post-wrapper .action-bar .action-btn.liked .action-icon-wrapper .action-icon.filled {
+  color: #0a66c2 !important;
+}
+
+.post-wrapper .action-bar .action-btn .action-text {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: rgba(0, 0, 0, 0.75) !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Fix emoji container in the stats */
+.post-wrapper .post-stats .likes-count .emoji-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 50% !important;
+  background-color: #0a66c2 !important;
+  color: white !important;
+}
+
+.post-wrapper .post-stats .likes-count .emoji-container .like-emoji {
+  font-size: 8px !important;
+  color: white !important;
+}
+
+/* Fix privacy icons */
+.post-wrapper .post-header .post-details .privacy-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 12px !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.post-wrapper .post-header .post-details .privacy-icon svg {
+  display: inline-block !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* Enhance action bar styling */
+.post-wrapper .action-bar {
+  display: flex !important;
+  justify-content: space-between !important;
+  padding: 4px 8px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  margin-top: 0 !important;
+}
+
+.post-wrapper .action-bar .action-btn {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 8px 0 !important;
+  background: none !important;
+  border: none !important;
+  color: rgba(0, 0, 0, 0.75) !important;
+  cursor: pointer !important;
+  border-radius: 4px !important;
+  transition: all 0.2s !important;
+}
+
+.post-wrapper .action-bar .action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+.post-wrapper .action-bar .action-btn.liked {
+  color: #0a66c2 !important;
+}
+
+/* General icon display fixes */
+.post-wrapper svg {
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+/* Add some styles for the ProfileAvatar in post templates */
+.post-author-avatar {
+  margin-right: 4px;
+}
+
+/* Update user-info to align with new avatar component */
+.user-info {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+/* You can either keep or remove the old user-avatar style since we're not using it directly anymore */
+/*
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+*/

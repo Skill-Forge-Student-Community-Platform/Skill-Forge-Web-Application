@@ -1,0 +1,224 @@
+/* Styles specific to reply comments */
+
+.reply-comment {
+  position: relative;
+  display: flex;
+  margin-bottom: 8px;
+  margin-left: 24px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  transition: transform 0.2s ease;
+}
+
+.reply-comment:hover {
+  transform: translateY(-1px);
+}
+
+/* Horizontal connector line from vertical line to reply */
+.reply-connector {
+  position: absolute;
+  top: 16px;
+  left: -24px;
+  width: 24px;
+  height: 2px;
+  background-color: #e0e0e0;
+  z-index: 2;
+}
+
+.nested-comment {
+  padding: 10px;
+  background-color: var(--linkedin-ultra-light); /* Lighter color for replies */
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+.reply-content {
+  flex: 1;
+  padding-right: 12px;
+  padding: 0;
+}
+
+/* Override some styles for replies to make them more compact */
+.reply-comment .comment-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.reply-comment .comment-author {
+  font-size: 13px;
+}
+
+.reply-comment .user-profession {
+  font-size: 11px;
+}
+
+.reply-comment .comment-text {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.reply-comment .comment-actions {
+  margin-top: 4px;
+  display: flex;
+  gap: 12px;
+}
+
+.reply-comment .comment-action-btn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #65676B;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reply-comment .comment-action-btn:hover {
+  background-color: #f2f3f5;
+}
+
+.reply-comment .comment-action-btn.liked {
+  color: #1877f2;
+}
+
+.reply-comment .like-count {
+  margin-left: 4px;
+}
+
+/* Style reply form within nested comments */
+.reply-comment .reply-form {
+  margin-top: 8px;
+}
+
+.reply-comment .reply-input-container {
+  background-color: #f0f2f5;
+  border-radius: 18px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.reply-comment .reply-input-container.expanded {
+  padding-bottom: 12px;
+}
+
+.reply-comment .reply-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: #050505;
+}
+
+.reply-comment .reply-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.reply-comment .reply-submit-btn {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+/* Hover state for nested replies */
+.reply-comment .nested-comment:hover {
+  background-color: #fafbfc;
+}
+
+/* Edit form in replies */
+.reply-comment .edit-form {
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.reply-comment .edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  min-height: 60px;
+  resize: vertical;
+}
+
+.reply-comment .edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.reply-comment .cancel-edit-btn,
+.reply-comment .save-edit-btn {
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reply-comment .cancel-edit-btn {
+  background-color: #f0f2f5;
+  color: #65676B;
+}
+
+.reply-comment .save-edit-btn {
+  background-color: #1877f2;
+  color: white;
+}
+
+.reply-comment .save-edit-btn:disabled {
+  background-color: #e4e6eb;
+  color: #bec3c9;
+  cursor: not-allowed;
+}
+
+/* Styling for nested replies */
+.nested-reply {
+  margin-left: 36px;
+  position: relative;
+}
+
+.nested-reply::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -24px;
+  width: 20px;
+  height: 2px;
+  background-color: #e0e0e0;
+}
+
+/* Options menu for replies */
+.reply-comment .comment-options-dropdown {
+  right: 0;
+  left: auto;
+  min-width: 160px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .reply-comment .comment-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .reply-connector {
+    left: -16px;
+    width: 16px;
+  }
+
+  .nested-comment {
+    padding: 6px 10px;
+  }
+
+  .reply-comment .comment-text {
+    font-size: 12px;
+  }
+}

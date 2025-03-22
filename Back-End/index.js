@@ -8,10 +8,6 @@ import fs from 'fs';
 import {v2 as cloudinary } from 'cloudinary';
 import http from 'http'; // Import HTTP
 import { Server } from 'socket.io'; // Import Socket.IO
-
-
-
-
 import fileUpload from 'express-fileupload'; // Add this import
 
 
@@ -25,12 +21,20 @@ import postRoutes from "./Features/Posting-Feed/routes/Post.route.js";
 
 
 import eventRoutes from "./Features/EventListing/routes/eventRoutes.js";
+import saveEventsRoutes from "./Features/SaveEvents/routes/saveEventsRoutes.js";
+import registerRoutes from "./Features/EventRegister/routes/registerRoutes.js";
 
 
 
 import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
 
 import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
+
+import friendRoutes from "./Features/Network/routers/friendRoutes.js";
+
+import notificationRoutes from './Features/Notifications/routes/Notification.route.js';
+
+
 
 
 // Environment configuration
@@ -66,6 +70,14 @@ io.on('connection', (socket) => {
     if (userId) {
       socket.join(`user:${userId}`);
       console.log(`User ${userId} authenticated and joined personal room`);
+    }
+  });
+
+  // Listen for join event (called after authentication)
+  socket.on('join', ({ userId }) => {
+    if (userId) {
+      socket.join(`user:${userId}`);
+      console.log(`User ${userId} joined personal room`);
     }
   });
 
@@ -116,9 +128,6 @@ app.use(cookieParser()); // to allow us parse incoming cookies
 
 
 
-
-
-
 app.use(fileUpload({
   createParentPath: true,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
@@ -132,7 +141,6 @@ app.use('/uploads', uploadMiddleware);
 
 
 
-
 // Serve static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -141,17 +149,20 @@ app.use("/api/auth", authRoutes);
 app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/teams", teamRoutes);
+app.use("/api/messages", messageRoutes);
 
-
-
-
+// Notification routes
+ app.use("/api/notifications", notificationRoutes);
 
 app.use("/Details", eventRoutes);
-
+app.use("/api", saveEventsRoutes);
+app.use("/api", registerRoutes);
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
 
+app.use("/api/friends", friendRoutes);
 
 
 

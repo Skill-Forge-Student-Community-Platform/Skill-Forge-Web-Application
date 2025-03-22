@@ -1,4 +1,4 @@
-html.modal-open,
+/*html.modal-open,
 body.modal-open {
   overflow: hidden;
   height: 100vh;
@@ -12,11 +12,11 @@ body.modal-open {
 
 .Layout__Container {
   display: flex;
-  max-width: 1200px; /* Reduced from 1440px for better centering */
+  max-width: 1200px; /* Reduced from 1440px for better centering *
   margin: 0 auto;
-  padding-top: 70px; /* Height of navbar */
-  gap: 16px; /* Reduced from 24px */
-  justify-content: center; /* Center the entire layout */
+  padding-top: 70px; /* Height of navbar *
+  gap: 16px; /* Reduced from 24px *
+  justify-content: center; /* Center the entire layout *
 }
 
 .Navigation__Container {
@@ -30,10 +30,10 @@ body.modal-open {
 
 .SideBar__Container {
   position: sticky;
-  top: 80px; /* Navbar height + desired gap */
-  width: 285px; /* Match SideBar width */
+  top: 80px; /* Navbar height + desired gap *
+  width: 285px; /* Match SideBar width *
   height: auto;
-  padding: 16px 8px; /* Reduced from 24px */
+  padding: 16px 8px; /* Reduced from 24px *
   flex-shrink: 0;
 }
 
@@ -41,19 +41,19 @@ body.modal-open {
   flex-grow: 1;
   padding: 16px;
   display: grid;
-  grid-template-columns: minmax(0, 580px) minmax(0, 280px); /* Fixed widths */
+  grid-template-columns: minmax(0, 580px) minmax(0, 280px); /* Fixed widths *
   gap: 24px;
-  max-width: 880px; /* Limit maximum width */
+  max-width: 880px; /* Limit maximum width *
   margin: 0;
 }
 
 .main-content {
-  min-width: 0; /* Prevent content overflow */
+  min-width: 0; /* Prevent content overflow *
 }
 
 .right-section {
   position: sticky;
-  top: 90px; /* Match sidebar top position */
+  top: 90px; /* Match sidebar top position *
   height: fit-content;
 }
 

@@ -41,6 +41,14 @@ const userSchema = new mongoose.Schema({
     ref: "User",
     default: [],
   }],
+  friendRequests: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  sentRequests: [{
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User'
+  }],
   coverImg: {
     type: String,
     default: "",
@@ -66,10 +74,23 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  // For Team Collaboration
+  teams: [
+    { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Team' 
+    }
+  ],
   resetPasswordToken: String,
   resetPasswordExpiresAt: Date,
   verificationToken: String,
   verificationTokenExpiresAt: Date,
+  // Add friends array if it doesn't exist
+  friends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: []
+  }],
 } ,{timestamps: true});
 
 

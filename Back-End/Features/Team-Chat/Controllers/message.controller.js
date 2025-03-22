@@ -1,6 +1,4 @@
-
 import { User } from "../../User-Authentication/models/User.js"
-
 import Message from "../models/message.model.js";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -8,7 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 export const getUsersForSidebar = async(req, res)=>{
      try {
       // grabs the user id from this request
-        const loggedInUserId = req.user._id;
+        const loggedInUserId = req.user.id;
 
       //   find all the users except current user and -
       // -this fetches evering except tha password
@@ -24,7 +22,7 @@ export const getUsersForSidebar = async(req, res)=>{
 export const getMessages = async(req, res)=>{
    try {
       const { id: userToChatId } = req.params
-      const myId = req.user._id
+      const myId = req.user.id
 
       const message = await Message.find({
          $or:[
@@ -43,7 +41,7 @@ export const sendMessages = async(req, res)=>{
    try {
       const { text, image } = req.body;
       const { id: receiverId } = req.params;
-      const senderId = req.user._id;
+      const senderId = req.user.id;
 
       let imageUrl;
       if(image){
@@ -68,4 +66,5 @@ export const sendMessages = async(req, res)=>{
       console.log("Erro in sendMessage controller: ", error.message);
       res.status(500).json({message:"Internal Sever Error"});
    }
+}
 

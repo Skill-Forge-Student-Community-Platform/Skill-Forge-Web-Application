@@ -1,0 +1,74 @@
+/* ✅ Certifications Section */
+.qualifications-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 200px; /* ✅ Ensures it matches projects section */
+}
+
+/* ✅ Title Styling */
+.qualifications-container h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* ✅ Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* ✅ Table Header */
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+/* ✅ Alternate Row Color */
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* ✅ Status Column */
+.status-text {
+  font-weight: bold;
+}
+
+/* ✅ "Verified" Text is Always Green & Bold */
+.status-text.verified {
+  color: green;
+  font-weight: bold;
+}
+
+/* ✅ Add Button Styling */
+.add-btn {
+  align-self: center;
+  width: 100px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.add-btn:hover {
+  background-color: #0056b3;
+}

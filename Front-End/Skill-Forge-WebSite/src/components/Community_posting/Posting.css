@@ -32,6 +32,20 @@
   transition: all 0.3s ease;
 }
 
+/* Avatar container in posting component needs specific styling */
+.posting-avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px; /* Add a small margin to space it properly */
+}
+
+.posting-avatar-container .avatar-container {
+  margin: 0;  /* Remove any margins that may be inherited */
+}
+
+/* Remove or adjust the old user-icon style since we're using ProfileAvatar now */
+/*
 .user-icon {
   width: 48px;
   height: 48px;
@@ -39,6 +53,7 @@
   border: 2px solid #1DA1F2;
   padding: 2px;
 }
+*/
 
 .post-icons {
   display: flex;
