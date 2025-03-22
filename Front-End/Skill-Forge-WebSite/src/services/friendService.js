@@ -1,17 +1,14 @@
 import axios from 'axios';
 
-// Fix the BASE_URL - hardcode it to ensure proper connection
 const BASE_URL = 'http://localhost:5000/api';
 
-// Helper to get auth headers
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('token');
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  };
-};
+// Helper function to get auth headers
+const getAuthHeaders = () => ({
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 const friendService = {
   getSuggestedFriends: async () => {
@@ -20,15 +17,15 @@ const friendService = {
       return response.data;
     } catch (error) {
       console.error('Error getting suggested friends:', error);
-      throw error.response?.data || { message: 'Failed to load suggestions' };
+      throw error.response?.data || { message: 'Failed to get suggested friends' };
     }
   },
 
   sendFriendRequest: async (userId) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/friends/send-request/${userId}`, 
-        {}, 
+        `${BASE_URL}/friends/send-request/${userId}`,
+        {},
         getAuthHeaders()
       );
       return response.data;
@@ -50,8 +47,8 @@ const friendService = {
   acceptFriendRequest: async (userId) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/friends/accept-request/${userId}`, 
-        {}, 
+        `${BASE_URL}/friends/accept-request/${userId}`,
+        {},
         getAuthHeaders()
       );
       return response.data;
@@ -63,8 +60,8 @@ const friendService = {
   rejectFriendRequest: async (userId) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/friends/reject-request/${userId}`, 
-        {}, 
+        `${BASE_URL}/friends/reject-request/${userId}`,
+        {},
         getAuthHeaders()
       );
       return response.data;
@@ -78,19 +75,70 @@ const friendService = {
       const response = await axios.get(`${BASE_URL}/friends/friends`, getAuthHeaders());
       return response.data;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to get friends' };
+      throw error.response?.data || { message: 'Failed to get friends list' };
     }
   },
 
   removeFriend: async (userId) => {
     try {
       const response = await axios.delete(
-        `${BASE_URL}/friends/remove/${userId}`, 
+        `${BASE_URL}/friends/remove/${userId}`,
         getAuthHeaders()
       );
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to remove friend' };
+    }
+  },
+
+  // Following and follower functions
+  getFollowing: async (userId) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/users/${userId}/following`,
+        getAuthHeaders()
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to get following users' };
+    }
+  },
+
+  getFollowers: async (userId) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/users/${userId}/followers`,
+        getAuthHeaders()
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to get followers' };
+    }
+  },
+
+  followUser: async (userId) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/users/follow/${userId}`,
+        {},
+        getAuthHeaders()
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to follow user' };
+    }
+  },
+
+  unfollowUser: async (userId) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/users/unfollow/${userId}`,
+        {},
+        getAuthHeaders()
+      );
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to unfollow user' };
     }
   }
 };
