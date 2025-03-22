@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTeamStore } from "../store/useTeamStore.js";
+import { useTeamStore } from "../../../store/useTeamStore.js";
 
 const ReceivedInvites = () => {
     const { receivedInvites, fetchReceivedInvites, respondToInvite } = useTeamStore();
@@ -79,10 +79,11 @@ const ReceivedInvites = () => {
                                             )}
                                         </div>
                                         <div className="text-gray-600 dark:text-gray-300 flex items-center gap-1">
-                                            <span>Invited by</span>
+                                            <span>Invited by</span> 
                                             <span className="font-semibold text-gray-800 dark:text-gray-100 ml-1">
-                                                {team.creator.fullName}
+                                                {team.creator.Username}, {team.name}
                                             </span>
+                                            <span>'s Leader</span>
                                         </div>
                                     </div>
                                     <div className="flex space-x-4">

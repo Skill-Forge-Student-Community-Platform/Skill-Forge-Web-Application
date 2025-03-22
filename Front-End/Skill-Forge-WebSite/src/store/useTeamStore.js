@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosIntance } from ".././utils/axios.js";
+import { axiosIntance } from ".././utils/axios";
 
 export const useTeamStore = create((set)=>({
     teams: [],

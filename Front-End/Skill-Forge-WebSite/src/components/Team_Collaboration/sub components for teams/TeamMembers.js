@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { useTeamStore } from "../store/useTeamStore.js";
-import { useAuthStore } from "../store/useAuthStore";
+import { useTeamStore } from "../../../store/useTeamStore.js";
+import { useAuthStore } from "../../../store/authStore.js";
 import { UserMinus, Crown, LogOut, AlertTriangle } from "lucide-react";
 
 const TeamMembers = ({ team }) => {
-    const { authUser } = useAuthStore();
+    const { user } = useAuthStore();
     const { kickMemberFromTeam } = useTeamStore();
 
     const [showModal, setShowModal] = useState(false);
     const [selectedMember, setSelectedMember] = useState(null);
 
-    const isCreator = authUser && team.creator === authUser._id;
+    const isCreator = user && team.creator === user._id;
 
     const handleLeaveClick = (member) => {
         setSelectedMember(member);
@@ -40,7 +40,7 @@ const TeamMembers = ({ team }) => {
                 <ul className="space-y-5">
                     {team.members.map((member) => {
                         const isTeamCreator = member._id === team.creator;
-                        const isCurrentUser = member._id === authUser._id;
+                        const isCurrentUser = member._id === user._id;
 
                         return (
                             <li 
@@ -87,7 +87,7 @@ const TeamMembers = ({ team }) => {
 
                                 <div className="flex space-x-3">
                                     {/* Kick button (only for team creator) */}
-                                    {isCreator && member._id !== authUser._id && !isTeamCreator && (
+                                    {isCreator && member._id !== user._id && !isTeamCreator && (
                                         <button
                                             className="flex items-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                                             onClick={() => kickMemberFromTeam(team._id, member._id)}
@@ -98,7 +98,7 @@ const TeamMembers = ({ team }) => {
                                     )}
 
                                     {/* Leave team button (for normal members) */}
-                                    {member._id === authUser._id && !isTeamCreator && (
+                                    {member._id === user._id && !isTeamCreator && (
                                         <button
                                             className="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                                             onClick={() => handleLeaveClick(member)}

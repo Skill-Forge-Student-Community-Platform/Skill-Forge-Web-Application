@@ -29,6 +29,7 @@ import messageRoutes from "./Features/Team-Chat/routes/message.route.js"
 import teamRoutes from './Features/Team-collaboration/routes/team.route.js'
 
 
+
 // Environment configuration
 dotenv.config();
 
@@ -144,6 +145,7 @@ app.use("/Details", eventRoutes);
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
+
 
 
 

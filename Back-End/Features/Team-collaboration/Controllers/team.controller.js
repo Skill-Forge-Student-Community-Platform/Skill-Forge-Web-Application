@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 // Create a team
 export const createTeam = async (req, res) => {
     const { name, technology } = req.body;
-    const creatorId = req.user._id;  // Get logged-in user ID
+    const creatorId = req.user.id;  // Get logged-in user ID
 
     try {
         const team = new Team({ name, technology, members: [creatorId], creator: creatorId });
@@ -35,7 +35,7 @@ export const createTeam = async (req, res) => {
 
 // Get teams created by the logged-in user
 export const getTeamsByUser = async (req, res) => {
-    const creatorId = req.user._id; // Get logged-in user ID
+    const creatorId = req.user.id; // Get logged-in user ID
 
     try {
         const teams = await Team.find({
@@ -74,7 +74,7 @@ export const sendInvite = async (req, res) => {
         if (!team) return res.status(404).json({ error: "Team not found" });
 
         // Ensure only team creators can invite
-        if (team.creator.toString() !== req.user._id.toString()) {
+        if (team.creator.toString() !== req.user.id.toString()) {
             return res.status(403).json({ error: "Only the team creator can send invites" });
         }
 
@@ -104,7 +104,7 @@ export const sendInvite = async (req, res) => {
 // Responding to Invitation
 export const respondToInvite = async (req, res) => {
     const { teamId, action } = req.body;
-    const userId = req.user._id; // Get userId from authentication
+    const userId = req.user.id; // Get userId from authentication
 
     if (!mongoose.Types.ObjectId.isValid(teamId) || !mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ error: "Invalid ID format" });
@@ -164,9 +164,9 @@ export const respondToInvite = async (req, res) => {
 
 // Get invites the user received
 export const getReceivedInvites = async (req, res) =>{
-    const userId = req.user._id;
+    const userId = req.user.id;
     try {
-        const teams = await Team.find({ invites:userId }).populate("creator", "fullName email")
+        const teams = await Team.find({ invites:userId }).populate("creator", "Username email").select("name technology creator")
 
         res.status(200).json(teams);
     } catch (error) {
@@ -179,9 +179,9 @@ export const getReceivedInvites = async (req, res) =>{
 
 // Get invites the user sent (as a team creator)
 export const getSentInvites = async (req, res) =>{
-    const userId = req.user._id;
+    const userId = req.user.id;
     try {
-        const teams = await Team.find({ creator: userId }).populate("invites", "fullName email");
+        const teams = await Team.find({ creator: userId }).populate("invites", "Username email");
 
         res.status(200).json(teams);
     } catch (error) {
@@ -193,7 +193,7 @@ export const getSentInvites = async (req, res) =>{
 // Kick a member from the team or allow them to leave voluntarily
 export const kickMemberFromTeam = async (req, res) => {
     const { teamId, memberId } = req.body;
-    const userId = req.user._id; // Get logged-in user ID
+    const userId = req.user.id; // Get logged-in user ID
 
     if (!mongoose.Types.ObjectId.isValid(teamId) || !mongoose.Types.ObjectId.isValid(memberId)) {
         return res.status(400).json({ error: "Invalid ID format" });

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useUserSearchStore from "../store/userSearchStore";
+import useUserSearchStore from "../../../store/userSearchStore";
 import Modal from "react-modal";
 
 const UserSearch = ({ teamId }) => {
@@ -74,7 +74,7 @@ const UserSearch = ({ teamId }) => {
                                     <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{user.fullName}</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{user.Username}</h3>
                                     {user.role && (
                                         <p className="text-sm text-gray-500 dark:text-gray-400">{user.role}</p>
                                     )}
@@ -128,7 +128,7 @@ const UserSearch = ({ teamId }) => {
                             />
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                    Invite {selectedUser.fullName}
+                                Invite {selectedUser.Username}
                                 </h2>
                                 {selectedUser.role && (
                                     <p className="text-gray-500 dark:text-gray-400">{selectedUser.role}</p>
@@ -137,7 +137,7 @@ const UserSearch = ({ teamId }) => {
                         </div>
                         
                         <p className="text-gray-600 dark:text-gray-300 mb-8 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800/30">
-                            You're about to send a team invitation to <span className="font-semibold">{selectedUser.fullName}</span>. 
+                            You're about to send a team invitation to <span className="font-semibold">{selectedUser.Username}</span>. 
                             They will receive a notification and can accept or decline your invitation.
                         </p>
                         

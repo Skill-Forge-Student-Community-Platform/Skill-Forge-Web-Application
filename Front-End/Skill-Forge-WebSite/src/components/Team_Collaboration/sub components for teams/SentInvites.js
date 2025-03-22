@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTeamStore } from "../store/useTeamStore.js";
+import { useTeamStore } from "../../../store/useTeamStore.js";
 
 const SentInvites = ({ teamId }) => {
     const { sentInvites, fetchSentInvites } = useTeamStore();
@@ -83,11 +83,11 @@ const SentInvites = ({ teamId }) => {
                                             >
                                                 <div className="flex items-center group-hover:translate-x-1 transition-transform duration-200">
                                                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium shadow-md">
-                                                        {user.fullName.charAt(0)}
+                                                        {user.Username.charAt(0)}
                                                     </div>
                                                     <div className="ml-4 flex-grow">
                                                         <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                                                            {user.fullName}
+                                                            {user.Username}
                                                         </p>
                                                         {user.email && (
                                                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">

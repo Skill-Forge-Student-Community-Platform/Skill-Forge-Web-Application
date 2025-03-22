@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTeamStore } from "../store/useTeamStore.js";
+import { useTeamStore } from "../../../store/useTeamStore.js";
 import UserSearch from "./UserSearch.js";
 import ReceivedInvites from "./ReceivedInvites.js";
 import SentInvites from "./SentInvites.js";
