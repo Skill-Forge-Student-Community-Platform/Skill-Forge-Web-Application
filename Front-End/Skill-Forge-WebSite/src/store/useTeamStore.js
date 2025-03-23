@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosIntance } from "../lib/axios";
+import { axiosIntance } from ".././utils/axios";
 
-export const useTeamStore = create((set, get)=>({
+export const useTeamStore = create((set)=>({
     teams: [],
     invites: [],
     receivedInvites: [],
@@ -74,7 +74,7 @@ export const useTeamStore = create((set, get)=>({
 
     respondToInvite: async (teamId, action) => {
         try {
-            const { data } = await axiosIntance.post("/teams/respondToInvite", { teamId, action }, {
+            await axiosIntance.post("/teams/respondToInvite", { teamId, action }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
     
@@ -88,34 +88,18 @@ export const useTeamStore = create((set, get)=>({
         }
     },
 
-    kickMember: async (teamId, memberId) => {
+     // Kick a member from the team
+     kickMemberFromTeam: async (teamId, memberId) => {
         try {
-            const response = await axiosIntance.post("/teams/kick-member", { teamId, memberId });
-            if (response.status === 200) {
-                // Update teams state to reflect the change
-                set((state) => ({
-                    teams: state.teams.map((team) =>
-                        team._id === teamId
-                            ? { ...team, members: team.members.filter((member) => member._id !== memberId) }
-                            : team
-                    ),
-                }));
-            }
+            await axiosIntance.post("/teams/kick-member", { teamId, memberId });
+            set((state) => ({
+                teams: state.teams.map((team) =>
+                    team._id === teamId ? { ...team, members: team.members.filter(m => m._id !== memberId) } : team
+                ),
+            }));
+            toast.success("Member removed successfully");
         } catch (error) {
-            console.error("Error kicking member:", error);
+            toast.error(error.response?.data?.error || "Error removing member");
         }
-    }
-
-
-    // Fetch Teams by Interest
-    // fetchTeamsByInterest: async (technology) => {
-    //     set({ loading: true });
-    //     try {
-    //         const res = await axiosIntance.get(`/teams/${technology}`);
-    //         set({ teams: res.data, loading: false });
-    //     } catch (error) {
-    //         toast.error(error.response?.data?.error || "Failed to fetch teams");
-    //         set({ loading: false });
-    //     }
-    // },
-}))
+    },
+}));

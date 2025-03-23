@@ -36,6 +36,7 @@ import notificationRoutes from './Features/Notifications/routes/Notification.rou
 
 
 
+
 // Environment configuration
 dotenv.config();
 
@@ -69,6 +70,14 @@ io.on('connection', (socket) => {
     if (userId) {
       socket.join(`user:${userId}`);
       console.log(`User ${userId} authenticated and joined personal room`);
+    }
+  });
+
+  // Listen for join event (called after authentication)
+  socket.on('join', ({ userId }) => {
+    if (userId) {
+      socket.join(`user:${userId}`);
+      console.log(`User ${userId} joined personal room`);
     }
   });
 
@@ -141,6 +150,7 @@ app.use("/api/auth", profileRoutes);
 app.use("/api/users", userSocialRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/teams", teamRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Notification routes
  app.use("/api/notifications", notificationRoutes);
@@ -153,6 +163,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
 
 app.use("/api/friends", friendRoutes);
+
 
 
 app.get("/api", (req, res) => {
@@ -195,6 +206,3 @@ server.listen(port, () => {
   console.log(`Server is now running on port ${port}`);
   console.log(`Socket.IO server is ready`);
 });
-
-
-

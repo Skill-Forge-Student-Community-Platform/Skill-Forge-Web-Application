@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 // Create a team
 export const createTeam = async (req, res) => {
     const { name, technology } = req.body;
-    const creatorId = req.user._id;  // Get logged-in user ID
+    const creatorId = req.user.id;  // Get logged-in user ID
 
     try {
         const team = new Team({ name, technology, members: [creatorId], creator: creatorId });
@@ -35,7 +35,7 @@ export const createTeam = async (req, res) => {
 
 // Get teams created by the logged-in user
 export const getTeamsByUser = async (req, res) => {
-    const creatorId = req.user._id; // Get logged-in user ID
+    const creatorId = req.user.id; // Get logged-in user ID
 
     try {
         const teams = await Team.find({
@@ -66,24 +66,15 @@ export const sendInvite = async (req, res) => {
 
     // Validate MongoDB ObjectIds
     if (!mongoose.Types.ObjectId.isValid(teamId) || !mongoose.Types.ObjectId.isValid(userId)) {
-        console.error("Invalid ID format:", { userId, teamId });
         return res.status(400).json({ error: "Invalid ID format" });
     }
 
     try {
-        // Check MongoDB connection status
-        if (mongoose.connection.readyState !== 1) {
-            throw new Error("MongoDB connection is not established");
-        }
-
         const team = await Team.findById(teamId);
-        if (!team) {
-            console.error("Team not found:", teamId);
-            return res.status(404).json({ error: "Team not found" });
-        }
+        if (!team) return res.status(404).json({ error: "Team not found" });
 
         // Ensure only team creators can invite
-        if (team.creator.toString() !== req.user._id.toString()) {
+        if (team.creator.toString() !== req.user.id.toString()) {
             return res.status(403).json({ error: "Only the team creator can send invites" });
         }
 
@@ -101,14 +92,10 @@ export const sendInvite = async (req, res) => {
         team.invites.push(userId);
 
         await team.save();
-        console.log("Invitation sent successfully:", { teamId, userId });
 
         res.status(200).json({ message: `Invitation sent to ${userId} successfully!` });
     } catch (error) {
-        console.error("Error in sendInvite:", error);
-        const errorMessage = error.name === 'MongooseError' ? 
-            'Database connection error' : error.message;
-        res.status(500).json({ error: errorMessage });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -117,7 +104,7 @@ export const sendInvite = async (req, res) => {
 // Responding to Invitation
 export const respondToInvite = async (req, res) => {
     const { teamId, action } = req.body;
-    const userId = req.user._id; // Get userId from authentication
+    const userId = req.user.id; // Get userId from authentication
 
     if (!mongoose.Types.ObjectId.isValid(teamId) || !mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ error: "Invalid ID format" });
@@ -177,9 +164,9 @@ export const respondToInvite = async (req, res) => {
 
 // Get invites the user received
 export const getReceivedInvites = async (req, res) =>{
-    const userId = req.user._id;
+    const userId = req.user.id;
     try {
-        const teams = await Team.find({ invites:userId }).populate("creator", "fullName email")
+        const teams = await Team.find({ invites:userId }).populate("creator", "Username email").select("name technology creator")
 
         res.status(200).json(teams);
     } catch (error) {
@@ -192,9 +179,9 @@ export const getReceivedInvites = async (req, res) =>{
 
 // Get invites the user sent (as a team creator)
 export const getSentInvites = async (req, res) =>{
-    const userId = req.user._id;
+    const userId = req.user.id;
     try {
-        const teams = await Team.find({ creator: userId }).populate("invites", "fullName email");
+        const teams = await Team.find({ creator: userId }).populate("invites", "Username email");
 
         res.status(200).json(teams);
     } catch (error) {
@@ -203,26 +190,44 @@ export const getSentInvites = async (req, res) =>{
     }
 };
 
-// Function to kick a member from the team
+// Kick a member from the team or allow them to leave voluntarily
 export const kickMemberFromTeam = async (req, res) => {
     const { teamId, memberId } = req.body;
+    const userId = req.user.id; // Get logged-in user ID
+
+    if (!mongoose.Types.ObjectId.isValid(teamId) || !mongoose.Types.ObjectId.isValid(memberId)) {
+        return res.status(400).json({ error: "Invalid ID format" });
+    }
 
     try {
         const team = await Team.findById(teamId);
+        if (!team) return res.status(404).json({ error: "Team not found" });
 
-        // Check if the user is the team creator
-        if (!team.creator.equals(req.user._id)) {
-            return res.status(403).json({ message: "Only the creator can remove members" });
+        // Ensure the member is part of the team
+        if (!team.members.includes(memberId)) {
+            return res.status(400).json({ error: "User is not a team member" });
         }
 
-        // Remove the member from the team
-        team.members = team.members.filter((member) => !member.equals(memberId));
+        // Allow members to leave voluntarily OR allow the creator to remove members
+        if (userId.toString() !== memberId.toString() && team.creator.toString() !== userId.toString()) {
+            return res.status(403).json({ error: "Only the team creator can remove members, or a member can leave voluntarily" });
+        }
 
+        // Prevent the creator from removing themselves
+        if (memberId.toString() === team.creator.toString()) {
+            return res.status(403).json({ error: "Team creator cannot leave the team" });
+        }
+
+        // Remove the member
+        team.members = team.members.filter(id => id.toString() !== memberId.toString());
         await team.save();
 
-        res.status(200).json({ message: "Member kicked successfully" });
+        // Remove the team reference from the user
+        await User.findByIdAndUpdate(memberId, { $pull: { teams: teamId } });
+
+        const action = userId.toString() === memberId.toString() ? "left the team" : "was removed from the team";
+        res.status(200).json({ message: `Member ${action} successfully`, team });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error kicking the member" });
+        res.status(500).json({ error: error.message });
     }
 };
