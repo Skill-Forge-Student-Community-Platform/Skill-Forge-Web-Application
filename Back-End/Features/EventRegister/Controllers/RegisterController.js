@@ -1,4 +1,4 @@
-import RegisteredUser from "../Models/RegisteredUser.js";
+import RegisteredUser from "../models/RegisteredUser.js";
 
 import Event from "../../EventListing/models/Event.js"; // Add this import
 
