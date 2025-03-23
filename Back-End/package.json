@@ -4,12 +4,11 @@
   "description": "Backend for Skill Forge Web Application",
   "main": "index.js",
   "type": "module",
-
   "scripts": {
-    "start": "node Back-End/index.js",
-    "dev": "nodemon Back-End/index.js" 
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "install-deps": "npm install express-fileupload"
   },
-
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
