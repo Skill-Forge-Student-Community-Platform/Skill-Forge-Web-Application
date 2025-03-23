@@ -1,7 +1,7 @@
 
 
 import express from "express";
-import{ registerUser,getRegisteredUsersByEvent,removeUserFromEvent,getRegisteredUser,getRegisteredEventList } from "../Controllers/RegisterController.js";
+import { registerUser, getRegisteredUsersByEvent, removeUserFromEvent, getRegisteredUser, getRegisteredEventList } from "../Controllers/RegisterController.js";
 
 const router = express.Router();
 // Register User Route
