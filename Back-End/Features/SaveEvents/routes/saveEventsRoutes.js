@@ -1,7 +1,7 @@
 import express from "express";
 
 
-import { saveEvent, getSavedEvents, removeSavedEvent } from '../controllers/saveEventsController.js';
+import { saveEvent, getSavedEvents, deleteSavedEvent } from '../Controllers/SaveEventsController.js';
 
 const router = express.Router();
 
