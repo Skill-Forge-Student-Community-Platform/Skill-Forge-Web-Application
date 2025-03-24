@@ -18,7 +18,7 @@ function Dashboard({userId}) {
   const fetchResumes = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:3000/resumes");
+      const response = await axios.get("http://localhost:5000/api/resumes");
       setResumes(response.data);
     } catch (error) {
       console.error("Error fetching resumes:", error);
@@ -55,7 +55,7 @@ function Dashboard({userId}) {
 
   const handleDeleteResume = async (resumeId) => {
     try {
-      await axios.delete(`http://localhost:3000/resumes/${resumeId}`);
+      await axios.delete(`http://localhost:5000/api/resumes/${resumeId}`);
       // Directly update the state to show changes immediately
       setResumes(prevResumes => prevResumes.filter(resume => resume._id !== resumeId));
     } catch (error) {
@@ -91,7 +91,7 @@ function Dashboard({userId}) {
         <div className="mb-8">
           <h2 className="font-bold text-3xl text-gray-800 mb-2">My Resumes</h2>
           <p className="text-gray-600">Create and manage your professional resumes for your next career opportunity.</p>
-        <h1>{userId}</h1>
+        
         </div>
 
         {isLoading ? (

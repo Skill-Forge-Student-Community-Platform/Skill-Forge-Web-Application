@@ -25,6 +25,9 @@ import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
 
+import Dashbord from '../Portfolio_Builder/Dashbord';
+import ResumePreview from '../Portfolio_Builder/ResumePreview.js';
+
 // Import Student Profile components
 import StudentProfilePage from '../StudentProfile/StudentProfilePage';
 // Import student profile related components from correct location
@@ -223,8 +226,8 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             {/* Certificate and project routes */}
             <Route path="add-certificate" element={<AddCertificateForm />} />
             <Route path="add-project" element={<AddProjectForm />} />
-            <Route path="portfolio-builder/*" element={<PortfolioBuilder userId={userId} />} />
-            <Route path="portfolio/:portfolioId" element={<PortfolioView />} />
+            <Route path="portfolio-builder/*" element={<Dashbord userId={userId} />} />
+            <Route path="portfolio/:id" element={< ResumePreview/>} />
 
             {/* Student-specific learning routes */}
             <Route path="learning-paths/*" element={<LearningPathsPage userId={userId} />} />
