@@ -6,7 +6,7 @@ export const Teams = () => {
   return (
     <div>
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-16 px-4 shadow-lg">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-16 px-4 shadow-lg">
                 <div className="max-w-5xl mx-auto text-center">
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                         🔥 Team Collaboration

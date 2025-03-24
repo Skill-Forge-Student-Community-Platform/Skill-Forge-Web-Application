@@ -23,6 +23,7 @@ import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
+import FindTeamsByTechnology from '../Team_Collaboration/sub components for teams/FindTeamsByTechnology.jsx';
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -243,7 +244,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
             <Route path="teams/inbox" element={<Inbox/>} />
             <Route path="teams/create" element={<CreateTeamPage userId={userId} />} />
-            <Route path="teams/find" element={<FindTeamsPage userId={userId} />} />
+            <Route path="teams/find" element={<FindTeamsByTechnology/>} />
 
             {/* Network routes */}
             <Route path="network/*" element={<Friendspage />} />

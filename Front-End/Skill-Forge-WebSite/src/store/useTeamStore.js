@@ -102,4 +102,13 @@ export const useTeamStore = create((set)=>({
             toast.error(error.response?.data?.error || "Error removing member");
         }
     },
+
+    fetchTeamsByTechnology: async (technology) => {
+        try {
+            const response = await axiosIntance.get(`/teams/getTeamsByTechnology?technology=${technology}`);
+            set({ teams: response.data });
+        } catch (error) {
+            console.error("Error fetching teams by technology:", error.response?.data?.error || error.message);
+        }
+    },
 }));
