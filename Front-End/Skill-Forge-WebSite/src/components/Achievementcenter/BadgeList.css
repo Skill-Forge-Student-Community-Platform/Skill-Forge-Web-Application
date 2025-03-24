@@ -1,0 +1,118 @@
+.badge-list-container {
+  width: 100%;
+}
+
+.badge-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.badge-list-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: var(--text-dark);
+}
+
+.badge-icon {
+  margin-right: 8px;
+}
+
+.view-all-button {
+  background: none;
+  border: none;
+  color: var(--blue-primary);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.view-all-button:hover {
+  color: var(--blue-hover);
+  text-decoration: underline;
+}
+
+.arrow-icon {
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+}
+
+.view-all-button:hover .arrow-icon {
+  transform: translateX(3px);
+}
+
+.badge-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.badge-section {
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* Updating status indicator colors */
+.status-indicator {
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-dark);
+}
+
+.unlocked {
+  color: #057a55; /* Green color */
+}
+
+.locked {
+  color: #6b7280; /* Gray color */
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .badges-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode support - keeping light theme */
+@media (prefers-color-scheme: dark) {
+  .view-all-button {
+    color: var(--blue-primary);
+  }
+
+  .view-all-button:hover {
+    color: var(--blue-hover);
+  }
+
+  .unlocked {
+    color: #057a55;
+  }
+
+  .locked {
+    color: #6b7280;
+  }
+
+  .badge-list-title {
+    color: var(--text-dark);
+  }
+}
