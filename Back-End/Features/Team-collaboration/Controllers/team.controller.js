@@ -190,6 +190,7 @@ export const getSentInvites = async (req, res) =>{
     }
 };
 
+
 // Kick a member from the team or allow them to leave voluntarily
 export const kickMemberFromTeam = async (req, res) => {
     const { teamId, memberId } = req.body;
@@ -227,6 +228,28 @@ export const kickMemberFromTeam = async (req, res) => {
 
         const action = userId.toString() === memberId.toString() ? "left the team" : "was removed from the team";
         res.status(200).json({ message: `Member ${action} successfully`, team });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Get teams by interested technology
+export const getTeamsByTechnology = async (req, res) => {
+    const { technology } = req.query; // Get technology from query params
+
+    try {
+        const teams = await Team.find({ 
+            technology: { 
+                $regex: new RegExp(technology, "i") 
+            } })
+            .limit(10)
+            .select( "technology name members email" );
+
+        if (!teams.length) {
+            return res.status(404).json({ error: "No teams found with the specified technology" });
+        }
+
+        res.status(200).json(teams);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
