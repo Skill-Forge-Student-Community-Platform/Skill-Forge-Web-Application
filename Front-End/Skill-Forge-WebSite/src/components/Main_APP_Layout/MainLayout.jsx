@@ -23,6 +23,9 @@ import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
+
+import CreateTeam from '../Team_Collaboration/sub components for teams/CreateTeam.js';
+import ReceivedInvites from '../Team_Collaboration/sub components for teams/ReceivedInvites.js';
 import FindTeamsByTechnology from '../Team_Collaboration/sub components for teams/FindTeamsByTechnology.jsx';
 
 // TODO: Uncomment these imports when the components are implemented
@@ -66,17 +69,13 @@ const ManageEvents = ({ userId }) => (
   <PlaceholderPage title={`Manage Events for user ${userId}`} />
 );
 
-const TeamPage = ({ userId }) => (
-  <PlaceholderPage title={`Teams Page for user ${userId}`} />
-);
+
 
 const TeamManagement = ({ userId }) => (
   <PlaceholderPage title={`Team Management for user ${userId}`} />
 );
 
-const TeamActivity = ({ userId }) => (
-  <PlaceholderPage title={`Team Activity for user ${userId}`} />
-);
+
 
 // const Inbox = ({ userId }) => (
 //   <PlaceholderPage title={`Inbox for user ${userId}`} />
@@ -95,13 +94,6 @@ const SavedEventsPage = ({ userId }) => (
   <PlaceholderPage title={`Saved Events for user ${userId}`} />
 );
 
-const CreateTeamPage = ({ userId }) => (
-  <PlaceholderPage title={`Create Team Page for user ${userId}`} />
-);
-
-const FindTeamsPage = ({ userId }) => (
-  <PlaceholderPage title={`Find Teams Page for user ${userId}`} />
-);
 
 const PricingPage = ({ userId }) => (
   <PlaceholderPage title={`Pricing Plans for user ${userId}`} />
@@ -241,9 +233,9 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             <Route path="teams" element={<Teams/>} />
             <Route path="teams/management" element={<TeamManagement userId={userId} />} />
-            <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
+            <Route path="teams/activity" element={<ReceivedInvites/>} />
             <Route path="teams/inbox" element={<Inbox/>} />
-            <Route path="teams/create" element={<CreateTeamPage userId={userId} />} />
+            <Route path="teams/create" element={<CreateTeam />} />
             <Route path="teams/find" element={<FindTeamsByTechnology/>} />
 
             {/* Network routes */}
