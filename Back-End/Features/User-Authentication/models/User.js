@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
     ref: 'User'
   }],
   sentRequests: [{
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
   coverImg: {
@@ -76,9 +76,9 @@ const userSchema = new mongoose.Schema({
   },
   // For Team Collaboration
   teams: [
-    { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Team' 
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team'
     }
   ],
   resetPasswordToken: String,
@@ -91,7 +91,61 @@ const userSchema = new mongoose.Schema({
     ref: 'User',
     default: []
   }],
+  // XP system fields
+  avatar: {
+    type: String,
+    default: 'default-avatar.png'
+  },
+  level: {
+    type: Number,
+    default: 1
+  },
+  currentXP: {
+    type: Number,
+    default: 0
+  },
+  totalXP: {
+    type: Number,
+    default: 0
+  },
+  badges: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Badge'
+  }],
+  rank: {
+    type: String,
+    default: 'Novice'
+  },
+  joinDate: {
+    type: Date,
+    default: Date.now
+  }
 } ,{timestamps: true});
 
+// Method to calculate next level XP requirement
+userSchema.methods.getNextLevelXP = function() {
+  return Math.floor(1000 * Math.pow(1.5, this.level - 1));
+};
+
+// Method to update level based on XP
+userSchema.methods.updateLevel = function() {
+  const nextLevelXP = this.getNextLevelXP();
+  if (this.currentXP >= nextLevelXP) {
+    this.level += 1;
+    this.currentXP -= nextLevelXP;
+
+    // Update rank based on level
+    if (this.level <= 10) {
+      const ranks = ['Novice', 'Beginner', 'Intermediate', 'Pro Competitor',
+        'Expert', 'Master', 'Grandmaster', 'Legend', 'Champion', 'Ultimate Champion'];
+      this.rank = ranks[this.level - 1];
+    } else {
+      this.rank = `Ultimate Champion ${this.level - 10}`;
+    }
+
+    return true;
+  }
+  return false;
+};
 
 export const User = mongoose.model('User', userSchema);

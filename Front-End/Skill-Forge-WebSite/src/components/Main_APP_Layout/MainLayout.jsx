@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-do
 import { useAuthStore } from '../../store/authStore';
 
 import { EventProvider } from '../../context/EventContext';
+import { XpContextProvider } from '../Xp platform/context/XpContext';
 
 import NavBar from '../Navigation/NavBar';
 
@@ -12,6 +13,8 @@ import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 
+// Import XP System Page
+import XPSystemPage from '../Xp platform/pages/XPSystemPage';
 
 import Friendspage from '../Network/Friendspage';
 import AchievementCenter from '../Achievementcenter/AchievementCenter';
@@ -57,10 +60,6 @@ const PlaceholderPage = ({ title }) => (
 );
 
 // Existing placeholder components
-const StudentDashboard = ({ userId }) => (
-  <PlaceholderPage title={`Student Dashboard for user ${userId}`} />
-);
-
 const OrganizerDashboard = ({ userId }) => (
   <PlaceholderPage title={`Organizer Dashboard for user ${userId}`} />
 );
@@ -203,9 +202,13 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
           <Routes>
             <Route path="home/*" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
-            {/* Dashboard route for students only */}
+            {/* Dashboard route for students using XP System */}
             {roleType === 'student' && (
-              <Route path="dashboard/*" element={<StudentDashboard userId={userId} />} />
+              <Route path="dashboard/*" element={
+                <XpContextProvider>
+                  <XPSystemPage />
+                </XpContextProvider>
+              } />
             )}
 
             {/* Profile routes */}
@@ -226,7 +229,7 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="portfolio-builder/*" element={<PortfolioBuilder userId={userId} />} />
             <Route path="portfolio/:portfolioId" element={<PortfolioView />} />
 
-            {/* Student-specific learning routes */}
+            {/* Student-specific learning routes - REMOVED xp-system route */}
             <Route path="learning-paths/*" element={<LearningPathsPage userId={userId} />} />
             <Route path="achievements/*" element={<AchievementCenter />} />
 
