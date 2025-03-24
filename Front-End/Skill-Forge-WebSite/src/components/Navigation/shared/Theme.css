@@ -1,11 +1,104 @@
+/* Theme toggle button styling */
 .themeToggle {
-  color: #bbb;
-  width: 3em;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 6px;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
+.themeToggle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .themeToggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.themeToggleInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Sun/Moon styling */
+.sunMoon {
+  fill: #ffbf00;
+  transform-origin: center;
+  transition: transform 0.5s ease;
+}
+
+.dark .sunMoon {
+  fill: #f1f5f9;
+  transform: scale(0.75);
+}
+
+/* Rays styling */
+.sunRay {
+  fill: #ffbf00;
+  transform-origin: center;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.dark .sunRay {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.sunRay1 {
+  transition-delay: 0.1s;
+}
+
+.sunRay2 {
+  transition-delay: 0.2s;
+}
+
+.sunRay3 {
+  transition-delay: 0.3s;
+}
+
+.sunRay4 {
+  transition-delay: 0.4s;
+}
+
+.sunRay5 {
+  transition-delay: 0.5s;
+}
+
+.sunRay6 {
+  transition-delay: 0.6s;
+}
+
+/* Button styling for different modes */
 .st-sunMoonThemeToggleBtn {
-  position: relative;
-  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  color: #000;
+}
+
+.dark .st-sunMoonThemeToggleBtn {
+  color: #f1f5f9;
+}
+
+.st-sunMoonThemeToggleBtn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark .st-sunMoonThemeToggleBtn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .st-sunMoonThemeToggleBtn .themeToggleInput {

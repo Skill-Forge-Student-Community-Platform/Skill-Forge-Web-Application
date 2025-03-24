@@ -1,6 +1,7 @@
 // components/ProfileCard.js
 import React from 'react';
 import './ProfileCard.css';
+import { FaShareAlt } from 'react-icons/fa';
 
 const ProfileCard = ({ user }) => {
   return (
@@ -12,10 +13,10 @@ const ProfileCard = ({ user }) => {
       <div className="profile-info">
         <h2 className="profile-name">{user.name}</h2>
         <p className="profile-title">{user.title}</p>
-        {user.isPro && <div className="pro-badge">Pro Member</div>}
+        {user.isPro && <div className="pro-badge">Premium</div>}
       </div>
       <button className="share-button">
-        <span className="share-icon">🔗</span> Share Profile
+        <FaShareAlt className="share-icon" /> Share Profile
       </button>
     </div>
   );
