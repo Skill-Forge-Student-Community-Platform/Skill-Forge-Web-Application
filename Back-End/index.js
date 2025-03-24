@@ -34,6 +34,7 @@ import friendRoutes from "./Features/Network/routers/friendRoutes.js";
 
 import notificationRoutes from './Features/Notifications/routes/Notification.route.js';
 
+import resumeRoutes from './Features/Portfolio-Builder/routes/resumeRoutes.js';
 
 
 
@@ -197,6 +198,8 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
 
 app.use("/api/friends", friendRoutes);
+
+app.use("/api/resumes", resumeRoutes);
 
 
 
