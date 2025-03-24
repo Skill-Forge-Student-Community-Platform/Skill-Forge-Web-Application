@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import imageCache from '../utils/imageCache';
 // Add this import
 import sessionProfileCache from '../utils/sessionProfileCache';
+import { io } from 'socket.io-client';
 
 // Use the environment variable or fall back to localhost
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/auth";
@@ -28,6 +29,8 @@ const useAuthStore = create((set, get) => ({
 	isLoading: false,
 	isCheckingAuth: true,
 	message: null,
+	onlineUsers:[],
+    socket:null,
 
 	updateUserRole: async (role) => {
 		set({ isLoading: true, error: null });
@@ -303,6 +306,31 @@ const useAuthStore = create((set, get) => ({
 			});
 			throw new Error(errorMessage);
 		}
+	},
+
+	connectSocket:()=>{
+		const { authUser } = get();
+		if (!authUser || get().socket?.connected) return;
+  
+		// passing the user id from backend 
+		const socket = io(API_URL, {
+		  query:{
+			userId:authUser._id,
+		  },
+		});
+		socket.connect()
+  
+		set({socket:socket});
+  
+		// Listen for online user updates
+		socket.on("getOnlineUsers", (userIds)=>{
+		  set({onlineUsers:userIds})
+		})
+  
+	},
+  
+	disconnectSocket:()=>{
+		if(get().socket?.connected) get().socket.disconnect();
 	},
 }));
 
