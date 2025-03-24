@@ -1,217 +1,270 @@
-/* Main container */
-.people-container {
-  width: 100%;
-  margin: 20px auto;
-  background: #6e6b6b49;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-/* Title aligned to the left */
-.people-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: left;
-  padding-left: 10px;
-}
-
-/* Container for all people cards - Horizontal Scroll */
-.people-you-may-know {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  white-space: nowrap;
-  padding: 10px;
-  scroll-behavior: smooth;
-}
-
-/* Individual person card */
-.person-card {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  text-align: center;
-  width: 200px;
-  flex: 0 0 auto;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid #f0f0f0;
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.dark .person-card {
-  border-color: #334155;
-}
-
-.person-card:hover {
-  background: #ececec;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Avatar styling */
-.person-avatar {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Name, role, and location */
-.person-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 8px 0;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0 0 4px 0;
-  color: #333;
-}
-
-.dark .person-name {
-  color: #e4e4e4;
-}
-
-.person-role,
-.person-location {
-  font-size: 13px;
-  color: gray;
-  margin: 4px 0;
-}
-
-.person-details {
-  font-size: 13px;
-  color: #666;
-  margin: 0;
-}
-
-.dark .person-details {
-  color: #94a3b8;
-}
-
-/* Friend Request Buttons */
-.add-btn, .cancel-btn {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: 12px;
-}
-
-/* Add Friend Button */
-.add-btn {
-  background: #2b66aa;
-  color: white;
-}
-
-.add-btn:hover {
-  background: #086bdd;
-}
-
-/* Cancel Request Button */
-.cancel-btn {
-  background: #e74c3c;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background: #c0392b;
-}
-
-/* Hide Scrollbar for Cleaner UI */
-.people-you-may-know::-webkit-scrollbar {
-  height: 8px;
-}
-
-.people-you-may-know::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 10px;
-}
-
-
-.people-you-may-know::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+/* People you may know styling */
 .suggestions-container {
-  background-color: #ffffff;
-  border-radius: 8px;
+  background-color: white;
+  border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.dark .suggestions-container {
-  background-color: #1e293b;
+.main-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.suggestions-section {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .section-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4b5563;
 }
 
-.dark .section-title {
-  color: #e4e4e4;
+.see-all-btn {
+  font-size: 0.875rem;
+  color: #0077b5;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-.suggestions-grid {
+.see-all-btn:hover {
+  color: #005885;
+  text-decoration: underline;
+}
+
+.suggestions-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 1rem;
+}
+
+.person-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.person-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.hide-suggestion {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: rgba(229, 231, 235, 0.8);
+  border: none;
+  color: #6b7280;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.person-card:hover .hide-suggestion {
+  opacity: 1;
+}
+
+.hide-suggestion:hover {
+  background-color: #e5e7eb;
+  color: #111827;
 }
 
 .person-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 1rem;
   cursor: pointer;
 }
 
+.person-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.person-details-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.person-name {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.person-role {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
 .mutual-connections {
-  margin-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.connection-icon {
+  font-size: 0.875rem;
 }
 
 .request-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background-color: #0a66c2;
+  gap: 0.5rem;
+  padding: 0.625rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #0077b5;
   color: white;
   border: none;
-  border-radius: 16px;
-  padding: 8px 16px;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
 .request-button:hover {
-  background-color: #0958a3;
+  background-color: #005885;
 }
 
 .request-button.pending {
-  background-color: #f0f0f0;
-  color: #666;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.request-button.pending:hover {
+  background-color: #e5e7eb;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  color: #6b7280;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+/* Dark mode support */
+.dark .suggestions-container {
+  background-color: #1f2937;
+}
+
+.dark .main-title {
+  color: #f3f4f6;
+}
+
+.dark .section-title {
+  color: #9ca3af;
+}
+
+.dark .see-all-btn {
+  color: #60a5fa;
+}
+
+.dark .see-all-btn:hover {
+  color: #93c5fd;
+}
+
+.dark .person-card {
+  background-color: #111827;
+  border-color: #374151;
+}
+
+.dark .hide-suggestion {
+  background-color: rgba(55, 65, 81, 0.8);
+  color: #9ca3af;
+}
+
+.dark .hide-suggestion:hover {
+  background-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .person-name {
+  color: #f3f4f6;
+}
+
+.dark .person-role,
+.dark .mutual-connections {
+  color: #9ca3af;
+}
+
+.dark .request-button {
+  background-color: #3b82f6;
+}
+
+.dark .request-button:hover {
+  background-color: #2563eb;
+}
+
+.dark .request-button.pending {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .request-button.pending:hover {
+  background-color: #4b5563;
+}
+
+.dark .loading-spinner,
+.dark .empty-state {
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .suggestions-cards {
+    grid-template-columns: 1fr;
+  }
 }
