@@ -1,0 +1,283 @@
+/* Pending invitations styling */
+.pending-invitations-container {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.invitations-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.invitations-header h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.manage-invitations-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0077b5;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.manage-invitations-btn:hover {
+  color: #005885;
+  text-decoration: underline;
+}
+
+.invitations-list {
+  padding: 1rem;
+}
+
+.invitation-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  margin-bottom: 1rem;
+}
+
+.invitation-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.invitation-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.default-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.invitation-details {
+  flex: 1;
+}
+
+.invitation-name {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.invitation-info {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.invitation-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.accept-btn, .decline-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.625rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.accept-btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+}
+
+.accept-btn:hover {
+  background-color: #059669;
+}
+
+.decline-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.decline-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.processing-text {
+  font-size: 0.875rem;
+}
+
+.view-more-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  color: #0077b5;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-more-btn:hover {
+  background-color: #f3f4f6;
+  color: #005885;
+}
+
+.no-invitations {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.skeleton-loading {
+  padding: 1rem;
+}
+
+.skeleton-header {
+  height: 1.5rem;
+  width: 40%;
+  background-color: #e5e7eb;
+  border-radius: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-item {
+  height: 5rem;
+  background-color: #e5e7eb;
+  border-radius: 0.375rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Dark mode support */
+.dark .pending-invitations-container {
+  background-color: #1f2937;
+}
+
+.dark .invitations-header {
+  border-bottom-color: #374151;
+}
+
+.dark .invitations-header h2 {
+  color: #f3f4f6;
+}
+
+.dark .manage-invitations-btn {
+  color: #60a5fa;
+}
+
+.dark .manage-invitations-btn:hover {
+  color: #93c5fd;
+}
+
+.dark .invitation-card {
+  background-color: #111827;
+  border-color: #374151;
+}
+
+.dark .default-avatar {
+  background-color: #374151;
+  color: #9ca3af;
+}
+
+.dark .invitation-name {
+  color: #f3f4f6;
+}
+
+.dark .invitation-info {
+  color: #9ca3af;
+}
+
+.dark .accept-btn {
+  background-color: #059669;
+}
+
+.dark .accept-btn:hover {
+  background-color: #047857;
+}
+
+.dark .decline-btn {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .decline-btn:hover {
+  background-color: #4b5563;
+}
+
+.dark .view-more-btn {
+  background-color: #111827;
+  color: #60a5fa;
+  border-color: #374151;
+}
+
+.dark .view-more-btn:hover {
+  background-color: #1f2937;
+  color: #93c5fd;
+}
+
+.dark .no-invitations {
+  color: #9ca3af;
+}
+
+.dark .skeleton-header,
+.dark .skeleton-item {
+  background-color: #374151;
+}
+
+@media (min-width: 640px) {
+  .invitation-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .invitation-profile {
+    flex: 1;
+  }
+
+  .invitation-actions {
+    width: auto;
+  }
+
+  .accept-btn, .decline-btn {
+    width: auto;
+    padding: 0.625rem 1.25rem;
+  }
+}

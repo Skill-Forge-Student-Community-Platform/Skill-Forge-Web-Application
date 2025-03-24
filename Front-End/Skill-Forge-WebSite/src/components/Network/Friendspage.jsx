@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import PeopleYouMayKnow from "./Friends/PeopleYouMayKnow";
 import AllFriends from "./Friends/AllFriends";
 import FollowingFollowers from "./Friends/FollowingFollowers";
 import NetworkSidebar from "./NetworkSidebar";
+import PendingInvitations from "./Friends/PendingInvitations";
 import { useAuthStore } from "../../store/authStore";
 import friendService from "../../services/friendService";
 import socketService from "../../services/socket";
@@ -14,6 +15,7 @@ const Friendspage = () => {
   const [pendingRequestCount, setPendingRequestCount] = useState(0);
   const { user } = useAuthStore();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Connect to socket for real-time updates
@@ -72,25 +74,34 @@ const Friendspage = () => {
     }
   };
 
-  // Component to show when no specific route is matched
+  // Component to show when no specific route is matched - DEFAULT PAGE
   const DefaultNetworkPage = () => (
-    <div className="w-full flex flex-col gap-5">
-      <PeopleYouMayKnow onFriendRequest={fetchPendingRequestsCount} />
-      <AllFriends
+    <div className="w-full flex flex-col gap-6">
+      {/* PendingInvitations always visible at the top */}
+      <PendingInvitations
         onAcceptRequest={() => {
           fetchFriendsCount();
           fetchPendingRequestsCount();
         }}
-        onRejectRequest={fetchPendingRequestsCount}
-        onRemoveFriend={fetchFriendsCount}
+        onRejectRequest={() => fetchPendingRequestsCount()}
       />
+
+      {/* People You May Know below */}
+      <PeopleYouMayKnow onFriendRequest={fetchPendingRequestsCount} />
     </div>
   );
 
+  // Base path construction for consistent routing
+  const getBasePath = () => {
+    if (!user?._id || !user?.role) return "/network";
+    const formattedRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+    return `/${formattedRole}/${user._id}/network`;
+  };
+
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-screen bg-gray-100 dark:bg-gray-900 p-5">
+    <div className="network-layout">
       {/* Left sidebar */}
-      <div className="w-full md:w-[260px] shrink-0 md:mr-5 mb-4 md:mb-0">
+      <div className="network-sidebar-container">
         <NetworkSidebar
           connectionCount={connectionCount}
           pendingCount={pendingRequestCount}
@@ -101,21 +112,37 @@ const Friendspage = () => {
       </div>
 
       {/* Main content area */}
-      <div className="flex-1">
+      <div className="network-content">
         <Routes>
+          {/* Default route (Home) */}
           <Route path="/" element={<DefaultNetworkPage />} />
+
+          {/* Connection management routes */}
           <Route path="/connections" element={<AllFriends activeTab="friends" />} />
           <Route path="/requests" element={<AllFriends activeTab="requests" />} />
           <Route path="/following" element={<FollowingFollowers />} />
+
+          {/* Coming soon features */}
           <Route path="/groups" element={
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
-              <h3 className="text-xl font-semibold mb-4">Groups Feature</h3>
-              <p className="text-gray-600 dark:text-gray-400">
+            <div className="coming-soon-container">
+              <h3 className="coming-soon-title">Groups Feature</h3>
+              <p className="coming-soon-description">
                 Group functionality is coming soon. Stay tuned for updates!
               </p>
             </div>
           } />
-          <Route path="*" element={<Navigate to="/network" replace />} />
+          <Route path="/events" element={
+            <div className="coming-soon-container">
+              <h3 className="coming-soon-title">Network Events</h3>
+              <p className="coming-soon-description">
+                Network events feature is under development. Check back soon!
+              </p>
+            </div>
+          } />
+
+          {/* Redirect all other paths to network home */}
+
+          <Route path="*" element={<Navigate to={getBasePath()} replace />} />
         </Routes>
       </div>
     </div>

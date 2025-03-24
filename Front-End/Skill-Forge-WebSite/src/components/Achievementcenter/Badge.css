@@ -1,0 +1,190 @@
+.badge {
+  display: flex;
+  padding: 16px;
+  border-radius: 8px;
+  position: relative;
+  transition: none; /* Removed transition */
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.badge.achieved {
+  border: none;
+}
+
+.badge.locked {
+  background: #f9fafb;
+  border: none;
+}
+
+.badge-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  background-color: var(--blue-light);
+}
+
+.badge-icon {
+  font-size: 1.5rem;
+}
+
+.badge-content {
+  flex: 1;
+}
+
+.badge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.badge-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.badge-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.badge-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.badge-reward {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  background: var(--blue-light);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--blue-primary);
+}
+
+.xp-icon {
+  margin-right: 5px;
+}
+
+.badge-progress-container {
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--blue-primary);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.lock-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.9rem;
+  opacity: 0.5;
+}
+
+/* LinkedIn color variations */
+.badge.gold::before,
+.badge.purple::before,
+.badge.blue::before,
+.badge.green::before {
+  background-color: var(--blue-primary);
+}
+
+.badge:hover {
+  transform: none; /* Removed hover transform effect */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Dark mode support - keeping light theme */
+@media (prefers-color-scheme: dark) {
+  .badge {
+    background: #FFFFFF;
+  }
+
+  .badge.achieved {
+    border: none;
+  }
+
+  .badge.locked {
+    background: #f9fafb;
+    border: none;
+  }
+
+  .badge-icon-container {
+    background-color: var(--blue-light);
+  }
+
+  .badge-title {
+    color: var(--text-dark);
+  }
+
+  .badge-description {
+    color: var(--text-secondary);
+  }
+
+  .badge-time {
+    color: var(--text-secondary);
+  }
+
+  .badge-reward {
+    background: var(--blue-light);
+    color: var(--blue-primary);
+  }
+
+  .progress-bar {
+    background: #e5e7eb;
+  }
+
+  .progress-fill {
+    background: var(--blue-primary);
+  }
+
+  .progress-text {
+    color: var(--text-secondary);
+  }
+
+  .badge.gold::before,
+  .badge.purple::before,
+  .badge.blue::before,
+  .badge.green::before {
+    background-color: var(--blue-primary);
+  }
+}

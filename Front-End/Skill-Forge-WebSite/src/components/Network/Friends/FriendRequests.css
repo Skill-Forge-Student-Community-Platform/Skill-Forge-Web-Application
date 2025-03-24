@@ -1,93 +1,152 @@
+/* Friend Requests Component Styling */
 .friend-requests-container {
-  background: white;
-  border-radius: 8px;
-  padding: 15px;
-  width: 100%;
-  max-width: 800px;
-  margin: 20px auto;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-}
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: white;
 
-/* Individual friend request */
-.friend-request-card {
-  background: #f8f9fa;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Header section with profile picture & details (Clickable) */
+.friend-request-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.friend-request-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
 .friend-request-header {
   display: flex;
   align-items: center;
+  gap: 1rem;
   cursor: pointer;
-  margin-bottom: 10px;
 }
 
-.friend-request-header:hover {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  padding: 5px;
-}
-
-/* Profile picture */
 .request-avatar {
-  width: 50px;
-  height: 50px;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
-  margin-right: 12px;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
 }
 
-/* Request details */
 .request-info {
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-/* Name styling */
 .request-name {
-  font-size: 14px;
-  margin: 0;
-  color: #333;
+  font-size: 0.875rem;
+  color: #111827;
 }
 
-/* Mutual friends & time */
 .request-time {
-  font-size: 12px;
-  color: gray;
-  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
-/* Action buttons */
 .request-actions {
   display: flex;
-  gap: 18px;
+  gap: 0.75rem;
 }
 
 .confirm-btn, .delete-btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
   cursor: pointer;
-  font-weight: bold;
+  transition: all 0.2s ease;
 }
 
 .confirm-btn {
-  background: #007bff;
+  background-color: #0077b5;
   color: white;
+  border: none;
+  flex: 1;
 }
 
 .confirm-btn:hover {
-  background: #0056b3;
+  background-color: #005885;
 }
 
 .delete-btn {
-  background: #e4e6eb;
-  color: black;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+  flex: 1;
 }
 
 .delete-btn:hover {
-  background: #cfd2d7;
+  background-color: #e5e7eb;
+}
+
+.no-friends {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* Dark mode support */
+.dark .friend-requests-container {
+  background-color: #1f2937;
+}
+
+.dark .friend-request-card {
+  background-color: #111827;
+  border-color: #374151;
+}
+
+.dark .request-name {
+  color: #f3f4f6;
+}
+
+.dark .request-time {
+  color: #9ca3af;
+}
+
+.dark .confirm-btn {
+  background-color: #3b82f6;
+}
+
+.dark .confirm-btn:hover {
+  background-color: #2563eb;
+}
+
+.dark .delete-btn {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .delete-btn:hover {
+  background-color: #4b5563;
+}
+
+.dark .no-friends {
+  color: #9ca3af;
+}
+
+@media (min-width: 640px) {
+  .friend-request-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .request-actions {
+    width: auto;
+  }
 }
