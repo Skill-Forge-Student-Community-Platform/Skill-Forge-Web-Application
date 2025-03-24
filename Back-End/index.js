@@ -98,8 +98,32 @@ io.on('connection', (socket) => {
 
   // Listen for shares/reposts
   socket.on('sharePost', (post) => {
-
     socket.broadcast.emit('newPost', post); // Shared posts appear as new posts
+  });
+
+  // Friend-related events
+  socket.on('friendRequest', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_received', data);
+    }
+  });
+
+  socket.on('friendRequestAccepted', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_accepted', data);
+    }
+  });
+
+  socket.on('friendRequestRejected', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_rejected', data);
+    }
+  });
+
+  socket.on('friendRequestCancelled', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_cancelled', data);
+    }
   });
 
   socket.on('disconnect', () => {
@@ -152,6 +176,16 @@ app.use("/api/teams", teamRoutes);
 
 // Notification routes
  app.use("/api/notifications", notificationRoutes);
+
+// Ensure the notifications route is properly registered
+// Check if it's already registered before adding it
+if (!app._router.stack.some(layer =>
+    layer.route &&
+    (layer.route.path === '/api/notifications' || layer.regexp.toString().includes('notifications'))
+)) {
+  app.use('/api/notifications', notificationRoutes);
+  console.log('📣 Notification routes registered successfully');
+}
 
 app.use("/Details", eventRoutes);
 app.use("/api", saveEventsRoutes);
