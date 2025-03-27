@@ -1,0 +1,338 @@
+/* 📌 Intro Section Container */
+.intro-section {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+}
+
+.intro-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1a1a1a;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e4e6eb;
+}
+
+.intro-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 12px 0;
+  color: #65676b;
+}
+
+/* 📌 Section Title */
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 📌 Bio Text */
+.bio-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.edit-bio-btn {
+  background-color: #e7f3ff;
+  color: #0a66c2;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.edit-bio-btn:hover {
+  background-color: #d4e9ff;
+}
+
+.bio-edit-container {
+  margin-bottom: 15px;
+}
+
+.bio-textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.bio-edit-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #65676b;
+  margin-bottom: 10px;
+}
+
+.bio-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.cancel-btn, .save-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+}
+
+.cancel-btn {
+  background-color: #f0f2f5;
+  color: #65676b;
+}
+
+.save-btn {
+  background-color: #0a66c2;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #e4e6eb;
+}
+
+.save-btn:hover {
+  background-color: #0a59a7;
+}
+
+/* 📌 Edit Mode Inputs */
+.edit-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* 📌 Save & Edit Buttons */
+.edit-btn, .save-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.edit-btn:hover {
+  background-color: green;
+}
+
+.save-btn:hover {
+  background-color: #28a745;
+  transform: scale(1.05);
+}
+
+.personal-details {
+  margin-top: 20px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.detail-icon {
+  margin-right: 10px;
+  color: #65676b;
+  font-size: 1.2rem;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #444;
+}
+
+.detail-text {
+  color: #1a1a1a;
+}
+
+.detail-text span {
+  color: #65676b;
+}
+
+.detail-item.empty {
+  color: #65676b;
+  opacity: 0.7;
+}
+
+/* 📌 Responsive */
+@media (max-width: 600px) {
+  .intro-section {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .edit-input {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .edit-btn, .save-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+
+
+/* Bio Section */
+.bio-section {
+  margin-bottom: 20px;
+}
+
+.bio-display p {
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.edit-bio textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+  margin-bottom: 5px;
+}
+
+/* Editing UI */
+.edit-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.edit-fields {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+}
+
+.edit-fields select,
+.edit-fields input {
+  padding: 8px;
+  border: 1px solid #dddfe2;
+  border-radius: 4px;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #65676b;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.remove-btn:hover {
+  color: #fa383e;
+}
+
+.add-item-btn {
+  background: none;
+  border: 1px dashed #dddfe2;
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 4px;
+  color: #1877f2;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.add-item-btn:hover {
+  background-color: #f0f2f5;
+}
+
+/* Action Buttons */
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.edit-btn {
+  color: #1877f2;
+}
+
+.edit-btn:hover {
+  background-color: #e7f3ff;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.save-btn {
+  background-color: #1877f2;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #166fe5;
+}
+
+.cancel-btn {
+  color: #65676b;
+}
+
+.cancel-btn:hover {
+  background-color: #f0f2f5;
+}
+
+/* Loading and Error States */
+.intro-section.loading,
+.intro-section.error {
+  text-align: center;
+  padding: 30px;
+  color: #65676b;
+}
+
+.intro-section.error {
+  color: #fa383e;
+}

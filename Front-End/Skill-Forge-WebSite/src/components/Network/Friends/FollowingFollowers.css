@@ -1,27 +1,370 @@
-.loader {
-  width: 30px;
-  height: 30px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
+/* Following/Followers styling */
+.following-followers-container {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  background: none;
+  border: none;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  color: #0077b5;
+  font-weight: 600;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #0077b5;
+  border-radius: 3px 3px 0 0;
+}
+
+.following-search-container {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+
+.search-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.following-search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #0077b5;
+  box-shadow: 0 0 0 3px rgba(0, 119, 181, 0.1);
+}
+
+.user-list {
+  padding: 1rem;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.user-card:hover {
+  background-color: #f9fafb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.user-role {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.follow-btn, .unfollow-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.follow-btn {
+  background-color: #0077b5;
+  color: white;
+  border: none;
+}
+
+.follow-btn:hover {
+  background-color: #005885;
+}
+
+.unfollow-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.unfollow-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.spinner-sm {
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.error-container {
+  background-color: #fee2e2;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #b91c1c;
+  text-align: center;
 }
 
-.connection-card {
-  transition: all 0.2s ease-in-out;
+.error-message {
+  margin-bottom: 0.75rem;
 }
 
-.connection-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.retry-button {
+  background-color: #b91c1c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #991b1b;
+}
+
+.empty-state {
+  padding: 2.5rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.find-people-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  padding: 0.625rem 1.25rem;
+  background-color: #0077b5;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.find-people-btn:hover {
+  background-color: #005885;
+}
+
+/* Dark mode support */
+.dark .following-followers-container {
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+.dark .tabs {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.dark .tab {
+  color: #9ca3af;
+}
+
+.dark .tab.active {
+  color: #60a5fa;
+}
+
+.dark .tab.active::after {
+  background-color: #60a5fa;
+}
+
+.dark .following-search-container {
+  border-bottom-color: #374151;
+}
+
+.dark .search-container {
+  border-bottom-color: #374151;
+
+}
+
+.dark .following-search-input {
+  background-color: #111827;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .search-input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+.dark .user-card {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .user-card:hover {
+  background-color: #2d3748;
+}
+
+.dark .user-name {
+  color: #f3f4f6;
+}
+
+.dark .user-role {
+  color: #9ca3af;
+}
+
+.dark .follow-btn {
+  background-color: #3b82f6;
+}
+
+.dark .follow-btn:hover {
+  background-color: #2563eb;
+}
+
+.dark .unfollow-btn {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .unfollow-btn:hover {
+  background-color: #4b5563;
+}
+
+.dark .error-container {
+  background-color: rgba(239, 68, 68, 0.1);
+
+  color: #f87171;
+}
+
+.dark .retry-button {
+  background-color: #ef4444;
+}
+
+.dark .retry-button:hover {
+  background-color: #dc2626;
+}
+
+.dark .empty-state {
+  color: #9ca3af;
+}
+
+.dark .find-people-btn {
+  background-color: #3b82f6;
+}
+
+.dark .find-people-btn:hover {
+  background-color: #2563eb;
+}
+
+@media (max-width: 640px) {
+  .user-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .action-buttons {
+    width: 100%;
+  }
+
+  .follow-btn, .unfollow-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -32,7 +32,7 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
       setIsLoading(true);
       setError(null);
       
-      axios.get(`http://localhost:3000/resumes/${id}`)
+      axios.get(`http://localhost:5000/api/resumes/${id}`)
         .then((response) => {
           const data = response.data;
           setFormData(data);
@@ -124,10 +124,10 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
       
       if (id) {
         // Update existing resume
-        response = await axios.put(`http://localhost:3000/resumes/${id}`, completeData);
+        response = await axios.put(`http://localhost:5000/api/resumes/${id}`, completeData);
       } else {
         // Create new resume
-        response = await axios.post("http://localhost:3000/resumes", completeData);
+        response = await axios.post("http://localhost:5000/api/resumes", completeData);
       }
       
       // Handle successful save
