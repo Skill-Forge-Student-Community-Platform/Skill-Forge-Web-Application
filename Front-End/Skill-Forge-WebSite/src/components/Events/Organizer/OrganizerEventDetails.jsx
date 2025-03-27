@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate,Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import RegisteredUsers from "./RegisterdUsers";
 import { useEvents } from "../../../context/EventContext";
+import { getApiBaseUrl, getStaticUrl } from "../../../utils/environment";
 
-
-import { 
-  FaCalendarAlt, 
-  FaMapMarkerAlt, 
-  FaFileAlt, 
-  FaClock, 
-  FaTrophy, 
-  FaUsers, 
-  FaScroll, 
-  FaEdit, 
-  FaTrashAlt, 
+import {
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaFileAlt,
+  FaClock,
+  FaTrophy,
+  FaUsers,
+  FaScroll,
+  FaEdit,
+  FaTrashAlt,
   FaMapMarkedAlt ,
   FaArrowLeft
 } from "react-icons/fa";
@@ -24,8 +24,8 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
 
 
   const { id } = useParams();
-  const navigate = useNavigate(); 
-  
+  const navigate = useNavigate();
+
   const [event, setEvent] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [mapUrl, setMapUrl] = useState("");
@@ -41,21 +41,21 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
     image: null,
   });
 
- 
+
 
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
-        
-        const response = await axios.get(`http://localhost:5000/Details/${id}`);
+
+        const response = await axios.get(`${getStaticUrl()}/Details/${id}`);
         setEvent(response.data);
-        
-  
+
+
         // Format date before setting it in the state
         const formattedDate = response.data.date
           ? new Date(response.data.date).toISOString().split('T')[0] // Convert to YYYY-MM-DD
           : ""; // Default to empty string if no date is present
-  
+
         setUpdatedData({
           title: response.data.title || "",
           date: formattedDate, // Set formatted date here
@@ -80,7 +80,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
     };
     fetchEventDetails();
   }, [id]);
-  
+
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
@@ -108,25 +108,25 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
     Object.keys(updatedData).forEach((key) => {
       formData.append(key, updatedData[key]);
     });
-  
+
     try {
       await updateEvent(id, formData);
-      const updatedResponse = await axios.get(`http://localhost:5000/Details/${id}`); // Re-fetch latest data
+      const updatedResponse = await axios.get(`${getStaticUrl()}/Details/${id}`); // Re-fetch latest data
       setEvent(updatedResponse.data);
       alert("Succsfully Updated event");
-      
+
       // Update map URL if location changed
       if (updatedData.location) {
         const encodedLocation = encodeURIComponent(updatedData.location);
         setMapUrl(`https://www.google.com/maps?q=${encodedLocation}&output=embed`);
       }
-      
+
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating event:", error);
     }
   };
-  
+
   if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -139,7 +139,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
   }
 
   return (
-    
+
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -148,7 +148,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
           <FaArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
           Back to Events
         </Link>
-     
+
 
           {isEditing ? (
             <div className="p-6">
@@ -274,8 +274,8 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                   >
                     Cancel
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                   >
                     Save Changes
@@ -288,7 +288,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
               {event.image && (
                 <div className="relative h-64 sm:h-80 md:h-96 w-full">
                   <img
-                    src={`http://localhost:5000/${event.image}`}
+                    src={`${getStaticUrl()}/${event.image}`}
                     alt={event.title}
                     className="w-full h-full object-cover"
                   />
@@ -325,11 +325,11 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                     </div>
 
                     <div className="rounded-xl overflow-hidden border border-gray-200 h-64 sm:h-80">
-                      <iframe 
+                      <iframe
                         title="Event Location"
-                        width="100%" 
-                        height="100%" 
-                        frameBorder="0" 
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
                         src={mapUrl || "https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=default+location"}
                         allowFullScreen>
                       </iframe>
@@ -338,7 +338,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
 
                   <div className="bg-gray-50 rounded-xl p-6 h-fit">
                     <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-3 border-b border-gray-200">Event Details</h3>
-                    
+
                     <div className="space-y-4">
                       <div className="flex items-center">
                         <div className="bg-blue-100 p-3 rounded-full mr-4">
@@ -353,7 +353,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                           })}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <div className="bg-green-100 p-3 rounded-full mr-4">
                           <FaClock className="text-green-600" />
@@ -363,7 +363,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                           <p className="font-medium">{event.time}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <div className="bg-red-100 p-3 rounded-full mr-4">
                           <FaMapMarkerAlt className="text-red-600" />
@@ -373,7 +373,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                           <p className="font-medium">{event.location}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <div className="bg-yellow-100 p-3 rounded-full mr-4">
                           <FaTrophy className="text-yellow-600" />
@@ -383,7 +383,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                           <p className="font-medium text-yellow-600">${Number(event.win_price).toLocaleString()}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <div className="bg-orange-100 p-3 rounded-full mr-4">
                           <FaUsers className="text-orange-600" />
@@ -396,7 +396,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
                   <button
                     onClick={() => setIsEditing(true)}
@@ -413,7 +413,7 @@ const EventDetails = ({ onDeleteEvent, onUpdateEvent }) => {
                 </div>
               </div>
               <div className="p-6">
-                  <RegisteredUsers eventId={id} />     
+                  <RegisteredUsers eventId={id} />
               </div>
 
             </div>

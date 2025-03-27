@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {FaTrashAlt} from "react-icons/fa";
+import { getApiBaseUrl } from "../../../utils/environment";
 
 const RegisteredUsers = ({ eventId }) => {
   const [registeredUsers, setRegisteredUsers] = useState([]);
@@ -7,93 +8,66 @@ const RegisteredUsers = ({ eventId }) => {
   const [error, setError] = useState("");
 
   // In RegisteredUsers.jsx
-useEffect(() => {
-  const fetchRegisteredUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/registered-users/${eventId}`);
-      
-      // If the response isn't ok but it's a 404 (not found), treat it as empty array
-      if (!response.ok) {
-        if (response.status === 404) {
-          setRegisteredUsers([]);
-          return;
-        }
-        throw new Error(`Error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      // Ensure we have an array even if API returns null or undefined
-      setRegisteredUsers(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      // Don't show error message for empty results
-      if (error.message !== "Error: 404") {
-        setError(error.message);
-      }
-      // Set empty array on error
-      setRegisteredUsers([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchRegisteredUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${getApiBaseUrl()}/registered-users/${eventId}`);
 
-  fetchRegisteredUsers();
-}, [eventId]);
+        // If the response isn't ok but it's a 404 (not found), treat it as empty array
+        if (!response.ok) {
+          if (response.status === 404) {
+            setRegisteredUsers([]);
+            return;
+          }
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Ensure we have an array even if API returns null or undefined
+        setRegisteredUsers(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        // Don't show error message for empty results
+        if (error.message !== "Error: 404") {
+          setError(error.message);
+        }
+        // Set empty array on error
+        setRegisteredUsers([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRegisteredUsers();
+  }, [eventId]);
 
   const deleteEvent = async (registrationId) => {
     alert(registrationId);
     if (!window.confirm("Are you sure you want to remove this user?")) return;
-  
+
     try {
-      const response = await fetch(`http://localhost:5000/api/remove-user/${registrationId}`, {
+      const response = await fetch(`${getApiBaseUrl()}/remove-user/${registrationId}`, {
         method: "DELETE",
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to remove user");
       }
-  
+
       setRegisteredUsers((prevUsers) => prevUsers.filter((user) => user._id !== registrationId));
     } catch (error) {
       console.error("Error removing user:", error);
     }
   };
 
-
- /* const updateUserPoints = async (userId, pointsToAdd) => {
-    try {
-      const response = await fetch(`http://localhost:3000/update-points/${userId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ points: pointsToAdd }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update points");
-      }
-
-      // Update state immediately for better UI responsiveness
-      setRegisteredUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === userId ? { ...user, points: user.points + pointsToAdd } : user
-        )
-      );
-    } catch (error) {
-      console.error("Error updating points:", error);
-    }
-  };
-  */
-  
-  
-
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-800 mb-3">Registered Users</h2>
-      
+
       {loading && <p className="text-gray-500 italic">Loading...</p>}
       {error && <p className="text-red-600 bg-red-50 p-2 rounded border border-red-200">{error}</p>}
-      
+
       {registeredUsers.length > 0 ? (
         <div className="overflow-x-auto rounded-lg shadow">
           <table className="min-w-full divide-y divide-gray-200">
@@ -133,5 +107,6 @@ useEffect(() => {
       )}
     </div>
   );
-  };
+};
+
 export default RegisteredUsers;

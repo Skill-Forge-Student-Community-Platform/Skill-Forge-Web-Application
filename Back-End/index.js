@@ -55,7 +55,8 @@ const allowedOrigins = [
   'http://localhost:3000',  // Local development
   process.env.DEPLOYED_CLIENT_URL || 'https://skill-forge-web-application-frontend.onrender.com',  // Production
   'https://www.skill-forge.io',  // Custom domain with www
-  'https://skill-forge.io'  // Root domain (no www)
+  'https://skill-forge.io',  // Root domain (no www)
+  'https://server.skill-forge.io'  // Add backend domain too
 ];
 
 // Create HTTP server using Express app
