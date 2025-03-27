@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { getApiBaseUrl } from '../utils/environment';
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = getApiBaseUrl();
 
 // Helper function to get auth headers
 const getAuthHeaders = () => ({

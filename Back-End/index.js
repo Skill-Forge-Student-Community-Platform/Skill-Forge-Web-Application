@@ -50,13 +50,29 @@ cloudinary.config({
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Dynamic CORS configuration based on environment
+const allowedOrigins = [
+  'http://localhost:3000',  // Local development
+  process.env.DEPLOYED_CLIENT_URL || 'https://skill-forge-web-application-frontend.onrender.com'  // Production
+];
+
 // Create HTTP server using Express app
 const server = http.createServer(app);
 
-// Create Socket.IO server
+// Create Socket.IO server with cross-origin support
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Match your frontend URL
+    origin: function(origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, Postman requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.warn(`Origin ${origin} not allowed by CORS policy`);
+        callback(null, true); // Still allow for development purposes - change to false in strict production
+      }
+    },
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -145,8 +161,22 @@ if (!fs.existsSync(uploadDir)) {
   console.log('Created upload directories at:', uploadDir);
 }
 
-// Middleware setup
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// Configure CORS with dynamic origins
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, Postman requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`Origin ${origin} not allowed by CORS policy`);
+      callback(null, true); // Still allow for development - change to false in strict production
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
 app.use(express.urlencoded({ limit: '50mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
