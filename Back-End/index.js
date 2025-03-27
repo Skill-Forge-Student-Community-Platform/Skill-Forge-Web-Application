@@ -53,10 +53,10 @@ const port = process.env.PORT || 5000;
 // Dynamic CORS configuration based on environment
 const allowedOrigins = [
   'http://localhost:3000',  // Local development
-  process.env.DEPLOYED_CLIENT_URL || 'https://skill-forge-web-application-frontend.onrender.com',  // Production
+  process.env.DEPLOYED_CLIENT_URL || 'https://skill-forge-web-application-frontend.onrender.com',
   'https://www.skill-forge.io',  // Custom domain with www
-  'https://skill-forge.io',  // Root domain (no www)
-  'https://server.skill-forge.io'  // Add backend domain too
+  'https://skill-forge.io',      // Root domain (no www)
+  'https://server.skill-forge.io' // Backend domain
 ];
 
 // Create HTTP server using Express app
