@@ -34,6 +34,7 @@ import friendRoutes from "./Features/Network/routers/friendRoutes.js";
 
 import notificationRoutes from './Features/Notifications/routes/Notification.route.js';
 
+import resumeRoutes from './Features/Portfolio-Builder/routes/resumeRoutes.js';
 
 
 
@@ -49,13 +50,29 @@ cloudinary.config({
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Dynamic CORS configuration based on environment
+const allowedOrigins = [
+  'http://localhost:3000',  // Local development
+  process.env.DEPLOYED_CLIENT_URL || 'https://skill-forge-web-application-frontend.onrender.com'  // Production
+];
+
 // Create HTTP server using Express app
 const server = http.createServer(app);
 
-// Create Socket.IO server
+// Create Socket.IO server with cross-origin support
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Match your frontend URL
+    origin: function(origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, Postman requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.warn(`Origin ${origin} not allowed by CORS policy`);
+        callback(null, true); // Still allow for development purposes - change to false in strict production
+      }
+    },
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -99,8 +116,32 @@ io.on('connection', (socket) => {
 
   // Listen for shares/reposts
   socket.on('sharePost', (post) => {
-
     socket.broadcast.emit('newPost', post); // Shared posts appear as new posts
+  });
+
+  // Friend-related events
+  socket.on('friendRequest', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_received', data);
+    }
+  });
+
+  socket.on('friendRequestAccepted', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_accepted', data);
+    }
+  });
+
+  socket.on('friendRequestRejected', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_rejected', data);
+    }
+  });
+
+  socket.on('friendRequestCancelled', (data) => {
+    if (data.to) {
+      io.to(`user:${data.to}`).emit('friend_request_cancelled', data);
+    }
   });
 
   socket.on('disconnect', () => {
@@ -120,8 +161,22 @@ if (!fs.existsSync(uploadDir)) {
   console.log('Created upload directories at:', uploadDir);
 }
 
-// Middleware setup
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// Configure CORS with dynamic origins
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, Postman requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`Origin ${origin} not allowed by CORS policy`);
+      callback(null, true); // Still allow for development - change to false in strict production
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
 app.use(express.urlencoded({ limit: '50mb', extended: true })); // Increased payload limit
 app.use(cookieParser()); // to allow us parse incoming cookies
@@ -155,6 +210,16 @@ app.use("/api/messages", messageRoutes);
 // Notification routes
  app.use("/api/notifications", notificationRoutes);
 
+// Ensure the notifications route is properly registered
+// Check if it's already registered before adding it
+if (!app._router.stack.some(layer =>
+    layer.route &&
+    (layer.route.path === '/api/notifications' || layer.regexp.toString().includes('notifications'))
+)) {
+  app.use('/api/notifications', notificationRoutes);
+  console.log('📣 Notification routes registered successfully');
+}
+
 app.use("/Details", eventRoutes);
 app.use("/api", saveEventsRoutes);
 app.use("/api", registerRoutes);
@@ -163,6 +228,8 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/teams", teamRoutes);
 
 app.use("/api/friends", friendRoutes);
+
+app.use("/api/resumes", resumeRoutes);
 
 
 

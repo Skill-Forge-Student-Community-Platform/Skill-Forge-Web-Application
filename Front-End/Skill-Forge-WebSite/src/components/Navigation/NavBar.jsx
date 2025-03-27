@@ -71,6 +71,7 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
               {Menus.map((menu) => (
                 <DesktopMenu key={menu.name} menu={menu} />
               ))}
+              {/* Removed XP System link */}
             </ul>
           </div>
 

@@ -1,98 +1,125 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import axios from 'axios';
+import { UserPlus, UserMinus, Search, Loader, UserCheck } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
+import friendService from '../../../services/friendService';
+import { toast } from 'react-hot-toast';
 import './FollowingFollowers.css';
-
-// Helper function to get auth headers
-const getAuthHeaders = () => ({
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-const BASE_URL = 'http://localhost:5000/api';
 
 const FollowingFollowers = () => {
   const [activeTab, setActiveTab] = useState('following');
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [processingIds, setProcessingIds] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loadingFollowing, setLoadingFollowing] = useState(false);
+  const [loadingFollowers, setLoadingFollowers] = useState(false);
+  const [errorFollowing, setErrorFollowing] = useState(null);
+  const [errorFollowers, setErrorFollowers] = useState(null);
+  const [processingUsers, setProcessingUsers] = useState({});
   const { user } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchConnections();
+    if (activeTab === 'following') {
+      loadFollowing();
+    } else {
+      loadFollowers();
+    }
   }, [activeTab]);
 
-  const fetchConnections = async () => {
-    try {
-      setLoading(true);
+  const loadFollowing = async () => {
+    if (loadingFollowing) return;
 
-      if (activeTab === 'following') {
-        // Fetch users that the current user is following
-        const response = await axios.get(`${BASE_URL}/users/${user._id}/following`, getAuthHeaders());
-        setFollowing(response.data || []);
-      } else {
-        // Fetch users that follow the current user
-        const response = await axios.get(`${BASE_URL}/users/${user._id}/followers`, getAuthHeaders());
-        setFollowers(response.data || []);
-      }
+    try {
+      setLoadingFollowing(true);
+      setErrorFollowing(null);
+      const data = await friendService.getFollowing(user._id);
+      setFollowing(data);
     } catch (error) {
-      console.error('Error fetching connections:', error);
-      toast.error('Failed to load connections');
+      console.error('Error loading following:', error);
+      setErrorFollowing(error.message || 'Failed to load following');
+      toast.error('Could not load following list');
     } finally {
-      setLoading(false);
+      setLoadingFollowing(false);
+    }
+  };
+
+  const loadFollowers = async () => {
+    if (loadingFollowers) return;
+
+    try {
+      setLoadingFollowers(true);
+      setErrorFollowers(null);
+      const data = await friendService.getFollowers(user._id);
+      setFollowers(data);
+    } catch (error) {
+      console.error('Error loading followers:', error);
+      setErrorFollowers(error.message || 'Failed to load followers');
+      toast.error('Could not load followers list');
+    } finally {
+      setLoadingFollowers(false);
     }
   };
 
   const handleFollow = async (userId) => {
     try {
-      setProcessingIds(prev => [...prev, userId]);
-      await axios.post(`${BASE_URL}/users/follow/${userId}`, {}, getAuthHeaders());
+      setProcessingUsers(prev => ({ ...prev, [userId]: 'following' }));
+      await friendService.followUser(userId);
 
-      if (activeTab === 'followers') {
-        // Update UI to show user is now followed
-        setFollowers(prev =>
-          prev.map(user =>
-            user._id === userId ? { ...user, isFollowedByMe: true } : user
-          )
-        );
+      // Update UI to show user is now followed
+      if (activeTab === 'following') {
+        setFollowing(prev => prev.map(user =>
+          user._id === userId ? { ...user, isFollowedByMe: true } : user
+        ));
+      } else {
+        setFollowers(prev => prev.map(user =>
+          user._id === userId ? { ...user, isFollowedByMe: true } : user
+        ));
       }
 
-      toast.success('User followed successfully');
+      toast.success('Successfully followed user');
     } catch (error) {
       console.error('Error following user:', error);
-      toast.error('Failed to follow user');
+      toast.error(error.message || 'Failed to follow user');
     } finally {
-      setProcessingIds(prev => prev.filter(id => id !== userId));
+      setProcessingUsers(prev => {
+        const newState = { ...prev };
+        delete newState[userId];
+        return newState;
+      });
     }
   };
 
   const handleUnfollow = async (userId) => {
     try {
-      setProcessingIds(prev => [...prev, userId]);
-      await axios.post(`${BASE_URL}/users/follow/${userId}`, {}, getAuthHeaders());
+      setProcessingUsers(prev => ({ ...prev, [userId]: 'unfollowing' }));
+      await friendService.unfollowUser(userId);
 
-      // Remove user from following list
+      // Update UI to show user is now unfollowed
       if (activeTab === 'following') {
-        setFollowing(prev => prev.filter(user => user._id !== userId));
+        setFollowing(prev => prev.map(user =>
+          user._id === userId ? { ...user, isFollowedByMe: false } : user
+        ));
+      } else {
+        setFollowers(prev => prev.map(user =>
+          user._id === userId ? { ...user, isFollowedByMe: false } : user
+        ));
       }
 
-      toast.success('User unfollowed successfully');
+      toast.success('Successfully unfollowed user');
     } catch (error) {
       console.error('Error unfollowing user:', error);
-      toast.error('Failed to unfollow user');
+      toast.error(error.message || 'Failed to unfollow user');
     } finally {
-      setProcessingIds(prev => prev.filter(id => id !== userId));
+      setProcessingUsers(prev => {
+        const newState = { ...prev };
+        delete newState[userId];
+        return newState;
+      });
     }
   };
 
   const goToProfile = (userId) => {
-    // Navigate to user profile based on role
     if (user.role) {
       const rolePath = user.role.charAt(0).toUpperCase() + user.role.slice(1);
       navigate(`/${rolePath}/${user._id}/profile/${userId}`);
@@ -101,36 +128,46 @@ const FollowingFollowers = () => {
     }
   };
 
-  // Render empty state
-  const renderEmptyState = () => (
-    <div className="empty-state-container">
-      <div className="empty-state-icon">
-        {activeTab === 'following' ? '👀' : '👥'}
-      </div>
-      <h3 className="empty-state-title">
-        {activeTab === 'following'
-          ? "You're not following anyone yet"
-          : "You don't have any followers yet"}
-      </h3>
-      <p className="empty-state-text">
-        {activeTab === 'following'
-          ? "When you follow someone, you'll see them here"
-          : "When someone follows you, they'll appear here"}
-      </p>
-      {activeTab === 'following' && (
-        <button
-          className="empty-state-button"
-          onClick={() => navigate('/network')}
-        >
-          Find people to follow
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+  const retryLoad = () => {
+    if (activeTab === 'following') {
+      loadFollowing();
+    } else {
+      loadFollowers();
+    }
+  };
+
+  // Filter users based on search term
+  const filteredUsers = activeTab === 'following'
+    ? following.filter(user =>
+        user.Username?.toLowerCase().includes(searchTerm) ||
+        user.email?.toLowerCase().includes(searchTerm))
+    : followers.filter(user =>
+        user.Username?.toLowerCase().includes(searchTerm) ||
+        user.email?.toLowerCase().includes(searchTerm));
+
+  // Error display for each tab
+  const renderError = () => {
+    const error = activeTab === 'following' ? errorFollowing : errorFollowers;
+
+    if (!error) return null;
+
+    return (
+      <div className="error-container">
+        <p className="error-message">{error}</p>
+        <button className="retry-button" onClick={retryLoad}>
+          Retry
         </button>
-      )}
-    </div>
-  );
+      </div>
+    );
+  };
 
   return (
-    <div className="friends-tabs">
-      <div className="tabs-header">
+    <div className="following-followers-container">
+      <div className="tabs">
         <button
           className={`tab ${activeTab === 'following' ? 'active' : ''}`}
           onClick={() => setActiveTab('following')}
@@ -145,70 +182,92 @@ const FollowingFollowers = () => {
         </button>
       </div>
 
-      <div className="tabs-content">
-        {loading ? (
-          <div className="flex justify-center my-8">
-            <div className="loader"></div>
+      <div className="following-search-container">
+        <div className="search-input-container">
+          <Search size={18} className="search-icon" />
+          <input
+            type="text"
+            placeholder={`Search ${activeTab}`}
+            value={searchTerm}
+            onChange={handleSearch}
+            className="following-search-input"
+          />
+        </div>
+      </div>
+
+      <div className="user-list">
+        {/* Loading states */}
+        {(activeTab === 'following' && loadingFollowing) || (activeTab === 'followers' && loadingFollowers) ? (
+          <div className="loading-container">
+            <Loader size={24} className="spinner" />
+            <p>Loading {activeTab}...</p>
           </div>
-        ) : activeTab === 'following' ? (
-          <div className="friend-list">
-            {following.length > 0 ? (
-              following.map((person) => (
-                <div key={person._id} className="friend-card connection-card">
-                  <div className="flex items-center cursor-pointer" onClick={() => goToProfile(person._id)}>
-                    <img
-                      src={person.profilePicture || "https://via.placeholder.com/50"}
-                      alt={person.Username}
-                      className="friend-avatar"
-                    />
-                    <div className="friend-info">
-                      <h3 className="friend-name">{person.Username}</h3>
-                      <p className="friend-role">{person.role}</p>
-                    </div>
-                  </div>
+        ) : renderError() ? (
+          renderError()
+        ) : filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div key={user._id} className="user-card">
+              <div className="user-info" onClick={() => goToProfile(user._id)}>
+                <img
+                  src={user.profilePicture || "/assets/default-avatar.png"}
+                  alt={user.Username}
+                  className="user-avatar"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/assets/default-avatar.png";
+                  }}
+                />
+                <div className="user-details">
+                  <h3 className="user-name">{user.Username}</h3>
+                  <p className="user-role">{user.role}</p>
+                </div>
+              </div>
+              <div className="action-buttons">
+                {user.isFollowedByMe ? (
                   <button
-                    className="message-btn"
-                    onClick={() => handleUnfollow(person._id)}
-                    disabled={processingIds.includes(person._id)}
+                    className="unfollow-btn"
+                    onClick={() => handleUnfollow(user._id)}
+                    disabled={processingUsers[user._id]}
                   >
-                    {processingIds.includes(person._id) ? 'Processing...' : 'Unfollow'}
+                    {processingUsers[user._id] === 'unfollowing' ? (
+                      <Loader size={16} className="spinner-sm" />
+                    ) : (
+                      <>
+                        <UserMinus size={16} />
+                        <span>Unfollow</span>
+                      </>
+                    )}
                   </button>
-                </div>
-              ))
-            ) : renderEmptyState()}
-          </div>
+                ) : (
+                  <button
+                    className="follow-btn"
+                    onClick={() => handleFollow(user._id)}
+                    disabled={processingUsers[user._id]}
+                  >
+                    {processingUsers[user._id] === 'following' ? (
+                      <Loader size={16} className="spinner-sm" />
+                    ) : (
+                      <>
+                        <UserPlus size={16} />
+                        <span>Follow</span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+          ))
         ) : (
-          <div className="friend-list">
-            {followers.length > 0 ? (
-              followers.map((person) => (
-                <div key={person._id} className="friend-card connection-card">
-                  <div className="flex items-center cursor-pointer" onClick={() => goToProfile(person._id)}>
-                    <img
-                      src={person.profilePicture || "https://via.placeholder.com/50"}
-                      alt={person.Username}
-                      className="friend-avatar"
-                    />
-                    <div className="friend-info">
-                      <h3 className="friend-name">{person.Username}</h3>
-                      <p className="friend-role">{person.role}</p>
-                    </div>
-                  </div>
-                  {!person.isFollowedByMe ? (
-                    <button
-                      className="message-btn"
-                      onClick={() => handleFollow(person._id)}
-                      disabled={processingIds.includes(person._id)}
-                    >
-                      {processingIds.includes(person._id) ? 'Processing...' : 'Follow Back'}
-                    </button>
-                  ) : (
-                    <span className="mutual-follow-badge">
-                      Mutual
-                    </span>
-                  )}
-                </div>
-              ))
-            ) : renderEmptyState()}
+          <div className="empty-state">
+            <p>No {activeTab} to display</p>
+            {activeTab === 'following' ? (
+              <button
+                className="find-people-btn"
+                onClick={() => navigate('/network')}
+              >
+                Find people to follow
+              </button>
+            ) : null}
           </div>
         )}
       </div>

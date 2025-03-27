@@ -1,11 +1,11 @@
-import { createContext, useState, useMemo, useContext } from 'react';
+import React, { createContext, useState, useContext, useMemo } from 'react';
 import { ThemeProvider as MUIThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 
-// Create context
+// Create the context
 const ThemeContext = createContext({
+  mode: 'light',
   toggleColorMode: () => {},
-  mode: 'dark',
 });
 
 // Custom hook to use the theme context
@@ -13,66 +13,58 @@ export const useThemeContext = () => useContext(ThemeContext);
 
 // Theme provider component
 export const ThemeProvider = ({ children }) => {
-  const [mode, setMode] = useState('dark');
+  const [mode, setMode] = useState('light');
 
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-      },
-      mode,
-    }),
-    [mode]
-  );
+  // Toggle between light and dark mode
+  const toggleColorMode = () => {
+    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  };
 
+  // Create theme based on current mode
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
           mode,
-          primary: {
-            main: mode === 'dark' ? '#90caf9' : '#1976d2',
-          },
-          secondary: {
-            main: mode === 'dark' ? '#f48fb1' : '#dc004e',
-          },
-          background: {
-            default: mode === 'dark' ? '#121212' : '#f5f5f5',
-            paper: mode === 'dark' ? '#1e1e1e' : '#ffffff',
-          },
+          ...(mode === 'light'
+            ? {
+                // Light mode colors
+                primary: {
+                  main: '#1976d2',
+                },
+                secondary: {
+                  main: '#f50057',
+                },
+                background: {
+                  default: '#f5f5f5',
+                  paper: '#ffffff',
+                },
+              }
+            : {
+                // Dark mode colors
+                primary: {
+                  main: '#90caf9',
+                },
+                secondary: {
+                  main: '#f48fb1',
+                },
+                background: {
+                  default: '#121212',
+                  paper: '#1e1e1e',
+                },
+              }),
         },
         typography: {
           fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-          h1: {
-            fontSize: '2.5rem',
-            fontWeight: 600,
-          },
-          h2: {
-            fontSize: '2rem',
-            fontWeight: 600,
-          },
-          h3: {
-            fontSize: '1.75rem',
-            fontWeight: 600,
-          },
+        },
+        shape: {
+          borderRadius: 8,
         },
         components: {
           MuiButton: {
             styleOverrides: {
               root: {
-                borderRadius: 8,
                 textTransform: 'none',
-                fontWeight: 600,
-              },
-            },
-          },
-          MuiCard: {
-            styleOverrides: {
-              root: {
-                borderRadius: 12,
-                boxShadow: mode === 'dark' 
-                  ? '0 8px 16px rgba(0, 0, 0, 0.4)' 
-                  : '0 8px 16px rgba(0, 0, 0, 0.1)',
               },
             },
           },
@@ -81,12 +73,13 @@ export const ThemeProvider = ({ children }) => {
     [mode]
   );
 
+  // Provide the theme context and wrap with MUI ThemeProvider
   return (
-    <ThemeContext.Provider value={colorMode}>
+    <ThemeContext.Provider value={{ mode, toggleColorMode }}>
       <MUIThemeProvider theme={theme}>
         <CssBaseline />
         {children}
       </MUIThemeProvider>
     </ThemeContext.Provider>
   );
-}; 
+};

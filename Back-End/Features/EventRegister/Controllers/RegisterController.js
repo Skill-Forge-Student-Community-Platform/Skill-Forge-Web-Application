@@ -37,26 +37,7 @@ export const getRegisteredUser = async (req, res) => {
   try {
     const registeredUsers = await RegisteredUser.find();
 
-    // Aggregate points by userId
-    /*const userPointsMap = {};
-
-    registeredUsers.forEach(user => {
-      const { userId, userName, email, points } = user;
-
-      if (!userPointsMap[userId]) {
-        userPointsMap[userId] = {
-          userId,
-          userName,
-          email,
-          //totalPoints: 0, // Initialize total points
-        };
-      }
-
-      //userPointsMap[userId].totalPoints += points; // Sum points
-    }); */
-
-    // Convert object values to an array
-    //const consolidatedUsers = Object.values(userPointsMap);
+    
 
     res.json(registeredUsers);
 
@@ -161,29 +142,4 @@ export const removeUserFromEvent = async (req, res) => {
     }
   };
 
-/*
-  export const updateUserPoints = async (req, res) => {
-    try {
-      const { userId } = req.params;
-      const { points } = req.body;
-  
-      if (!points || isNaN(points)) {
-        return res.status(400).json({ error: "Invalid points value" });
-      }
-  
-      const user = await RegisteredUser.findById(userId);
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-  
-      user.points += points;
-      await user.save();
-  
-      res.status(200).json({ message: "User points updated", user });
-    } catch (error) {
-      console.error("Error updating points:", error);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  };
-  */
-  
+

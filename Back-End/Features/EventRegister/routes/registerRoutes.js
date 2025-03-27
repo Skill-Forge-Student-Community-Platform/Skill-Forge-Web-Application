@@ -13,7 +13,7 @@ router.get("/registered-users/:eventId", getRegisteredUsersByEvent);
 
 router.delete("/remove-user/:registrationId", removeUserFromEvent);
 
-//router.patch("/update-points/:userId", updateUserPoints);
+
 
 
 

@@ -1,6 +1,9 @@
 import axios from "axios";
+import { getStaticUrl, getApiBaseUrl } from "../utils/environment";
 
-const API_URL = "http://localhost:5000";
+// Use base API URL without the /api suffix since this service uses different endpoint format
+const API_URL = getStaticUrl();
+const API_BASE = getApiBaseUrl().replace('/api', '');
 
 // Helper function to handle image URLs
 const getImageUrl = (imagePath) => {
@@ -42,10 +45,10 @@ export const EventServices = {
   addEvent: async (eventData) => {
     try {
       console.log("Adding event with data:", eventData);
-      
+
       // Check if we have actual file upload capability
       const hasFileData = eventData.get('image') instanceof File;
-      
+
       let response;
       if (hasFileData) {
         // Try with multipart/form-data
@@ -60,7 +63,7 @@ export const EventServices = {
         }
         response = await axios.post(`${API_URL}/Details`, formDataObject);
       }
-      
+
       return response.data.event;
     } catch (error) {
       console.error("Error adding event:", error);
@@ -90,7 +93,7 @@ export const EventServices = {
       throw error;
     }
   },
-  
+
   // Get event by ID
   getEventById: async (eventId) => {
     try {

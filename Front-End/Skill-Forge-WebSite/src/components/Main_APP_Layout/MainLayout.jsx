@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-do
 import { useAuthStore } from '../../store/authStore';
 
 import { EventProvider } from '../../context/EventContext';
+import { XpContextProvider } from '../Xp platform/context/XpContext';
 
 import NavBar from '../Navigation/NavBar';
 
@@ -12,8 +13,11 @@ import ExplorePage from '../Events/Student/ExplorePage';
 import OrgnizerEventAddingForm from '../Events/Organizer/OrganizerEventAddingForm';
 import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 
+// Import XP System Page
+import XPSystemPage from '../Xp platform/pages/XPSystemPage';
 
 import Friendspage from '../Network/Friendspage';
+import AchievementCenter from '../Achievementcenter/AchievementCenter';
 
 import { Teams } from '../Team_Collaboration/sub components for teams/Teams.jsx';
 import { Inbox } from '../Team_Collaboration/sub-components/Inbox.jsx';
@@ -23,6 +27,27 @@ import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
+
+
+import CreateTeam from '../Team_Collaboration/sub components for teams/CreateTeam.js';
+import ReceivedInvites from '../Team_Collaboration/sub components for teams/ReceivedInvites.js';
+import FindTeamsByTechnology from '../Team_Collaboration/sub components for teams/FindTeamsByTechnology.jsx';
+
+import Dashbord from '../Portfolio_Builder/Dashbord';
+import ResumePreview from '../Portfolio_Builder/ResumePreview.js';
+
+// Import Student Profile components
+import StudentProfilePage from '../StudentProfile/StudentProfilePage';
+// Import student profile related components from correct location
+import ViewAllProjects from '../StudentProfile/student_layout_pages/ViewAllProjects';
+import ViewAllPosts from '../StudentProfile/student_layout_pages/ViewAllPosts';
+
+// Placeholder for components to be implemented later
+const AddCertificateForm = () => <PlaceholderPage title="Add Certificate Form" />;
+const AddProjectForm = () => <PlaceholderPage title="Add Project Form" />;
+const PortfolioBuilder = () => <PlaceholderPage title="Portfolio Builder" />;
+const PortfolioView = () => <PlaceholderPage title="Portfolio View" />;
+
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -44,10 +69,6 @@ const PlaceholderPage = ({ title }) => (
 );
 
 // Existing placeholder components
-const StudentDashboard = ({ userId }) => (
-  <PlaceholderPage title={`Student Dashboard for user ${userId}`} />
-);
-
 const OrganizerDashboard = ({ userId }) => (
   <PlaceholderPage title={`Organizer Dashboard for user ${userId}`} />
 );
@@ -65,17 +86,13 @@ const ManageEvents = ({ userId }) => (
   <PlaceholderPage title={`Manage Events for user ${userId}`} />
 );
 
-const TeamPage = ({ userId }) => (
-  <PlaceholderPage title={`Teams Page for user ${userId}`} />
-);
+
 
 const TeamManagement = ({ userId }) => (
   <PlaceholderPage title={`Team Management for user ${userId}`} />
 );
 
-const TeamActivity = ({ userId }) => (
-  <PlaceholderPage title={`Team Activity for user ${userId}`} />
-);
+
 
 // const Inbox = ({ userId }) => (
 //   <PlaceholderPage title={`Inbox for user ${userId}`} />
@@ -94,13 +111,6 @@ const SavedEventsPage = ({ userId }) => (
   <PlaceholderPage title={`Saved Events for user ${userId}`} />
 );
 
-const CreateTeamPage = ({ userId }) => (
-  <PlaceholderPage title={`Create Team Page for user ${userId}`} />
-);
-
-const FindTeamsPage = ({ userId }) => (
-  <PlaceholderPage title={`Find Teams Page for user ${userId}`} />
-);
 
 const PricingPage = ({ userId }) => (
   <PlaceholderPage title={`Pricing Plans for user ${userId}`} />
@@ -133,10 +143,6 @@ const MyEventsPage = ({ userId }) => (
 );
 
 // Role-specific profile pages
-const StudentProfilePage = ({ userId }) => (
-  <PlaceholderPage title={`Student Profile for user ${userId}`} />
-);
-
 const OrganizerProfilePage = ({ userId }) => (
   <PlaceholderPage title={`Organizer Profile for user ${userId}`} />
 );
@@ -194,21 +200,36 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
           <Routes>
             <Route path="home/*" element={<Home isDarkMode={isDarkMode} toggleTheme={toggleTheme} user={user} />} />
 
-            {/* Dashboard route for students only */}
+            {/* Dashboard route for students using XP System */}
             {roleType === 'student' && (
-              <Route path="dashboard/*" element={<StudentDashboard userId={userId} />} />
+              <Route path="dashboard/*" element={
+                <XpContextProvider>
+                  <XPSystemPage />
+                </XpContextProvider>
+              } />
             )}
 
-            {/* Profile route based on role */}
+            {/* Profile routes */}
             <Route path="profile/*" element={
-              roleType === 'student'
-                ? <StudentProfilePage userId={userId} />
-                : <OrganizerProfilePage userId={userId} />
+              roleType === 'student' ? (
+                <StudentProfilePage user={user} isOwnProfile={true} />
+              ) : (
+                <OrganizerProfilePage userId={userId} />
+              )
             } />
 
-            {/* Student-specific learning routes */}
+            {/* Student profile viewing routes */}
+            <Route path="student/:profileId/*" element={<StudentProfilePage user={user} />} />
+
+            {/* Certificate and project routes */}
+            <Route path="add-certificate" element={<AddCertificateForm />} />
+            <Route path="add-project" element={<AddProjectForm />} />
+            <Route path="portfolio-builder/*" element={<Dashbord userId={userId} />} />
+            <Route path="portfolio/:id" element={< ResumePreview/>} />
+
+            {/* Student-specific learning routes - REMOVED xp-system route */}
             <Route path="learning-paths/*" element={<LearningPathsPage userId={userId} />} />
-            <Route path="achievements/*" element={<AchievementsPage userId={userId} />} />
+            <Route path="achievements/*" element={<AchievementCenter />} />
 
             {/* Event routes */}
             <Route path="view-events/*" element={<ExplorePage userId={userId} user={user} isStudent={roleType === 'student'} />} />
@@ -240,14 +261,13 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             <Route path="teams" element={<Teams/>} />
             <Route path="teams/management" element={<TeamManagement userId={userId} />} />
-            <Route path="teams/activity" element={<TeamActivity userId={userId} />} />
+            <Route path="teams/activity" element={<ReceivedInvites/>} />
             <Route path="teams/inbox" element={<Inbox/>} />
-            <Route path="teams/create" element={<CreateTeamPage userId={userId} />} />
-            <Route path="teams/find" element={<FindTeamsPage userId={userId} />} />
+            <Route path="teams/create" element={<CreateTeam />} />
+            <Route path="teams/find" element={<FindTeamsByTechnology/>} />
 
             {/* Network routes */}
             <Route path="network/*" element={<Friendspage />} />
-
 
             {/* other routes */}
             <Route path="bookmarks" element={<BookmarksPage userId={userId} />} />

@@ -1,14 +1,15 @@
-import { create } from "zustand"; // Make sure you're importing from zustand, not "zustand/vanilla"
+import { create } from "zustand";
 import axios from "axios";
 import { toast } from 'react-hot-toast';
+import { getAuthApiUrl, getSocketUrl } from '../utils/environment';
 // Import the image cache utility
 import imageCache from '../utils/imageCache';
 // Add this import
 import sessionProfileCache from '../utils/sessionProfileCache';
 import { io } from 'socket.io-client';
 
-// Use the environment variable or fall back to localhost
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/auth";
+// Use the environment utility to get the API URL
+const API_URL = getAuthApiUrl();
 
 console.log("API URL being used:", API_URL); // Debug logging
 
@@ -311,24 +312,24 @@ const useAuthStore = create((set, get) => ({
 	connectSocket:()=>{
 		const { authUser } = get();
 		if (!authUser || get().socket?.connected) return;
-  
-		// passing the user id from backend 
-		const socket = io(API_URL, {
+
+		// passing the user id from backend
+		const socket = io(getSocketUrl(), {
 		  query:{
 			userId:authUser._id,
 		  },
 		});
 		socket.connect()
-  
+
 		set({socket:socket});
-  
+
 		// Listen for online user updates
 		socket.on("getOnlineUsers", (userIds)=>{
 		  set({onlineUsers:userIds})
 		})
-  
+
 	},
-  
+
 	disconnectSocket:()=>{
 		if(get().socket?.connected) get().socket.disconnect();
 	},

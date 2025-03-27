@@ -13,7 +13,7 @@ export const useChatStore = create((set, get)=>({
         set({ isUsersLoading: true });
         try {
 
-            // endpoint 
+            // endpoint
 
           const res = await axiosIntance.get("/messages/users");
           set({ users: res.data });
@@ -29,7 +29,7 @@ export const useChatStore = create((set, get)=>({
         set({ isMessagesLoading: true });
         try {
           const res = await axiosIntance.get(`/messages/${userId}`);
-        
+
           //   update state
           set({ messages: res.data });
         } catch (error) {
