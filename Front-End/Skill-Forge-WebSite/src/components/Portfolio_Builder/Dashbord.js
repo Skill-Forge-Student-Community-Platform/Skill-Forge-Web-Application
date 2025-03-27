@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react"; 
-import { FaPlus, FaTrash, FaEdit } from "react-icons/fa"; 
-import ResumeForm from "./ResumeForm"; 
+import React, { useState, useEffect } from "react";
+import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import ResumeForm from "./ResumeForm";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import { getApiBaseUrl } from "../../utils/environment";
 
 function Dashboard({userId}) {
   const [isOpen, setIsOpen] = useState(false);
   const [resumeTitle, setResumeTitle] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [resumes, setResumes] = useState([]); 
+  const [resumes, setResumes] = useState([]);
   const [editingResumeIndex, setEditingResumeIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Dashboard({userId}) {
   const fetchResumes = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/resumes");
+      const response = await axios.get(`${getApiBaseUrl()}/resumes`);
       setResumes(response.data);
     } catch (error) {
       console.error("Error fetching resumes:", error);
@@ -44,18 +45,18 @@ function Dashboard({userId}) {
   const handleSaveResume = async (resumeData) => {
     // After saving resume, refresh the resume list
     await fetchResumes();
-    
+
     if (editingResumeIndex !== null) {
       setEditingResumeIndex(null);
     }
-    
+
     setShowForm(false);
     navigate('/'); // Return to dashboard after saving
   };
 
   const handleDeleteResume = async (resumeId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/resumes/${resumeId}`);
+      await axios.delete(`${getApiBaseUrl()}/resumes/${resumeId}`);
       // Directly update the state to show changes immediately
       setResumes(prevResumes => prevResumes.filter(resume => resume._id !== resumeId));
     } catch (error) {
@@ -79,7 +80,7 @@ function Dashboard({userId}) {
     );
   }
 
- 
+
 
   // Filter resumes to include only those that match the userId
   const userResumes = resumes.filter(event => event.userId === userId);
@@ -91,7 +92,7 @@ function Dashboard({userId}) {
         <div className="mb-8">
           <h2 className="font-bold text-3xl text-gray-800 mb-2">My Resumes</h2>
           <p className="text-gray-600">Create and manage your professional resumes for your next career opportunity.</p>
-        
+
         </div>
 
         {isLoading ? (
@@ -113,7 +114,7 @@ function Dashboard({userId}) {
             </div>
 
 
-            
+
             {/* Existing Resumes */}
             {userResumes.map((resume) => (
               <div
@@ -121,7 +122,7 @@ function Dashboard({userId}) {
                 className="group relative bg-white border border-gray-200 rounded-xl h-64 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
               >
                 {/* Card Body */}
-                <div 
+                <div
                   className="p-6 h-full flex flex-col justify-between cursor-pointer"
                   onClick={() => navigate(`/resume/${resume._id}`)}
                 >
@@ -129,11 +130,11 @@ function Dashboard({userId}) {
                     <h3 className="font-semibold text-xl text-gray-800 mb-2 truncate">{resume.title || "Untitled Resume"}</h3>
                     {resume.fullName && <p className="text-gray-700 truncate">{resume.fullName}</p>}
                     {resume.email && <p className="text-gray-500 text-sm truncate">{resume.email}</p>}
-                    
+
                     {/* Last edited info - placeholder, you could add actual timestamp */}
                     <p className="text-xs text-gray-400 mt-3">Last edited: {new Date().toLocaleDateString()}</p>
                   </div>
-                  
+
                   <div className="text-blue-600 text-sm font-medium mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     Click to edit
                   </div>
@@ -141,7 +142,7 @@ function Dashboard({userId}) {
 
                 {/* Actions Overlay */}
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button 
+                  <button
                     className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-sm"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -165,7 +166,7 @@ function Dashboard({userId}) {
             <div className="bg-white text-black p-6 rounded-xl shadow-xl w-96 max-w-full mx-4 animate-fadeIn">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Create New Resume</h3>
               <p className="text-gray-600 mb-4">Give your resume a title that reflects your career goals.</p>
-              
+
               <div className="mb-6">
                 <label htmlFor="resumeTitle" className="block text-sm font-medium text-gray-700 mb-1">Resume Title</label>
                 <input
@@ -177,7 +178,7 @@ function Dashboard({userId}) {
                   onChange={(e) => setResumeTitle(e.target.value)}
                 />
               </div>
-              
+
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setIsOpen(false)}

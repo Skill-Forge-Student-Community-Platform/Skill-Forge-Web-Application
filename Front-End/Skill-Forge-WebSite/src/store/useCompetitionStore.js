@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosIntance } from ".././utils/axios.js";
+import { axiosInstance } from "../utils/axios.js"; // Fix the typo in import
 
 const useCompetitionStore = create((set) => ({
     trendingCompetitions: [],
@@ -10,7 +10,7 @@ const useCompetitionStore = create((set) => ({
     getTrendingCompetitions: async () => {
         set({ loading: true, error: null });
         try {
-            const res = await axiosIntance.get("/competitions/trending");
+            const res = await axiosInstance.get("/competitions/trending");
             set({ trendingCompetitions: res.data });
             toast.success("Trending competitions fetched successfully");
         } catch (error) {

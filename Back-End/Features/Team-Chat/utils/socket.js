@@ -9,7 +9,13 @@ const server =http.createServer(app);
 // create socket.io server
 const io = new Server(server, {
     cors:{
-        origin:["http://localhost:3000"]
+        origin: [
+            "http://localhost:3000",
+            "https://www.skill-forge.io",
+            "https://skill-forge.io",
+            "https://skill-forge-web-application-frontend.onrender.com"
+        ],
+        credentials: true
     },
 });
 
@@ -27,11 +33,12 @@ io.on("connection", (socket)=>{
 
     // io.emit() is used to send events to all connected users
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
-    
-    // if a user disconnectes 
+
+    // if a user disconnectes
     socket.on("disconnect",()=>{
         console.log("A user disconnected", socket.id);
         delete userSocketMap[userId];
+
     });
 
 });

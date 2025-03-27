@@ -53,7 +53,9 @@ const port = process.env.PORT || 5000;
 // Dynamic CORS configuration based on environment
 const allowedOrigins = [
   'http://localhost:3000',  // Local development
-  process.env.DEPLOYED_CLIENT_URL || 'https://skill-forge-web-application-frontend.onrender.com'  // Production
+  process.env.DEPLOYED_CLIENT_URL || 'https://skill-forge-web-application-frontend.onrender.com',  // Production
+  'https://www.skill-forge.io',  // Custom domain with www
+  'https://skill-forge.io'  // Root domain (no www)
 ];
 
 // Create HTTP server using Express app
@@ -70,7 +72,7 @@ const io = new Server(server, {
         callback(null, true);
       } else {
         console.warn(`Origin ${origin} not allowed by CORS policy`);
-        callback(null, true); // Still allow for development purposes - change to false in strict production
+        callback(null, false); // IMPORTANT: Reject unauthorized origins in production
       }
     },
     methods: ["GET", "POST"],
@@ -171,7 +173,7 @@ app.use(cors({
       callback(null, true);
     } else {
       console.warn(`Origin ${origin} not allowed by CORS policy`);
-      callback(null, true); // Still allow for development - change to false in strict production
+      callback(null, false); // Reject unauthorized origins in production
     }
   },
   credentials: true
