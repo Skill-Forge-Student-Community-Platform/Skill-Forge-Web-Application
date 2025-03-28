@@ -1,22 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-import { getMenus } from './MenuList';
-import Theme from './shared/Theme';
-import DesktopMenu from './shared/DesktopMenu';
-import MobileMenu from './shared/MobileMenu';
-import SearchBar from './shared/SearchBar';
-import ProfileDropDown from './shared/ProfiledropDown';
-import Notification from '../Notifications/Notification dropdown/Notification';
-import './NavBar.css';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { getMenus } from "./MenuList";
+import Theme from "./shared/Theme";
+import DesktopMenu from "./shared/DesktopMenu";
+import MobileMenu from "./shared/MobileMenu";
+import SearchBar from "./shared/SearchBar";
+import ProfileDropDown from "./shared/ProfiledropDown";
+import Notification from "../Notifications/Notification dropdown/Notification";
+import "./NavBar.css";
 
-const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, roleType }) => {
+const NavBar = ({
+  isDarkMode,
+  toggleTheme,
+  user,
+  logout,
+  toggleSidebar,
+  userId,
+  roleType,
+}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
   // Base URL for role-based navigation
-  const baseUrl = `/${roleType.charAt(0).toUpperCase() + roleType.slice(1)}/${userId}`;
+  const baseUrl = `/${
+    roleType.charAt(0).toUpperCase() + roleType.slice(1)
+  }/${userId}`;
 
   // Get menus based on current role and userId
   const Menus = getMenus(roleType, userId);
@@ -27,8 +37,8 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleToggleSidebar = () => {
@@ -46,7 +56,7 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
   };
 
   return (
-    <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+    <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       <div className="navbar-container">
         {/* Left Section - Logo and Toggle */}
         <div className="navbar-left">
@@ -83,7 +93,10 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
         {/* Right Section */}
         <div className="navbar-right">
           {/* Theme Toggle */}
-          <div className="theme-toggle-wrapper" title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+          <div
+            className="theme-toggle-wrapper"
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
             <Theme isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
           </div>
 
