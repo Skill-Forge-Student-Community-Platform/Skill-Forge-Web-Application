@@ -19,6 +19,9 @@ import {
 import socketService from "../../../services/socket";
 import friendService from "../../../services/friendService";
 
+// Import ProfileAvatar
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+
 const Notification = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -327,7 +330,7 @@ const Notification = () => {
 
   const unreadCount = notifications.filter((notif) => !notif.read).length;
 
-  // Update the renderNotificationList function for better empty state display
+  // Update the renderNotificationList function for better layout
   const renderNotificationList = () => {
     if (loading) {
       return <div className="notification-item loading">Loading notifications...</div>;
@@ -359,17 +362,31 @@ const Notification = () => {
         }}
       >
         {!notification.read && <span className="blue-circle"></span>}
-        <img
-          src={notification.from?.profilePicture || "https://i.pravatar.cc/100"}
-          alt={notification.from?.Username || "User"}
-          className="avatar"
+
+        <ProfileAvatar
+          userId={notification.from?._id}
+          staticImageUrl={notification.from?.profilePicture}
+          customAltText={notification.from?.Username || "User"}
+          size="small"
+          showLevel={false}
+          showMembershipTag={false}
+          className="notification-avatar"
         />
+
         <div className="notification-content">
-          <div className="notification-header">
-            <p>
-              <strong>{notification.from?.Username || "User"}</strong>{" "}
-              {formatNotificationMessage(notification)}
-            </p>
+          <div className="notification-main">
+            <div className="notification-message">
+              <p>
+                <strong>{notification.from?.Username || "User"}</strong>{" "}
+                {formatNotificationMessage(notification)}
+              </p>
+
+              <span className="time">
+                <Clock size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
+                {timeAgo(notification.createdAt)}
+              </span>
+            </div>
+
             <button
               className="delete-notification"
               onClick={(e) => handleDeleteNotification(notification._id, e)}
@@ -378,10 +395,6 @@ const Notification = () => {
               <X size={14} />
             </button>
           </div>
-          <span className="time">
-            <Clock size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
-            {timeAgo(notification.createdAt)}
-          </span>
 
           {notification.type === 'friend_request' && !notification.status && (
             <div className="notification-buttons">
