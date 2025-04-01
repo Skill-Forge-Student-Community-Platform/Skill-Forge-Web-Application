@@ -4,6 +4,7 @@ import { UserPlus, UserCheck, Loader, X } from "lucide-react";
 import friendService from "../../../services/friendService";
 import { toast } from 'react-hot-toast';
 import socketService from "../../../services/socket";
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
 import "./PeopleYouMayKnow.css";
 
 const PeopleYouMayKnow = ({ onFriendRequest }) => {
@@ -95,9 +96,13 @@ const PeopleYouMayKnow = ({ onFriendRequest }) => {
                 </button>
 
                 <div className="person-info" onClick={() => goToProfile(person._id)}>
-                    <img
-                        src={person.profilePicture || "https://via.placeholder.com/50"}
-                        alt={person.Username}
+                    <ProfileAvatar
+                        userId={person._id}
+                        staticImageUrl={person.profilePicture}
+                        customAltText={person.Username}
+                        size="small"
+                        showLevel={false}
+                        showMembershipTag={false}
                         className="person-avatar"
                     />
                     <div className="person-details-container">
@@ -160,7 +165,7 @@ const PeopleYouMayKnow = ({ onFriendRequest }) => {
         return (
             <div className="suggestions-container">
                 <h2 className="main-title">People you may know</h2>
-                <div className="loading-spinner">
+                <div className="people-loading-spinner">
                     <Loader size={24} className="animate-spin" />
                     <p>Loading suggestions...</p>
                 </div>

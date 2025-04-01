@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import friendService from '../../../services/friendService';
 import { User, Check, X, ChevronRight } from 'lucide-react';
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
 import './PendingInvitations.css';
 
 const PendingInvitations = ({ onAcceptRequest, onRejectRequest }) => {
@@ -121,17 +122,15 @@ const PendingInvitations = ({ onAcceptRequest, onRejectRequest }) => {
         {requests.slice(0, 3).map(request => (
           <div key={request._id} className="invitation-card">
             <div className="invitation-profile" onClick={() => goToProfile(request._id)}>
-              {request.profilePicture ? (
-                <img
-                  src={request.profilePicture}
-                  alt={request.Username}
-                  className="invitation-avatar"
-                />
-              ) : (
-                <div className="default-avatar">
-                  <User size={24} />
-                </div>
-              )}
+              <ProfileAvatar
+                userId={request._id}
+                staticImageUrl={request.profilePicture}
+                customAltText={request.Username}
+                size="small"
+                showLevel={false}
+                showMembershipTag={false}
+                className="invitation-avatar"
+              />
 
               <div className="invitation-details">
                 <h3 className="invitation-name">{request.Username}</h3>

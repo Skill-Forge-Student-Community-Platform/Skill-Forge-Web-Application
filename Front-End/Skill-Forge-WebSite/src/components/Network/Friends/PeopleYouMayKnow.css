@@ -180,6 +180,15 @@
   color: #6b7280;
 }
 
+.people-loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  color: #6b7280;
+}
+
 .animate-spin {
   animation: spin 1s linear infinite;
 }
@@ -262,6 +271,7 @@
 .dark .empty-state {
   color: #9ca3af;
 }
+
 
 @media (max-width: 768px) {
   .suggestions-cards {
