@@ -42,6 +42,12 @@ import StudentProfilePage from '../StudentProfile/StudentProfilePage';
 import ViewAllProjects from '../StudentProfile/student_layout_pages/ViewAllProjects';
 import ViewAllPosts from '../StudentProfile/student_layout_pages/ViewAllPosts';
 
+// Import the SavedPostsList component
+import SavedPostsList from '../Saved-Items/SavedPostsList';
+
+// Import OrganizerProfilePage
+import OrganizerProfilePage from '../OrganizerProfile/OrganizerProfilePage';
+
 // Placeholder for components to be implemented later
 const AddCertificateForm = () => <PlaceholderPage title="Add Certificate Form" />;
 const AddProjectForm = () => <PlaceholderPage title="Add Project Form" />;
@@ -140,11 +146,6 @@ const EventUpdatesPage = ({ userId }) => (
 
 const MyEventsPage = ({ userId }) => (
   <PlaceholderPage title={`My Registered Events for user ${userId}`} />
-);
-
-// Role-specific profile pages
-const OrganizerProfilePage = ({ userId }) => (
-  <PlaceholderPage title={`Organizer Profile for user ${userId}`} />
 );
 
 const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
@@ -269,8 +270,10 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             {/* Network routes */}
             <Route path="network/*" element={<Friendspage />} />
 
+            {/* Replace the placeholder BookmarksPage with SavedPostsList */}
+            <Route path="bookmarks" element={<SavedPostsList userId={userId} />} />
+
             {/* other routes */}
-            <Route path="bookmarks" element={<BookmarksPage userId={userId} />} />
             <Route path="pricing" element={<PricingPage userId={userId} />} />
 
 

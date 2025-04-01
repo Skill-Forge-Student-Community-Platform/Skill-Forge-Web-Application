@@ -5,9 +5,11 @@ import { getMenus } from './MenuList';
 import Theme from './shared/Theme';
 import DesktopMenu from './shared/DesktopMenu';
 import MobileMenu from './shared/MobileMenu';
+import TabletMenu from './shared/TabletMenu';
 import SearchBar from './shared/SearchBar';
 import ProfileDropDown from './shared/ProfiledropDown';
 import Notification from '../Notifications/Notification dropdown/Notification';
+import SkillForgeLogo from '../../Assets/Skill Forge logo .png';
 import './NavBar.css';
 
 const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, roleType }) => {
@@ -48,17 +50,14 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
-        {/* Left Section - Logo and Toggle */}
+        {/* Left Section - Logo */}
         <div className="navbar-left">
-          <button
-            onClick={handleToggleSidebar}
-            className="sidebar-toggle"
-            aria-label="Toggle sidebar"
-          >
-            {isSidebarOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-
           <Link to={`${baseUrl}/home`} className="navbar-logo">
+             <img
+                src={SkillForgeLogo}
+                alt="SkillForge Logo"
+                className="h-10 w-auto "
+              />
             <h1>SkillForge</h1>
           </Link>
         </div>
@@ -71,12 +70,11 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
               {Menus.map((menu) => (
                 <DesktopMenu key={menu.name} menu={menu} />
               ))}
-              {/* Removed XP System link */}
             </ul>
           </div>
 
           {/* Search Bar */}
-          <div className="search-wrapper">
+          <div className="search-wrapper md:hidden">
             <SearchBar placeholder="Search courses, events, teams..." />
           </div>
         </div>
@@ -100,6 +98,12 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
             onLogout={handleLogout}
             roleType={roleType}
           />
+
+
+          {/* Tablet navigation - visible on medium screens */}
+          <div className="tablet-menu">
+            <TabletMenu Menus={Menus} />
+          </div>
 
           {/* Mobile Menu Button - visible on smaller screens */}
           <div className="mobile-menu">
