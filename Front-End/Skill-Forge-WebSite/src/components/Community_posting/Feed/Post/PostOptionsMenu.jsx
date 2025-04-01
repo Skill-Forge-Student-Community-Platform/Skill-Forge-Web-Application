@@ -34,6 +34,7 @@ const PostOptionsMenu = forwardRef(({
 }, menuRef) => {
   // State to track if privacy submenu is open
   const [showPrivacySubmenu, setShowPrivacySubmenu] = useState(false);
+  const [showOptions, setShowOptions] = useState(true);
 
   // Helper to copy post URL to clipboard
   const handleCopyLink = () => {
@@ -60,6 +61,29 @@ const PostOptionsMenu = forwardRef(({
     e.stopPropagation();
   };
 
+  // Handle edit post properly (including images)
+  const handleEditPost = () => {
+    // Pass the entire post object to the edit handler
+    onEditPost(post);
+    setShowOptions(false);
+  };
+
+  // Handle privacy change with validation
+  const handleChangePrivacy = (privacy) => {
+    if (privacy && typeof onChangePrivacy === 'function') {
+      onChangePrivacy(post._id, privacy);
+    }
+    setShowPrivacySubmenu(false);
+  };
+
+  // Handle save/unsave post
+  const handleSavePost = () => {
+    if (typeof onSavePost === 'function') {
+      onSavePost(post._id, post.isSaved);
+    }
+    setShowOptions(false);
+  };
+
   return (
     <div
       className="post-options-menu-container"
@@ -81,10 +105,7 @@ const PostOptionsMenu = forwardRef(({
 
           <button
             className={`menu-item ${post.privacy === 'Public' ? 'active' : ''}`}
-            onClick={() => {
-              onChangePrivacy(post._id, 'Public');
-              setShowPrivacySubmenu(false);
-            }}
+            onClick={() => handleChangePrivacy('Public')}
           >
             <FaGlobe className="menu-icon" />
             <div className="menu-text">
@@ -95,10 +116,7 @@ const PostOptionsMenu = forwardRef(({
 
           <button
             className={`menu-item ${post.privacy === 'Friends' ? 'active' : ''}`}
-            onClick={() => {
-              onChangePrivacy(post._id, 'Friends');
-              setShowPrivacySubmenu(false);
-            }}
+            onClick={() => handleChangePrivacy('Friends')}
           >
             <FaUserFriends className="menu-icon" />
             <div className="menu-text">
@@ -109,10 +127,7 @@ const PostOptionsMenu = forwardRef(({
 
           <button
             className={`menu-item ${post.privacy === 'Friends except...' ? 'active' : ''}`}
-            onClick={() => {
-              onChangePrivacy(post._id, 'Friends except...');
-              setShowPrivacySubmenu(false);
-            }}
+            onClick={() => handleChangePrivacy('Friends except...')}
           >
             <FaUserSlash className="menu-icon" />
             <div className="menu-text">
@@ -123,10 +138,7 @@ const PostOptionsMenu = forwardRef(({
 
           <button
             className={`menu-item ${post.privacy === 'Specific friends' ? 'active' : ''}`}
-            onClick={() => {
-              onChangePrivacy(post._id, 'Specific friends');
-              setShowPrivacySubmenu(false);
-            }}
+            onClick={() => handleChangePrivacy('Specific friends')}
           >
             <FaUserPlus className="menu-icon" />
             <div className="menu-text">
@@ -137,10 +149,7 @@ const PostOptionsMenu = forwardRef(({
 
           <button
             className={`menu-item ${post.privacy === 'Only me' ? 'active' : ''}`}
-            onClick={() => {
-              onChangePrivacy(post._id, 'Only me');
-              setShowPrivacySubmenu(false);
-            }}
+            onClick={() => handleChangePrivacy('Only me')}
           >
             <FaLock className="menu-icon" />
             <div className="menu-text">
@@ -157,7 +166,7 @@ const PostOptionsMenu = forwardRef(({
             <>
               <button
                 className="menu-item"
-                onClick={() => onEditPost(post)}
+                onClick={handleEditPost}
               >
                 <FaEdit className="menu-icon" />
                 <span>Edit post</span>
@@ -198,7 +207,7 @@ const PostOptionsMenu = forwardRef(({
           {/* Common options for all users */}
           <button
             className="menu-item"
-            onClick={() => onSavePost(post._id, post.isSaved)}
+            onClick={handleSavePost}
           >
             {post.isSaved ? (
               <>
@@ -214,7 +223,6 @@ const PostOptionsMenu = forwardRef(({
           </button>
 
           <button
-
             className="menu-item"
             onClick={handleCopyLink}
           >

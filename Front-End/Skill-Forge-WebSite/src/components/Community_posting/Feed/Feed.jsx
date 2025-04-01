@@ -86,14 +86,21 @@ const Feed = ({
   };
 
   // Handle media click to open lightbox
-  const handleMediaClick = (post, mediaIndex) => {
+  const handleMediaClick = (post, mediaIndex, isDoubleClick = false) => {
     if (post.media && post.media.files && post.media.files.length > 0) {
-      setMediaPreview({
-        open: true,
-        post: post,
-        mediaIndex: mediaIndex || 0,
-        media: post.media.files
-      });
+      // Always open on double click
+      if (isDoubleClick) {
+        console.log('Opening lightbox on double click', { post, mediaIndex });
+        setMediaPreview({
+          open: true,
+          post: post,
+          mediaIndex: mediaIndex || 0,
+          media: post.media.files
+        });
+      } else {
+        // For debugging - can remove later
+        console.log('Single click detected - ignoring');
+      }
     }
   };
 
@@ -133,11 +140,16 @@ const Feed = ({
     try {
       // Use the postServices to handle the API call
       const response = await postServices.likeComment(postId, commentId);
+      console.log("Like comment response:", response);
+
       toast.success(response.liked ? "Comment liked" : "Comment unliked");
+
+      // Return response for state updates
       return response;
     } catch (error) {
       toast.error("Failed to update comment like");
       console.error("Comment like error:", error);
+      throw error; // Re-throw to allow caller to handle
     }
   };
 
@@ -221,6 +233,7 @@ const Feed = ({
             onReportPost={onReportPost}
             onDeleteComment={onDeleteComment}
             onMediaClick={handleMediaClick}
+            onLikeComment={handleLikeComment}
           />
         ))}
       </div>
@@ -238,6 +251,8 @@ const Feed = ({
           onComment={onComment}
           onShare={onShare}
           onDelete={isPostOwner(mediaPreview.post) ? onDelete : null}
+          onLikeComment={handleLikeComment}
+          onDeleteComment={onDeleteComment}
           currentUserId={currentUserId}
         />
       )}
