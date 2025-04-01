@@ -1,10 +1,17 @@
 .lightbox-overlay {
   @apply fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-80;
+  padding-top: 70px; /* Space below navbar */
+  padding-bottom: 20px;
 }
 
 .lightbox-container {
-  @apply flex w-full h-full max-w-7xl mx-auto my-auto bg-white;
-  height: calc(100vh - 40px);
+  @apply flex w-full mx-auto bg-white;
+  max-width: 1100px;
+  height: calc(100vh - 120px);
+  max-height: 80vh;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .lightbox-close {
@@ -65,10 +72,12 @@
 
 .lightbox-post-actions {
   @apply flex justify-between border-t border-b py-2;
+  cursor: pointer; /* Ensure cursor shows this is clickable */
 }
 
 .lightbox-action-btn {
   @apply flex items-center justify-center py-2 px-4 rounded-md hover:bg-gray-100 transition-all;
+  cursor: pointer; /* Ensure cursor shows this is clickable */
 }
 
 .lightbox-action-btn.active {
@@ -81,13 +90,24 @@
 
 .lightbox-delete-btn {
   @apply absolute top-4 right-4 text-red-600 hover:text-red-800 transition-all;
+  cursor: pointer; /* Ensure cursor shows this is clickable */
+}
+
+/* Add a hover effect to all buttons to enhance UI feedback */
+.lightbox-action-btn:hover,
+.lightbox-delete-btn:hover,
+.lightbox-close:hover,
+.lightbox-nav:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 
 /* Media queries for responsive design */
 @media (max-width: 1024px) {
   .lightbox-container {
     @apply flex-col;
-    height: calc(100vh - 20px);
+    width: 90%;
+    height: calc(100vh - 140px);
   }
 
   .lightbox-media-container,
@@ -96,18 +116,23 @@
   }
 
   .lightbox-media-container {
-    height: 50%;
+    height: 55%;
   }
 
   .lightbox-details {
-    height: 50%;
+    height: 45%;
   }
 }
 
 @media (max-width: 640px) {
+  .lightbox-overlay {
+    padding-top: 60px;
+  }
+
   .lightbox-container {
-    @apply p-0;
-    height: 100vh;
+    width: 95%;
+    height: calc(100vh - 100px);
+    max-height: 85vh;
   }
 
   .lightbox-close {
@@ -115,11 +140,11 @@
   }
 
   .lightbox-media-container {
-    height: 40%;
+    height: 45%;
   }
 
   .lightbox-details {
-    height: 60%;
+    height: 55%;
   }
 
   .lightbox-nav {
