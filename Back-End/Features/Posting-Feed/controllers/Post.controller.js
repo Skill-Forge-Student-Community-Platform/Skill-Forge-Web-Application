@@ -912,3 +912,236 @@ export const getFollowingPosts = async (req, res) => {
     });
   }
 };
+
+/**
+ * Update an existing post
+ * @route PUT /api/posts/:postId
+ * @access Private
+ */
+export const updatePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { text, privacy } = req.body;
+    const userId = req.user.id;
+
+    // Find the post
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
+
+    }
+
+    // Check if user is post owner
+    if (post.user.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to edit this post"
+      });
+    }
+
+    // Update the post
+    if (text !== undefined) post.text = text;
+    if (privacy !== undefined) post.privacy = privacy;
+
+    await post.save();
+
+    // Return fully populated post
+    const updatedPost = await Post.findById(postId)
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
+
+    // Emit socket event for real-time updates
+    io.emit('postUpdated', updatedPost);
+
+    res.status(200).json({
+      success: true,
+      message: "Post updated successfully",
+      post: updatedPost
+    });
+  } catch (error) {
+    console.error("Error in updatePost controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while updating post",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Update post privacy settings
+ * @route PUT /api/posts/:postId/privacy
+ * @access Private
+ */
+export const updatePostPrivacy = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { privacy } = req.body;
+    const userId = req.user.id;
+
+    // Validate privacy value
+    const validPrivacySettings = ["Public", "Friends", "Friends except...", "Specific friends"];
+    if (!validPrivacySettings.includes(privacy)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid privacy setting"
+      });
+    }
+
+    // Find the post
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
+    }
+
+    // Check if user is post owner
+    if (post.user.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to change this post's privacy"
+      });
+    }
+
+    // Update the post privacy
+    post.privacy = privacy;
+    await post.save();
+
+    // Return updated post
+    const updatedPost = await Post.findById(postId)
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
+
+    // Emit socket event for real-time updates
+    io.emit('privacyUpdated', { postId, privacy });
+
+    res.status(200).json({
+      success: true,
+      message: "Post privacy updated successfully",
+      post: updatedPost
+    });
+  } catch (error) {
+    console.error("Error in updatePostPrivacy controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while updating post privacy",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Save or unsave a post
+ * @route POST /api/posts/:postId/save
+ * @access Private
+ */
+export const savePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user.id;
+
+    // Find the post
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Check if post is already saved
+    const isPostSaved = user.savedPosts && user.savedPosts.includes(postId);
+
+    if (isPostSaved) {
+      // Unsave the post
+      await User.findByIdAndUpdate(userId, {
+        $pull: { savedPosts: postId }
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Post unsaved successfully",
+        saved: false
+      });
+    } else {
+      // Save the post
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { savedPosts: postId } // Use addToSet to prevent duplicates
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Post saved successfully",
+        saved: true
+      });
+    }
+  } catch (error) {
+    console.error("Error in savePost controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while saving post",
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Get saved posts
+ * @route GET /api/posts/saved
+ * @access Private
+ */
+export const getSavedPosts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { page = 1, limit = 10, filter } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Find the user with saved posts
+    const user = await User.findById(userId).select('savedPosts');
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Create query filter based on saved posts
+    let query = { _id: { $in: user.savedPosts || [] } };
+
+    // Add media type filter if specified
+    if (filter === 'photos') {
+      query['media.files.type'] = 'image';
+    } else if (filter === 'videos') {
+      query['media.files.type'] = 'video';
+    } else if (filter === 'events') {
+      query['postType'] = 'event';
+    }
+
+    // Find all saved posts
+    const posts = await Post.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate("user", "-password")
+      .populate("comments.user", "-password");
+
+    // Get total count for pagination
+    const totalPosts = await Post.countDocuments(query);
+
+    res.status(200).json({
+      success: true,
+      posts,
+      pagination: {
+        total: totalPosts,
+        page: parseInt(page),
+        pages: Math.ceil(totalPosts / limit)
+      }
+    });
+  } catch (error) {
+    console.error("Error in getSavedPosts controller:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching saved posts",
+      error: error.message
+    });
+  }
+};

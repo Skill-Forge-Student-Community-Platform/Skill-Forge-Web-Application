@@ -119,7 +119,12 @@ const userSchema = new mongoose.Schema({
   joinDate: {
     type: Date,
     default: Date.now
-  }
+  },
+  // Add savedPosts to the schema
+  savedPosts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post"
+  }]
 } ,{timestamps: true});
 
 // Method to calculate next level XP requirement
