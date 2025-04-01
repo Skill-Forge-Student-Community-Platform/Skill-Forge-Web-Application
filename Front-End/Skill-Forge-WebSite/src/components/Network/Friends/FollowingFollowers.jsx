@@ -4,6 +4,7 @@ import { UserPlus, UserMinus, Search, Loader, UserCheck } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import friendService from '../../../services/friendService';
 import { toast } from 'react-hot-toast';
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
 import './FollowingFollowers.css';
 
 const FollowingFollowers = () => {
@@ -208,14 +209,14 @@ const FollowingFollowers = () => {
           filteredUsers.map((user) => (
             <div key={user._id} className="user-card">
               <div className="user-info" onClick={() => goToProfile(user._id)}>
-                <img
-                  src={user.profilePicture || "/assets/default-avatar.png"}
-                  alt={user.Username}
+                <ProfileAvatar
+                  userId={user._id}
+                  staticImageUrl={user.profilePicture}
+                  customAltText={user.Username}
+                  size="small"
+                  showLevel={false}
+                  showMembershipTag={false}
                   className="user-avatar"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/assets/default-avatar.png";
-                  }}
                 />
                 <div className="user-details">
                   <h3 className="user-name">{user.Username}</h3>

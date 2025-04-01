@@ -246,7 +246,7 @@ export default function NotificationPage({ userId }) {
                             userId={notification.from?._id}
                             staticImageUrl={notification.from?.profilePicture || "https://i.pravatar.cc/50"}
                             customAltText={notification.from?.Username || "User"}
-                            size="medium"
+                            size="small"
                             showLevel={false}
                           />
                           {!notification.read && <span className="unread-indicator"></span>}

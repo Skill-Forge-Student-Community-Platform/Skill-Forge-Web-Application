@@ -4,6 +4,7 @@ import { UserMinus, MessageSquare, MoreHorizontal, Search, UserCheck, X } from "
 import { useAuthStore } from "../../../store/authStore";
 import friendService from "../../../services/friendService";
 import { toast } from 'react-hot-toast';
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
 import "./AllFriends.css";
 
 const AllFriends = ({ activeTab: initialTab = 'friends' }) => {
@@ -189,16 +190,20 @@ const AllFriends = ({ activeTab: initialTab = 'friends' }) => {
                 {activeTab === 'friends' ? (
                     <div className="friend-list">
                         {loading ? (
-                            <div className="loading-spinner">
+                            <div className="friends-loading-spinner">
                                 <div className="spinner"></div>
                             </div>
                         ) : filteredFriends.length > 0 ? (
                             filteredFriends.map((friend) => (
                                 <div key={friend._id} className="friend-card">
                                     <div className="friend-left" onClick={() => goToProfile(friend._id)}>
-                                        <img
-                                            src={friend.profileImage || "https://via.placeholder.com/50"}
-                                            alt={friend.Username}
+                                        <ProfileAvatar
+                                            userId={friend._id}
+                                            staticImageUrl={friend.profileImage}
+                                            customAltText={friend.Username}
+                                            size="small"
+                                            showLevel={false}
+                                            showMembershipTag={false}
                                             className="friend-avatar"
                                         />
                                         <div className="friend-info">
@@ -265,16 +270,20 @@ const AllFriends = ({ activeTab: initialTab = 'friends' }) => {
                 ) : (
                     <div className="request-list">
                         {requestsLoading ? (
-                            <div className="loading-spinner">
+                            <div className="friends-loading-spinner">
                                 <div className="spinner"></div>
                             </div>
                         ) : filteredRequests.length > 0 ? (
                             filteredRequests.map((request) => (
                                 <div key={request._id} className="friend-request-item">
                                     <div className="request-content" onClick={() => goToProfile(request._id)}>
-                                        <img
-                                            src={request.profileImage || "https://via.placeholder.com/50"}
-                                            alt={request.Username}
+                                        <ProfileAvatar
+                                            userId={request._id}
+                                            staticImageUrl={request.profileImage}
+                                            customAltText={request.Username}
+                                            size="tiny"
+                                            showLevel={false}
+                                            showMembershipTag={false}
                                             className="request-avatar"
                                         />
                                         <div className="request-info">
