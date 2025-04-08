@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import useThemeToggle from '../../hooks/useThemeToggle';
 import './QuickStats.css';
 
 const QuickStats = ({ userId }) => {
+  const { isDarkMode } = useThemeToggle();
   // Placeholder data (in a real app, this would come from an API)
   const [stats, setStats] = useState({
     badgesEarned: 0,
@@ -25,7 +27,7 @@ const QuickStats = ({ userId }) => {
   }, [userId]);
 
   return (
-    <div className="quick-stats">
+    <div className={`quick-stats ${isDarkMode ? 'dark' : 'light'}`}>
       <h3 className="stats-header">
         <span className="stats-icon">📊</span>
         Achievement Stats

@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { X, UserCheck, UserX } from 'lucide-react';
 import friendService from "../../../services/friendService";
 import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import "./ManageInvitations.css";
 
 const ManageInvitations = () => {
@@ -11,6 +12,7 @@ const ManageInvitations = () => {
   const [sentRequests, setSentRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [processingIds, setProcessingIds] = useState([]);
+  const { isDarkMode } = useThemeToggle();
 
   useEffect(() => {
     loadData();
@@ -83,7 +85,7 @@ const ManageInvitations = () => {
   };
 
   return (
-    <div className="invitations-container">
+    <div className={`invitations-container ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="invitations-header">
         <h2>Manage Invitations</h2>
 

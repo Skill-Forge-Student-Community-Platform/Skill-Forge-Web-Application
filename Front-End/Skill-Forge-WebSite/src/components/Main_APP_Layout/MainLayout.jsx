@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
+import useThemeToggle from '../../hooks/useThemeToggle';
 
 import { EventProvider } from '../../context/EventContext';
 import { XpContextProvider } from '../Xp platform/context/XpContext';
@@ -22,12 +23,10 @@ import AchievementCenter from '../Achievementcenter/AchievementCenter';
 import { Teams } from '../Team_Collaboration/sub components for teams/Teams.jsx';
 import { Inbox } from '../Team_Collaboration/sub-components/Inbox.jsx';
 
-
 import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
-
 
 import CreateTeam from '../Team_Collaboration/sub components for teams/CreateTeam.js';
 import ReceivedInvites from '../Team_Collaboration/sub components for teams/ReceivedInvites.js';
@@ -53,7 +52,6 @@ const AddCertificateForm = () => <PlaceholderPage title="Add Certificate Form" /
 const AddProjectForm = () => <PlaceholderPage title="Add Project Form" />;
 const PortfolioBuilder = () => <PlaceholderPage title="Portfolio Builder" />;
 const PortfolioView = () => <PlaceholderPage title="Portfolio View" />;
-
 
 // TODO: Uncomment these imports when the components are implemented
 // import StudentDashboard from '../Dashboard/StudentDashboard';
@@ -92,13 +90,9 @@ const ManageEvents = ({ userId }) => (
   <PlaceholderPage title={`Manage Events for user ${userId}`} />
 );
 
-
-
 const TeamManagement = ({ userId }) => (
   <PlaceholderPage title={`Team Management for user ${userId}`} />
 );
-
-
 
 // const Inbox = ({ userId }) => (
 //   <PlaceholderPage title={`Inbox for user ${userId}`} />
@@ -116,7 +110,6 @@ const BookmarksPage = ({ userId }) => (
 const SavedEventsPage = ({ userId }) => (
   <PlaceholderPage title={`Saved Events for user ${userId}`} />
 );
-
 
 const PricingPage = ({ userId }) => (
   <PlaceholderPage title={`Pricing Plans for user ${userId}`} />
@@ -148,8 +141,9 @@ const MyEventsPage = ({ userId }) => (
   <PlaceholderPage title={`My Registered Events for user ${userId}`} />
 );
 
-const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
+const MainLayout = ({ roleType }) => {
   const { user, logout } = useAuthStore();
+  const { isDarkMode, toggleTheme } = useThemeToggle();
   const { userId } = useParams();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -180,6 +174,11 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
+
+  // Only render when theme is determined
+  if (isDarkMode === null) {
+    return null; // Or a minimal loading UI
+  }
 
   return (
     <div className="flex h-screen ">
@@ -244,7 +243,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             <Route path="view-events/updates/*" element={<EventUpdatesPage userId={userId} />} />
             <Route path="saved-events" element={<SavedEventsPage userId={userId} />} />
 
-
             {/* Notifications page */}
             <Route path="notifications/*" element={<NotificationPage userId={userId} />} />
 
@@ -258,8 +256,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
             )}
 
             {/* Team routes */}
-
-
             <Route path="teams" element={<Teams/>} />
             <Route path="teams/management" element={<TeamManagement userId={userId} />} />
             <Route path="teams/activity" element={<ReceivedInvites/>} />
@@ -275,7 +271,6 @@ const MainLayout = ({ isDarkMode, toggleTheme, roleType }) => {
 
             {/* other routes */}
             <Route path="pricing" element={<PricingPage userId={userId} />} />
-
 
             {/* Default route */}
             <Route path="*" element={<Navigate to="home" replace />} />

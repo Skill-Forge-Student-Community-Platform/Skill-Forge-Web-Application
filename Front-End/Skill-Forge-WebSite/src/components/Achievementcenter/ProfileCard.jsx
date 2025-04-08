@@ -1,12 +1,15 @@
 // components/ProfileCard.js
 import React from 'react';
+import useThemeToggle from '../../hooks/useThemeToggle';
 import './ProfileCard.css';
 import { FaShareAlt } from 'react-icons/fa';
 import ProfileAvatar from '../Home_page/Home_components/ProfileAvatar';
 
 const ProfileCard = ({ user }) => {
+  const { isDarkMode } = useThemeToggle();
+
   return (
-    <div className="achievements-profile-card">
+    <div className={`achievements-profile-card ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="achievements-profile-avatar-container">
         <ProfileAvatar
           userId={user.id}

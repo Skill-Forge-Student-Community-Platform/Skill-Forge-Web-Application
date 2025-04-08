@@ -3,6 +3,7 @@ import { Bell, CheckCheck, Clock, ArrowRight, UserPlus, UserCheck, X } from "luc
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { toast } from "react-hot-toast";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import "./Notification.css";
 
 // Import services
@@ -31,6 +32,7 @@ const Notification = () => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { isDarkMode } = useThemeToggle();
 
   // Notification animation timing
   const notificationEntryDelay = 100; // Milliseconds between each notification animation
@@ -463,7 +465,7 @@ const Notification = () => {
   };
 
   return (
-    <div className="notification-bar" ref={dropdownRef}>
+    <div className={`notification-bar ${isDarkMode ? 'dark' : 'light'}`} ref={dropdownRef}>
       <button className="notification-icon notification-button" onClick={handleIconClick} aria-label="Notifications">
         <Bell size={20} strokeWidth={1.5} />
         {unreadCount > 0 && (

@@ -5,6 +5,7 @@ import { useAuthStore } from "../../../store/authStore";
 import friendService from "../../../services/friendService";
 import { toast } from 'react-hot-toast';
 import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import "./AllFriends.css";
 
 const AllFriends = ({ activeTab: initialTab = 'friends' }) => {
@@ -17,6 +18,7 @@ const AllFriends = ({ activeTab: initialTab = 'friends' }) => {
     const [processingUsers, setProcessingUsers] = useState(new Set());
     const [openDropdowns, setOpenDropdowns] = useState({});
     const { user } = useAuthStore();
+    const { isDarkMode } = useThemeToggle();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -155,7 +157,7 @@ const AllFriends = ({ activeTab: initialTab = 'friends' }) => {
         : requests;
 
     return (
-        <div className="friends-container bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        <div className={`friends-container ${isDarkMode ? 'dark' : 'light'}`}>
             <div className="friends-tabs">
                 <button
                     className={`tab ${activeTab === 'friends' ? 'active' : ''}`}

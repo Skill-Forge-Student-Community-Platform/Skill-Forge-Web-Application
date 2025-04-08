@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
 import './EventManagement.css';
 import roleServices from '../../../services/roleServices';
 import { useAuthStore } from '../../../store/authStore';
@@ -43,11 +42,6 @@ const EventManagement = ({ userId }) => {
 
         if (response && response.data && response.data.events) {
           setEvents(response.data.events);
-
-          // Set the first event as active if there are events
-          if (response.data.events.length > 0) {
-            setActiveEvent(response.data.events[0]);
-          }
         } else {
           // If we get an empty response, set empty events array
           setEvents([]);
@@ -83,10 +77,6 @@ const EventManagement = ({ userId }) => {
             ]
           }
         ]);
-
-        if (events.length > 0) {
-          setActiveEvent(events[0]);
-        }
       } finally {
         setIsLoading(false);
       }
@@ -94,6 +84,13 @@ const EventManagement = ({ userId }) => {
 
     fetchEvents();
   }, [userId]);
+
+  // Add a new useEffect to handle setting the activeEvent when events change
+  useEffect(() => {
+    if (events && events.length > 0 && !activeEvent) {
+      setActiveEvent(events[0]);
+    }
+  }, [events, activeEvent]);
 
   // Handle manage event click
   const handleManageEvent = (eventId) => {
@@ -136,7 +133,7 @@ const EventManagement = ({ userId }) => {
     return (
       <div className="event-container">
         <h1 className="page-title">Event Management</h1>
-        <div className="empty-state">
+        <div className="Event-empty-state">
           <h2>No Events Found</h2>
           <p>You haven't created any events yet.</p>
           {userId === user?._id && (
@@ -152,98 +149,102 @@ const EventManagement = ({ userId }) => {
     );
   }
 
-  // If we have events but no active event selected
-  if (!activeEvent) {
-    setActiveEvent(events[0]);
-    return null; // Return null to prevent rendering until activeEvent is set
-  }
-
   return (
     <div className="event-container">
-      <h1 className="page-title">Ongoing Event</h1>
-
-      <div className="event-header">
-        <div className="event-banner">
-          <img
-            src={activeEvent.image || defaultBannerImage}
-            alt={activeEvent.title || "Event banner"}
-            className="banner-image"
-          />
+      {!activeEvent ? (
+        // Add a loading state for when events exist but activeEvent is not yet set
+        <div className="loading-container">
+          <div className="event-loading-spinner"></div>
+          <p>Preparing event data...</p>
         </div>
-
-        <div className="event-header-content">
-          <div className="event-title-section">
-            <h2 className="event-title">{activeEvent.title || "Untitled Event"}</h2>
-            <p className="event-date">
-              {activeEvent.date || "Date not specified"}
-            </p>
-          </div>
-          <button
-            className="manage-event-btn"
-            onClick={() => handleManageEvent(activeEvent.id)}
-          >
-            Manage Event
-          </button>
-        </div>
-      </div>
-
-      {activeEvent.activities && activeEvent.activities.length > 0 ? (
-        <>
-          <div className="event-features">
-            <h2 className="features-title">Event Activities</h2>
-            <p className="features-description">
-              Explore our range of activities available for your event. Each
-              activity comes with professional staff and full setup.
-            </p>
-          </div>
-
-          <div className="event-activities">
-            {activeEvent.activities.map((activity, index) => (
-              <div key={activity.id || index} className="activity-card">
-                <div className="activity-image-container">
-                  <img
-                    src={activity.image || defaultActivityImages[index % defaultActivityImages.length]}
-                    alt={activity.title || "Activity"}
-                    className="activity-image"
-                  />
-                  {activity.badge && <div className="activity-badge">{activity.badge}</div>}
-                </div>
-                <h3 className="activity-title">{activity.title || "Activity"}</h3>
-                <p className="activity-description">{activity.description || "No description available."}</p>
-                <button
-                  className="activity-btn"
-                  onClick={() =>
-                    setSelectedActivity(
-                      selectedActivity?.id === activity.id ? null : activity
-                    )
-                  }
-                >
-                  {selectedActivity?.id === activity.id ? "Hide Details" : "View Details"}
-                </button>
-
-                {selectedActivity?.id === activity.id && (
-                  <div className="activity-details">
-                    <p>{selectedActivity.details || "No additional details available."}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </>
       ) : (
-        <div className="no-activities">
-          <h3>No Activities Added</h3>
+        <>
+          <h1 className="page-title">Ongoing Event</h1>
 
-          <p>This event doesn't have any activities yet.</p>
-          {userId === user?._id && (
-            <button
-              className="add-activity-button"
-              onClick={() => handleManageEvent(activeEvent.id)}
-            >
-              Add Activities
-            </button>
+          <div className="event-header">
+            <div className="event-banner">
+              <img
+                src={activeEvent.image || defaultBannerImage}
+                alt={activeEvent.title || "Event banner"}
+                className="banner-image"
+              />
+            </div>
+
+            <div className="event-header-content">
+              <div className="event-title-section">
+                <h2 className="event-title">{activeEvent.title || "Untitled Event"}</h2>
+                <p className="event-date">
+                  {activeEvent.date || "Date not specified"}
+                </p>
+              </div>
+              <button
+                className="manage-event-btn"
+                onClick={() => handleManageEvent(activeEvent.id)}
+              >
+                Manage Event
+              </button>
+            </div>
+          </div>
+
+          {activeEvent.activities && activeEvent.activities.length > 0 ? (
+            <>
+              <div className="event-features">
+                <h2 className="features-title">Event Activities</h2>
+                <p className="features-description">
+                  Explore our range of activities available for your event. Each
+                  activity comes with professional staff and full setup.
+                </p>
+              </div>
+
+              <div className="event-activities">
+                {activeEvent.activities.map((activity, index) => (
+                  <div key={activity.id || index} className="activity-card">
+                    <div className="activity-image-container">
+                      <img
+                        src={activity.image || defaultActivityImages[index % defaultActivityImages.length]}
+                        alt={activity.title || "Activity"}
+                        className="activity-image"
+                      />
+                      {activity.badge && <div className="activity-badge">{activity.badge}</div>}
+                    </div>
+                    <h3 className="activity-title">{activity.title || "Activity"}</h3>
+                    <p className="activity-description">{activity.description || "No description available."}</p>
+                    <button
+                      className="activity-btn"
+                      onClick={() =>
+                        setSelectedActivity(
+                          selectedActivity?.id === activity.id ? null : activity
+                        )
+                      }
+                    >
+                      {selectedActivity?.id === activity.id ? "Hide Details" : "View Details"}
+                    </button>
+
+                    {selectedActivity?.id === activity.id && (
+                      <div className="activity-details">
+                        <p>{selectedActivity.details || "No additional details available."}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="no-activities">
+              <h3>No Activities Added</h3>
+
+              <p>This event doesn't have any activities yet.</p>
+              {userId === user?._id && (
+                <button
+                  className="add-activity-button"
+                  onClick={() => handleManageEvent(activeEvent.id)}
+                >
+                  Add Activities
+                </button>
+              )}
+            </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );

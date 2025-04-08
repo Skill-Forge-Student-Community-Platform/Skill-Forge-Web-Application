@@ -9,13 +9,18 @@ import TabletMenu from './shared/TabletMenu';
 import SearchBar from './shared/SearchBar';
 import ProfileDropDown from './shared/ProfiledropDown';
 import Notification from '../Notifications/Notification dropdown/Notification';
-import SkillForgeLogo from '../../Assets/Skill Forge logo .png';
+import SkillForgeBlackLogo from '../../Assets/Skill Forge black.svg';
+import SkillForgeWhiteLogo from '../../Assets/Skill Forge white.svg';
+import useThemeToggle from '../../hooks/useThemeToggle';
 import './NavBar.css';
 
-const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, roleType }) => {
+const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
+
+  // Use our custom hook for theme toggling
+  const { isDarkMode, toggleTheme } = useThemeToggle();
 
   // Base URL for role-based navigation
   const baseUrl = `/${roleType.charAt(0).toUpperCase() + roleType.slice(1)}/${userId}`;
@@ -47,6 +52,11 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
     }
   };
 
+  // Only render content when isDarkMode is determined (no longer null)
+  if (isDarkMode === null) {
+    return null; // Or a minimal loading state
+  }
+
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
@@ -54,7 +64,7 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
         <div className="navbar-left">
           <Link to={`${baseUrl}/home`} className="navbar-logo">
              <img
-                src={SkillForgeLogo}
+                src={isDarkMode ? SkillForgeWhiteLogo : SkillForgeBlackLogo}
                 alt="SkillForge Logo"
                 className="h-10 w-auto "
               />
@@ -74,7 +84,7 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
           </div>
 
           {/* Search Bar */}
-          <div className="search-wrapper md:hidden">
+          <div className="search-wrapper lg:block md:hidden">
             <SearchBar placeholder="Search courses, events, teams..." />
           </div>
         </div>
@@ -98,7 +108,6 @@ const NavBar = ({ isDarkMode, toggleTheme, user, logout, toggleSidebar, userId, 
             onLogout={handleLogout}
             roleType={roleType}
           />
-
 
           {/* Tablet navigation - visible on medium screens */}
           <div className="tablet-menu">

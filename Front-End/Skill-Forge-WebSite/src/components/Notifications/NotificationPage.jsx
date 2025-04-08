@@ -14,10 +14,12 @@ import ProfileOverview from '../Home_page/Home_components/ProfileOverview';
 import Trending_Data from '../Home_page/Home_components/Trending_Data';
 import { useAuthStore } from '../../store/authStore';
 import ProfileAvatar from '../Home_page/Home_components/ProfileAvatar';
+import useThemeToggle from '../../hooks/useThemeToggle';
 import './NotificationPage.css';
 
 export default function NotificationPage({ userId }) {
   const { user } = useAuthStore();
+  const { isDarkMode } = useThemeToggle();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -188,7 +190,7 @@ export default function NotificationPage({ userId }) {
   const notificationGroups = groupNotificationsByDate(notifications);
 
   return (
-    <div className="flex justify-center w-full bg-gray-100 dark:bg-gray-900">
+    <div className={`flex justify-center w-full `}>
       <div className="w-full max-w-[1128px] xl:max-w-[1128px] lg:max-w-[990px] px-4">
         {/* Three column layout with responsive visibility - changed to row at md breakpoint */}
         <div className="flex flex-col md:flex-row gap-6">
@@ -201,7 +203,7 @@ export default function NotificationPage({ userId }) {
 
           {/* Middle column - Notifications - always visible, smaller on medium screens */}
           <main className="w-full sm:max-w-[600px] md:w-[calc(100%-230px)] lg:w-[520px] xl:w-[540px] shrink-0 overflow-y-auto mx-auto md:mx-0">
-            <div className="mb-4 bg-white rounded-lg shadow-sm">
+            <div className="mb-4 rounded-lg shadow-sm">
               <div className="notifications-page">
                 <div className="notifications-page-header">
                   <div className="notifications-title">
@@ -339,9 +341,6 @@ export default function NotificationPage({ userId }) {
                   ))}
                 </div>
               </div>
-
-              {/* Trending data component from Home */}
-              <Trending_Data />
             </div>
           </div>
         </div>

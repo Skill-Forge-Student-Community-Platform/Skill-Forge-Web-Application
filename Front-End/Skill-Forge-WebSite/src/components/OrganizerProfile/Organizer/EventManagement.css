@@ -296,21 +296,21 @@
   }
 
   /* Empty state */
-  .empty-state {
+  .Event-empty-state {
     text-align: center;
     padding: 40px;
     background-color: #f9f9f9;
     border-radius: 8px;
   }
 
-  .empty-state h2 {
+  .Event-empty-state h2 {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
     color: #333;
   }
 
-  .empty-state p {
+  .Event-empty-state p {
     color: #666;
     margin-bottom: 16px;
   }

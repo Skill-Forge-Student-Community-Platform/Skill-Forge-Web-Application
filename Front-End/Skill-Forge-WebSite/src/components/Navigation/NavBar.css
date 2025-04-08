@@ -168,7 +168,7 @@
   border-radius: 20px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 20px;
   transition: var(--transition-fast);
 }
 

@@ -1,10 +1,13 @@
 // components/Badge.js
 import React from 'react';
+import useThemeToggle from '../../hooks/useThemeToggle';
 import './Badge.css';
 
 const Badge = ({ icon, title, description, xp, timeAgo, color, achieved, progress, remaining }) => {
+  const { isDarkMode } = useThemeToggle();
+
   return (
-    <div className={`badge ${achieved ? 'achieved' : 'locked'} ${color || ''}`}>
+    <div className={`badge ${achieved ? 'achieved' : 'locked'} ${color || ''} ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="badge-icon-container">
         <div className="badge-icon">{icon}</div>
       </div>

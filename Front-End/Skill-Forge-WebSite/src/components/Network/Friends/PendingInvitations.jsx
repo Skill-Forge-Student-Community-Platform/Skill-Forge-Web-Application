@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import friendService from '../../../services/friendService';
 import { User, Check, X, ChevronRight } from 'lucide-react';
 import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import './PendingInvitations.css';
 
 const PendingInvitations = ({ onAcceptRequest, onRejectRequest }) => {
@@ -11,6 +12,7 @@ const PendingInvitations = ({ onAcceptRequest, onRejectRequest }) => {
   const [loading, setLoading] = useState(false);
   const [processingIds, setProcessingIds] = useState({});
   const navigate = useNavigate();
+  const { isDarkMode } = useThemeToggle();
 
   useEffect(() => {
     loadRequests();
@@ -106,11 +108,10 @@ const PendingInvitations = ({ onAcceptRequest, onRejectRequest }) => {
   }
 
   return (
-    <div className="pending-invitations-container">
+    <div className={`pending-invitations-container ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="invitations-header">
         <h2>Pending Invitations ({requests.length})</h2>
         <button
-
           className="manage-invitations-btn"
           onClick={goToManageInvitations}
         >

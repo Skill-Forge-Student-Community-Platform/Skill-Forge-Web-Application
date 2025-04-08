@@ -8,12 +8,14 @@ import PendingInvitations from "./Friends/PendingInvitations";
 import { useAuthStore } from "../../store/authStore";
 import friendService from "../../services/friendService";
 import socketService from "../../services/socket";
+import useThemeToggle from "../../hooks/useThemeToggle";
 import "./Friendspage.css";
 
 const Friendspage = () => {
   const [connectionCount, setConnectionCount] = useState(0);
   const [pendingRequestCount, setPendingRequestCount] = useState(0);
   const { user } = useAuthStore();
+  const { isDarkMode } = useThemeToggle();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -99,7 +101,7 @@ const Friendspage = () => {
   };
 
   return (
-    <div className="network-layout">
+    <div className={`network-layout ${isDarkMode ? 'dark' : 'light'}`}>
       {/* Left sidebar */}
       <div className="network-sidebar-container">
         <NetworkSidebar

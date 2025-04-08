@@ -5,6 +5,7 @@ import friendService from "../../../services/friendService";
 import { toast } from 'react-hot-toast';
 import socketService from "../../../services/socket";
 import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import "./PeopleYouMayKnow.css";
 
 const PeopleYouMayKnow = ({ onFriendRequest }) => {
@@ -17,6 +18,7 @@ const PeopleYouMayKnow = ({ onFriendRequest }) => {
     const [pendingRequests, setPendingRequests] = useState([]);
     const [hiddenUsers, setHiddenUsers] = useState([]); // To track users that are hidden from UI
     const navigate = useNavigate();
+    const { isDarkMode } = useThemeToggle();
 
     useEffect(() => {
         loadSuggestedPeople();
@@ -190,7 +192,7 @@ const PeopleYouMayKnow = ({ onFriendRequest }) => {
     }
 
     return (
-        <div className="suggestions-container">
+        <div className={`suggestions-container ${isDarkMode ? 'dark' : 'light'}`}>
             <h2 className="main-title">People you may know</h2>
 
             {renderSuggestionsSection("People you may know from your university", people.university, "Your University")}

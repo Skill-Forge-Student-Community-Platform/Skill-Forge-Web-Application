@@ -5,6 +5,7 @@ import { useAuthStore } from '../../../store/authStore';
 import friendService from '../../../services/friendService';
 import { toast } from 'react-hot-toast';
 import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import './FollowingFollowers.css';
 
 const FollowingFollowers = () => {
@@ -18,6 +19,7 @@ const FollowingFollowers = () => {
   const [errorFollowers, setErrorFollowers] = useState(null);
   const [processingUsers, setProcessingUsers] = useState({});
   const { user } = useAuthStore();
+  const { isDarkMode } = useThemeToggle();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -167,7 +169,7 @@ const FollowingFollowers = () => {
   };
 
   return (
-    <div className="following-followers-container">
+    <div className={`following-followers-container ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="tabs">
         <button
           className={`tab ${activeTab === 'following' ? 'active' : ''}`}
