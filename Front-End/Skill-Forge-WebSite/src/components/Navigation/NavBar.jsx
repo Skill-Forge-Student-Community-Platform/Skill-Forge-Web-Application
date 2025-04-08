@@ -4,8 +4,11 @@ import { Menu, X } from "lucide-react";
 import { getMenus } from "./MenuList";
 import Theme from "./shared/Theme";
 import DesktopMenu from "./shared/DesktopMenu";
+
+import UserSearch from "./shared/UserSearch";
+
 import MobileMenu from "./shared/MobileMenu";
-import SearchBar from "./shared/SearchBar";
+// import SearchBar from "./shared/SearchBar";
 import ProfileDropDown from "./shared/ProfiledropDown";
 import Notification from "../Notifications/Notification dropdown/Notification";
 import "./NavBar.css";
@@ -86,7 +89,8 @@ const NavBar = ({
 
           {/* Search Bar */}
           <div className="search-wrapper">
-            <SearchBar placeholder="Search courses, events, teams..." />
+            {/* <SearchBar placeholder="Search courses, events, teams..." /> */}
+            <UserSearch placeholder="Search users..." />
           </div>
         </div>
 

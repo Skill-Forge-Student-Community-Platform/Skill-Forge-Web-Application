@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useTeamStore } from "../../../store/useTeamStore.js";
+import { useAuthStore } from "../../../store/authStore.js";
 import TeamMembers from "./TeamMembers.js";
 
 const FindTeamsByTechnology = () => {
   const [technology, setTechnology] = useState("");
   const { teams, fetchTeamsByTechnology } = useTeamStore();
+  const { user } = useAuthStore();
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [activeTab, setActiveTab] = useState("members");
 
@@ -147,6 +149,13 @@ const FindTeamsByTechnology = () => {
                     {selectedTeam.members.length} member
                     {selectedTeam.members.length !== 1 ? "s" : ""}
                   </span>
+                  <div>
+                    const isMember ={" "}
+                    {selectedTeam.members.some(
+                      (member) => member._id === user._id
+                    )}
+                    ;
+                  </div>
                 </div>
               </div>
 
