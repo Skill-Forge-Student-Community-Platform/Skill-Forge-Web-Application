@@ -1,11 +1,11 @@
-/* Styles specific to reply comments */
+/* Styles specific to reply comments with theme support */
 
 .reply-comment {
   position: relative;
   display: flex;
   margin-bottom: 8px;
   margin-left: 24px;
-  background-color: #f8f8f8;
+  background-color: var(--card-bg);
   border-radius: 10px;
   transition: transform 0.2s ease;
 }
@@ -21,16 +21,17 @@
   left: -24px;
   width: 24px;
   height: 2px;
-  background-color: #e0e0e0;
+  background-color: var(--divider-color);
   z-index: 2;
 }
 
 .nested-comment {
   padding: 10px;
-  background-color: var(--linkedin-ultra-light); /* Lighter color for replies */
+  background-color: var(--card-bg);
   border-radius: 10px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px var(--modal-shadow);
   position: relative;
+  border: 1px solid var(--card-border);
 }
 
 .reply-content {
@@ -69,7 +70,7 @@
   align-items: center;
   background: none;
   border: none;
-  color: #65676B;
+  color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
   padding: 4px 8px;
@@ -78,11 +79,12 @@
 }
 
 .reply-comment .comment-action-btn:hover {
-  background-color: #f2f3f5;
+  background-color: var(--hover-bg);
+  text-decoration: none;
 }
 
 .reply-comment .comment-action-btn.liked {
-  color: #1877f2;
+  color: var(--accent-blue);
 }
 
 .reply-comment .like-count {
@@ -95,10 +97,11 @@
 }
 
 .reply-comment .reply-input-container {
-  background-color: #f0f2f5;
+  background-color: var(--input-bg);
   border-radius: 18px;
   padding: 8px 12px;
   transition: all 0.3s ease;
+  border: 1px solid var(--input-border);
 }
 
 .reply-comment .reply-input-container.expanded {
@@ -111,7 +114,7 @@
   background: transparent;
   outline: none;
   font-size: 14px;
-  color: #050505;
+  color: var(--input-text);
 }
 
 .reply-comment .reply-actions {
@@ -122,13 +125,31 @@
 }
 
 .reply-comment .reply-submit-btn {
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
+  border: none;
+  border-radius: 4px;
   padding: 4px 10px;
+  font-weight: 500;
+  cursor: pointer;
   font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.reply-comment .reply-submit-btn:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.reply-comment .reply-submit-btn:disabled {
+  background-color: var(--button-secondary);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* Hover state for nested replies */
 .reply-comment .nested-comment:hover {
-  background-color: #fafbfc;
+  background-color: var(--hover-bg);
 }
 
 /* Edit form in replies */
@@ -140,11 +161,18 @@
 .reply-comment .edit-input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   font-size: 14px;
   min-height: 60px;
   resize: vertical;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+}
+
+.reply-comment .edit-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.1);
 }
 
 .reply-comment .edit-actions {
@@ -164,19 +192,21 @@
 }
 
 .reply-comment .cancel-edit-btn {
-  background-color: #f0f2f5;
-  color: #65676B;
+  background-color: var(--button-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--input-border);
 }
 
 .reply-comment .save-edit-btn {
-  background-color: #1877f2;
-  color: white;
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
 }
 
 .reply-comment .save-edit-btn:disabled {
-  background-color: #e4e6eb;
-  color: #bec3c9;
+  background-color: var(--button-secondary);
+  color: var(--text-secondary);
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* Styling for nested replies */
@@ -192,7 +222,7 @@
   left: -24px;
   width: 20px;
   height: 2px;
-  background-color: #e0e0e0;
+  background-color: var(--divider-color);
 }
 
 /* Options menu for replies */
@@ -200,6 +230,45 @@
   right: 0;
   left: auto;
   min-width: 160px;
+  background-color: var(--container-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 12px var(--modal-shadow);
+}
+
+.reply-comment .comment-option-item {
+  color: var(--text-color);
+}
+
+.reply-comment .comment-option-item:hover {
+  background-color: var(--hover-bg);
+}
+
+.reply-comment .emoji-picker-container {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px var(--modal-shadow);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.reply-comment .emoji-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reply-comment .emoji-btn:hover {
+  background-color: var(--hover-bg);
+  color: var(--accent-yellow);
 }
 
 /* Responsive adjustments */
@@ -220,5 +289,15 @@
 
   .reply-comment .comment-text {
     font-size: 12px;
+  }
+
+  .reply-comment .edit-input {
+    font-size: 12px;
+    min-height: 50px;
+  }
+
+  .reply-comment .comment-action-btn {
+    font-size: 11px;
+    padding: 3px 6px;
   }
 }

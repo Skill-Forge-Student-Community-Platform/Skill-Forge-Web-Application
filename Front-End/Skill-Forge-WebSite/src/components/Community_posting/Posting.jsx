@@ -15,9 +15,13 @@ import postServices from '../../services/postServices';
 import { compressImage, processVideo } from '../../utils/imageCompression';
 import useUserProfile from '../../hooks/useUserProfile.js'; // Add .js extension
 import ProfileAvatar from '../../components/Home_page/Home_components/ProfileAvatar';
+import useThemeToggle from '../../hooks/useThemeToggle'; // Import theme toggle hook
 
 // Add user as a prop to your component
 function Posting({ user }) {
+  // Get the current theme state
+  const { isDarkMode } = useThemeToggle();
+
   // Get profile data using our custom hook
   const { getProfileImage, fullName } = useUserProfile(user?._id);
 
@@ -732,7 +736,7 @@ function Posting({ user }) {
   };
 
   return (
-    <div className="community-posting">
+    <div className={`community-posting ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <div className="post-input-container">
 
         <div className="input-row">
@@ -846,12 +850,14 @@ function Posting({ user }) {
             lastPostRef={lastPostRef} // Pass the ref for the last post
             currentUserId={user?._id} // Pass the current
             isUploading={isUploading}
+            uploadProgress={uploadProgress}
             uploadError={uploadError}
             onCancelUpload={handleCancelUpload}
             onUnfollow={(userId) => console.log("Unfollow user:", userId)}
             onNotInterested={(postId) => console.log("Not interested in post:", postId)}
             onInterested={(postId) => console.log("Interested in post:", postId)}
             onReportPost={(postId) => console.log("Report post:", postId)}
+            isDarkMode={isDarkMode} // Pass theme state to Feed
           />
 
           {/* Load more button */}

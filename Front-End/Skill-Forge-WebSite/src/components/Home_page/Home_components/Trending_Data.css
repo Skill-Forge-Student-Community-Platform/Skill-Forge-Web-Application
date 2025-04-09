@@ -86,20 +86,20 @@
 }
 
 /* Connect button */
-.connect-btn {
+.Trending-connect-btn {
   margin-left: 0.5rem;
   display: flex;
   align-items: center;
   font-size: 0.75rem;
-  background-color: var(--hover-bg);
-  color: var(--text-color);
+  background-color: var(--divider-color);
+  color: var(--accent-blue);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   transition: background-color 0.2s;
 }
 
-.connect-btn:hover {
-  background-color: var(--nav-item-hover);
+.Trending-connect-btn:hover {
+  background-color: var(--bg-color);
 }
 
 /* Resource icon */
@@ -118,12 +118,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  text-align: center;
   font-size: 0.875rem;
   color: var(--accent-blue);
   font-weight: 500;
   padding-top: 0.5rem;
   padding-bottom: 0.25rem;
+  margin-top: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
   border-top: 1px solid var(--divider-color);
+  cursor: pointer;
 }
 
 .view-more:hover {

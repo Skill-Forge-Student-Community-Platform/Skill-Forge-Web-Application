@@ -10,11 +10,13 @@ import {
   formatNotificationMessage,
   getNotificationActions
 } from '../../services/notificationServices';
+import friendService from '../../services/friendService';
 import ProfileOverview from '../Home_page/Home_components/ProfileOverview';
 import Trending_Data from '../Home_page/Home_components/Trending_Data';
 import { useAuthStore } from '../../store/authStore';
 import ProfileAvatar from '../Home_page/Home_components/ProfileAvatar';
 import useThemeToggle from '../../hooks/useThemeToggle';
+import { toast } from 'react-hot-toast';
 import './NotificationPage.css';
 
 export default function NotificationPage({ userId }) {
@@ -23,12 +25,9 @@ export default function NotificationPage({ userId }) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [suggestedConnections, setSuggestedConnections] = useState([
-    { _id: 'u1', Username: 'Alex Johnson', profilePicture: 'https://i.pravatar.cc/150?img=11', role: 'Student' },
-    { _id: 'u2', Username: 'Maya Peterson', profilePicture: 'https://i.pravatar.cc/150?img=5', role: 'Organizer' },
-    { _id: 'u3', Username: 'David Wilson', profilePicture: 'https://i.pravatar.cc/150?img=15', role: 'Student' },
-    { _id: 'u4', Username: 'Sophia Chen', profilePicture: 'https://i.pravatar.cc/150?img=25', role: 'Student' }
-  ]);
+  const [suggestedConnections, setSuggestedConnections] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(true);
+  const [pendingRequests, setPendingRequests] = useState([]);
 
   const [activityStats, setActivityStats] = useState({
     today: 5,
@@ -41,7 +40,7 @@ export default function NotificationPage({ userId }) {
 
   useEffect(() => {
     fetchNotifications();
-    // In a real implementation, we'd also fetch suggested connections here
+    fetchSuggestedConnections();
   }, []);
 
   const fetchNotifications = async () => {
@@ -60,6 +59,20 @@ export default function NotificationPage({ userId }) {
       console.error("Error fetching notifications:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSuggestedConnections = async () => {
+    try {
+      setLoadingSuggestions(true);
+      const response = await friendService.getSuggestedFriends();
+      // Get just top 4 for the sidebar widget
+      setSuggestedConnections(response.slice(0, 4));
+    } catch (err) {
+      console.error("Error fetching suggested connections:", err);
+      // Keep the default empty array for suggestedConnections
+    } finally {
+      setLoadingSuggestions(false);
     }
   };
 
@@ -144,14 +157,28 @@ export default function NotificationPage({ userId }) {
     }
   };
 
-  const handleConnectWithUser = (userId, e) => {
+  const handleConnectWithUser = async (userId, e) => {
     e.preventDefault();
-    // This would call an API to connect with the user
-    console.log(`Connect with user: ${userId}`);
-    // For demo, let's just update the UI
-    setSuggestedConnections(prev =>
-      prev.map(u => u._id === userId ? {...u, isConnected: true} : u)
-    );
+
+    try {
+      // Add to pending requests to update UI immediately
+      setPendingRequests(prev => [...prev, userId]);
+
+      // Call the API to send friend request
+      await friendService.sendFriendRequest(userId);
+
+      // Update the UI to show request was sent
+      setSuggestedConnections(prev =>
+        prev.map(u => u._id === userId ? {...u, isConnected: true} : u)
+      );
+
+      toast.success("Friend request sent successfully!");
+    } catch (error) {
+      toast.error("Failed to send friend request");
+
+      // Remove from pending requests if it fails
+      setPendingRequests(prev => prev.filter(id => id !== userId));
+    }
   };
 
   const timeAgo = (timestamp) => {
@@ -317,28 +344,47 @@ export default function NotificationPage({ userId }) {
               <div className="sidebar-card mb-4">
                 <h3>People You May Know</h3>
                 <div className="connection-suggestions">
-                  {suggestedConnections.map(user => (
-                    <div key={user._id} className="suggested-user">
-                      <ProfileAvatar
-                        userId={user._id}
-                        staticImageUrl={user.profilePicture}
-                        customAltText={user.Username}
-                        size="small"
-                        showLevel={false}
-                      />
-                      <div className="user-profile-info">
-                        <span className="username">{user.Username}</span>
-                        <span className="role">{user.role}</span>
-                      </div>
-                      <button
-                        className="connect-btn"
-                        onClick={(e) => handleConnectWithUser(user._id, e)}
-                        disabled={user.isConnected}
-                      >
-                        {user.isConnected ? <BsPersonCheck /> : <BsPersonPlus />}
-                      </button>
+                  {loadingSuggestions ? (
+                    <div className="text-center py-4">
+                      <div className="animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent mx-auto"></div>
+                      <p className="text-sm text-gray-500 mt-2">Loading suggestions...</p>
                     </div>
-                  ))}
+                  ) : suggestedConnections.length === 0 ? (
+                    <div className="text-center py-4">
+                      <p className="text-sm text-gray-500">No suggestions available right now.</p>
+                    </div>
+                  ) : (
+                    suggestedConnections.map(user => (
+                      <div key={user._id} className="suggested-user">
+                        <ProfileAvatar
+                          userId={user._id}
+                          staticImageUrl={user.profilePicture}
+                          customAltText={user.Username || "User"}
+                          size="small"
+                          showLevel={false}
+                        />
+                        <div className="user-profile-info">
+                          <span className="username">
+                            {user.FirstName && user.LastName
+                              ? `${user.FirstName} ${user.LastName}`
+                              : user.Username}
+                          </span>
+                          <span className="role">{user.role || "Student"}</span>
+                        </div>
+                        <button
+                          className="connect-btn"
+                          onClick={(e) => handleConnectWithUser(user._id, e)}
+                          disabled={pendingRequests.includes(user._id) || user.isConnected}
+                        >
+                          {pendingRequests.includes(user._id) || user.isConnected ? (
+                            <BsPersonCheck className="text-green-500" />
+                          ) : (
+                            <BsPersonPlus />
+                          )}
+                        </button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

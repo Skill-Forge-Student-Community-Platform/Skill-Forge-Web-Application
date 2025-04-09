@@ -7,9 +7,9 @@
   margin: 0;
   padding: 0.5rem 1.5rem;
   background-color: var(--container-bg);
-  border: 1px solid var(--hover-bg);
+  border: 1px solid var(--card-border);
   border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px var(--modal-shadow);
   transition: all 0.3s ease;
 }
 
@@ -24,7 +24,7 @@
   flex: 1;
   padding: 1rem 1.5rem;
   border: none;
-  background: var(--bg-color);
+  background: var(--input-bg);
   font-size: 1rem;
   color: var(--text-color);
   border-radius: 25px;
@@ -76,13 +76,20 @@
   font-size: 1.2rem;
 }
 
-.action-icon.media { color: #2ecc71; }
-.action-icon.event { color: #3498db; }
-.action-icon.article { color: #e67e22; }
+/* Theme-aware action icon colors */
+.action-icon.media { color: var(--accent-green); }
+.action-icon.event { color: var(--accent-blue); }
+.action-icon.article { color: var(--accent-yellow); }
 
 .action-icon:hover {
   background-color: var(--hover-bg);
   transform: translateY(-2px);
+}
+
+.action-icon.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .icon-text {
@@ -108,4 +115,67 @@
 .post-item {
   width: 100%;
   /* ...existing styles... */
+}
+
+/* Error container */
+.error-container {
+  background-color: var(--card-bg);
+  border: 1px solid var(--accent-red);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: var(--text-color);
+}
+
+.error-container button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+/* Load more button */
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.load-more button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--button-secondary);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.load-more button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.load-more button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
 }

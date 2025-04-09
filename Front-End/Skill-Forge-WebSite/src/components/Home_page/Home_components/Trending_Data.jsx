@@ -1,11 +1,47 @@
-import React from 'react';
-import { FaChevronRight, FaUserPlus, FaUsers } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaChevronRight, FaUserPlus, FaUsers, FaSpinner } from 'react-icons/fa';
+import { UserCheck } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import friendService from '../../../services/friendService';
+import ProfileAvatar from './ProfileAvatar';
 import './Trending_Data.css';
 
 const Trending_Data = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pendingRequests, setPendingRequests] = useState([]);
+
+  useEffect(() => {
+    loadSuggestedUsers();
+  }, []);
+
+  const loadSuggestedUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await friendService.getSuggestedFriends();
+      // Just get the top 3 for this compact widget
+      setSuggestedUsers(response.slice(0, 3));
+    } catch (error) {
+      console.error("Failed to load user suggestions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFriendRequest = async (userId) => {
+    try {
+      setPendingRequests(prev => [...prev, userId]);
+      await friendService.sendFriendRequest(userId);
+      toast.success("Friend request sent successfully!");
+    } catch (error) {
+      toast.error("Failed to send friend request");
+      // Remove from pending if it fails
+      setPendingRequests(prev => prev.filter(id => id !== userId));
+    }
+  };
 
   const handleViewAllEvents = () => {
     // Extract the base path (e.g., /Student/67ea8e1551c9a3f0fa4dad0d)
@@ -17,6 +53,16 @@ const Trending_Data = () => {
     } else {
       // Fallback in case the path structure is different
       navigate('view-events');
+    }
+  };
+
+  const goToNetworkPage = () => {
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length >= 3) {
+      const basePath = `/${pathParts[1]}/${pathParts[2]}`;
+      navigate(`${basePath}/network`);
+    } else {
+      navigate('/network');
     }
   };
 
@@ -76,52 +122,64 @@ const Trending_Data = () => {
           People you may know
         </h3>
         <div className="trending-list">
-          <div className="trending-item">
-            <div className="profile-img bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center text-white font-medium text-sm">
-              JS
+          {loading ? (
+            <div className="text-center py-4">
+              <FaSpinner className="animate-spin mx-auto text-gray-500" size={20} />
+              <p className="text-sm text-gray-500 mt-2">Loading suggestions...</p>
             </div>
-            <div className="trending-content">
-              <h4 className="trending-item-title">John Smith</h4>
-              <p className="trending-item-desc">Software Engineer at Tech Co</p>
+          ) : suggestedUsers.length === 0 ? (
+            <div className="text-center py-4">
+              <p className="text-sm text-gray-500">No suggestions available right now.</p>
             </div>
-            <button className="connect-btn">
-              <FaUserPlus size={12} className="mr-1" />
-              Connect
-            </button>
-          </div>
+          ) : (
+            <>
+              {suggestedUsers.map(user => (
+                <div key={user._id} className="trending-item">
+                  <ProfileAvatar
+                    userId={user._id}
+                    staticImageUrl={user.profilePicture}
+                    customAltText={user.Username || "User"}
+                    size="tiny"
+                    showLevel={false}
+                    className="profile-img"
+                  />
+                  <div className="trending-content">
+                    <h4 className="trending-item-title">
+                      {user.FirstName && user.LastName
+                        ? `${user.FirstName} ${user.LastName}`
+                        : user.Username}
+                    </h4>
+                    <p className="trending-item-desc">
+                      {user.role || "Student"}
+                      {user.school && ` at ${user.school}`}
+                    </p>
+                  </div>
+                  <button
+                    className={`Trending-connect-btn ${pendingRequests.includes(user._id) ? 'pending' : ''}`}
+                    onClick={() => handleFriendRequest(user._id)}
+                    disabled={pendingRequests.includes(user._id)}
+                  >
+                    {pendingRequests.includes(user._id) ? (
+                      <>
+                        <UserCheck size={12} className="mr-1" />
+                        Sent
+                      </>
+                    ) : (
+                      <>
+                        <FaUserPlus size={12} className="mr-1" />
+                        Connect
+                      </>
+                    )}
+                  </button>
+                </div>
+              ))}
 
-          <div className="trending-item">
-            <div className="profile-img bg-gradient-to-r from-purple-400 to-pink-500 flex items-center justify-center text-white font-medium text-sm">
-              AD
-            </div>
-            <div className="trending-content">
-              <h4 className="trending-item-title">Amy Davis</h4>
-              <p className="trending-item-desc">UX Designer at Design Studio</p>
-            </div>
-            <button className="connect-btn">
-              <FaUserPlus size={12} className="mr-1" />
-              Connect
-            </button>
-          </div>
-
-          <div className="trending-item">
-            <div className="profile-img bg-gradient-to-r from-green-400 to-teal-500 flex items-center justify-center text-white font-medium text-sm">
-              MJ
-            </div>
-            <div className="trending-content">
-              <h4 className="trending-item-title">Mark Johnson</h4>
-              <p className="trending-item-desc">Web Developer at Creative Inc</p>
-            </div>
-            <button className="connect-btn">
-              <FaUserPlus size={12} className="mr-1" />
-              Connect
-            </button>
-          </div>
-
-          <a href="/network" className="view-more">
-            View more
-            <FaChevronRight size={12} className="ml-1" />
-          </a>
+              <button onClick={goToNetworkPage} className="view-more">
+                View more
+                <FaChevronRight size={12} className="ml-1" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 

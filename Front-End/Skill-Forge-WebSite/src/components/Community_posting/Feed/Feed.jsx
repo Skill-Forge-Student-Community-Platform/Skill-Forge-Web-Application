@@ -32,7 +32,9 @@ const Feed = ({
   isLoading = false,
   // New props for refresh functionality
   onRefresh,
-  lastUpdated
+  lastUpdated,
+  // Theme prop
+  isDarkMode
 }) => {
   // Track media preview state
   const [mediaPreview, setMediaPreview] = useState({
@@ -154,13 +156,14 @@ const Feed = ({
   };
 
   return (
-    <div className="feed-container">
+    <div className={`feed-container ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       {/* Upload Progress Bar */}
       <UploadProgressBar
         progress={uploadProgress}
         isUploading={isUploading}
         onCancel={onCancelUpload}
         error={uploadError}
+        isDarkMode={isDarkMode}
       />
 
       {/* Feed Header with Tabs */}
@@ -234,6 +237,7 @@ const Feed = ({
             onDeleteComment={onDeleteComment}
             onMediaClick={handleMediaClick}
             onLikeComment={handleLikeComment}
+            isDarkMode={isDarkMode}
           />
         ))}
       </div>
@@ -254,6 +258,7 @@ const Feed = ({
           onLikeComment={handleLikeComment}
           onDeleteComment={onDeleteComment}
           currentUserId={currentUserId}
+          isDarkMode={isDarkMode}
         />
       )}
     </div>
