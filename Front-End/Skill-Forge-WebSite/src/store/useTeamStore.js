@@ -30,6 +30,7 @@ export const useTeamStore = create((set) => ({
     }
   },
 
+
   // get teams
   getTeamsByUser: async () => {
     set({ loading: true, error: null });
@@ -63,6 +64,7 @@ export const useTeamStore = create((set) => ({
     }
   },
 
+
   fetchSentInvites: async () => {
     try {
       const { data } = await axiosIntance.get("/teams/invites/sent", {
@@ -74,6 +76,7 @@ export const useTeamStore = create((set) => ({
     }
   },
 
+
   respondToInvite: async (teamId, action) => {
     try {
       await axiosIntance.post(
@@ -82,7 +85,9 @@ export const useTeamStore = create((set) => ({
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
+
       );
+
 
       set((state) => ({
         receivedInvites: state.receivedInvites.filter(
@@ -129,4 +134,5 @@ export const useTeamStore = create((set) => ({
       );
     }
   },
+
 }));

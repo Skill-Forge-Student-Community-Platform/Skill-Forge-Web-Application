@@ -1,22 +1,10 @@
 import React, { useState } from "react";
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
 import "./FriendRequests.css";
 
-const FriendRequests = ({ addToFriends, confirmedFriends, removeFromRequests, removedRequests }) => { 
+const FriendRequests = ({ addToFriends, confirmedFriends, removeFromRequests, removedRequests }) => {
   const [requests, setRequests] = useState([
-    {
-      id: 6,
-      name: "Shanika Hewage",
-      avatar: "https://i.pravatar.cc/50?img=10",
-      mutualFriends: "Sawanee Wedamestrige",
-      time: "1d",
-    },
-    {
-      id: 7,
-      name: "Gayani Nimnaadi",
-      avatar: "https://i.pravatar.cc/50?img=11",
-      mutualFriends: "",
-      time: "11h",
-    },
+
   ]);
 
   // Function to navigate to the user's profile
@@ -49,7 +37,14 @@ const FriendRequests = ({ addToFriends, confirmedFriends, removeFromRequests, re
           .map((request) => (
             <div key={request.id} className="friend-request-card">
               <div className="friend-request-header" onClick={() => goToProfile(request.id)}>
-                <img src={request.avatar} alt={request.name} className="request-avatar" />
+                <ProfileAvatar
+                  staticImageUrl={request.avatar}
+                  customAltText={request.name}
+                  size="small"
+                  showLevel={false}
+                  showMembershipTag={false}
+                  className="request-avatar"
+                />
                 <div className="request-info">
                   <p className="request-name"><strong>{request.name}</strong> sent you a friend request.</p>
                   <p className="request-time">{request.time} {request.mutualFriends && `· ${request.mutualFriends}`}</p>

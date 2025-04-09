@@ -19,12 +19,12 @@ const ProfileDropDown = ({ user, baseUrl, onLogout, roleType }) => {
 
   return (
     <div className="profile-wrapper" onClick={toggleDropdown}>
-      <div className="profile-container">
+      <div className={`profile-container ${dropdownOpen ? 'active' : ''}`}>
         <div className="profile-image-container">
           {user?._id ? (
             <ProfileAvatar
               userId={user._id}
-              size="tiny"
+              size="small"
               showLevel={false}
               showMembershipTag={false}
               className="profile-dropdown-avatar"
@@ -56,7 +56,7 @@ const ProfileDropDown = ({ user, baseUrl, onLogout, roleType }) => {
             <div className="dropdown-avatar">
               <ProfileAvatar
                 userId={user?._id}
-                size="tiny"
+                size="small"
                 showLevel={false}
                 showMembershipTag={false}
               />

@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { getApiBaseUrl } from '../utils/environment';
 
-const API_URL = 'http://localhost:5000/api/notifications';
+const API_URL = `${getApiBaseUrl()}/notifications`;
 
 // Configure axios with credentials for auth cookies
 const api = axios.create({

@@ -232,8 +232,7 @@ function useUserProfile(userId) {
 
   // Helper to get social links with proper fallbacks
   const getSocialLinks = () => {
-    // Try to get from profile-specific data first
-    if (profileData?.profileData?.socialLinks) {
+    if (profileData?.role === 'organizer' && profileData?.profileData?.socialLinks) {
       return profileData.profileData.socialLinks;
     }
 
@@ -275,9 +274,7 @@ function useUserProfile(userId) {
 
   // Get education details (student-specific)
   const getEducationDetails = () => {
-    if (profileData?.role !== 'student' || !profileData?.profileData) {
-      return null;
-    }
+    if (!profileData?.profileData) return null;
 
     const student = profileData.profileData;
     return {
@@ -302,7 +299,17 @@ function useUserProfile(userId) {
       industry: organizer.industry || '',
       position: organizer.position || '',
       organizerType: organizer.organizerType || '',
-      isVerified: organizer.isVerified || false
+      isVerified: organizer.isVerified || false,
+      bio: organizer.bio || '',
+      expertise: organizer.expertise || [],
+      contactEmail: organizer.contactEmail || '',
+      contactPhone: organizer.contactPhone || '',
+      mobileNumber: organizer.mobileNumber || '',
+      website: organizer.website || '',
+      socialLinks: organizer.socialLinks || {},
+      preferredEventTypes: organizer.preferredEventTypes || [],
+      expectedParticipantsRange: organizer.expectedParticipantsRange || '',
+      eventFormatPreference: organizer.eventFormatPreference || ''
     };
   };
 
@@ -321,14 +328,14 @@ function useUserProfile(userId) {
         backupEmail: roleData.backupEmail || '',
         preferredNotifications: roleData.preferredNotifications || []
       };
-    } else if (profileData?.role === 'organizer') {
+    } else if (profileData?.role === 'organizer' && profileData?.profileData) {
+      const organizer = profileData.profileData;
       return {
         ...baseInfo,
-        contactEmail: roleData.contactEmail || baseInfo.email,
-        contactPhone: roleData.contactPhone || '',
-        mobileNumber: roleData.mobileNumber || '',
-        backupContact: roleData.backupContact || '',
-        website: roleData.website || ''
+        contactEmail: organizer.contactEmail || baseInfo.email,
+        contactPhone: organizer.contactPhone || '',
+        mobileNumber: organizer.mobileNumber || '',
+        website: organizer.website || ''
       };
     }
 
@@ -376,6 +383,14 @@ function useUserProfile(userId) {
     return {};
   };
 
+  // Get bio
+  const getBio = () => {
+    if (profileData?.role === 'organizer') {
+      return profileData?.profileData?.bio || '';
+    }
+    return profileData?.profileData?.bio || '';
+  };
+
   // Check if the profile belongs to the current logged in user
   const isOwnProfile = () => {
     return user && user._id === userId;
@@ -401,13 +416,13 @@ function useUserProfile(userId) {
                 user?.Username || "User"),
 
     email: profileData?.email || user?.email || '',
-    bio: profileData?.bio || '',
+    bio: getBio(),
     role: profileData?.role || user?.role || null,
 
     // Social networking
     followers: profileData?.followers || [],
     following: profileData?.following || [],
-    coverImage: profileData?.coverImg || null,
+    coverImage: profileData?.profileData?.coverImage || '',
     personalLink: profileData?.link || '',
 
     // Helper functions
@@ -424,7 +439,7 @@ function useUserProfile(userId) {
     getInstitutionName,
 
     // Raw access to role-specific data
-    roleSpecificData: profileData?.profileData || null,
+    roleSpecificData: profileData?.profileData || {},
 
     // Default image for direct use
     defaultProfilePicture,

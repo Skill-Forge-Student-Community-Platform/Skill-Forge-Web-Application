@@ -1,13 +1,13 @@
-import { 
-  FaCalendarAlt, 
-  FaMapMarkerAlt, 
-  FaFileAlt, 
-  FaClock, 
-  FaTrophy, 
-  FaUsers, 
-  FaScroll, 
-  FaTicketAlt, 
-  FaShareAlt, 
+import {
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaFileAlt,
+  FaClock,
+  FaTrophy,
+  FaUsers,
+  FaScroll,
+  FaTicketAlt,
+  FaShareAlt,
   FaRegBookmark,
   FaArrowLeft,
   FaWhatsapp,
@@ -21,6 +21,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import SaveEvents from "./SaveEvents";
 import ShareEvent from "./ShareEvent";
+import { getApiBaseUrl, getStaticUrl } from "../../../utils/environment";
 
 const ExploreDetails = ({userId, user}) => {
   const [event, setEvent] = useState(null);
@@ -33,7 +34,7 @@ const ExploreDetails = ({userId, user}) => {
   const [regloading, setRegLoading] = useState(false);
 
   const isStudent = user && user.role === 'student';
-  
+
   // Add state for organizer ID and fetch organizer profile data
   const [organizerId, setOrganizerId] = useState(null);
   const organizerProfile = useUserProfile(organizerId);
@@ -41,17 +42,17 @@ const ExploreDetails = ({userId, user}) => {
   // Handle event registration
   const handleRegister = async () => {
     setRegLoading(true);
-    
+
     if (!user) {
       alert("Please log in to register for this event");
       setRegLoading(false);
       return;
     }
-    
+
     console.log("User object:", user);
-    
+
     try {
-      const response = await fetch("http://localhost:5000/api/register", {
+      const response = await fetch(`${getApiBaseUrl()}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,19 +64,19 @@ const ExploreDetails = ({userId, user}) => {
           eventId: id,
         }),
       });
-      
+
       const responseData = await response.json().catch(() => ({}));
       console.log("Server response:", response.status, responseData);
-      
+
       if (response.status === 409) {
         alert("You have already registered for this event!");
         return;
       }
-      
+
       if (!response.ok) {
         throw new Error(`Failed to register: ${responseData.message || "Server error"}`);
       }
-      
+
       alert("Registration successful!");
       window.location.reload();
     } catch (error) {
@@ -102,7 +103,7 @@ const ExploreDetails = ({userId, user}) => {
         return;
       }
 
-      const response = await axios.post("http://localhost:5000/api/save-event", {
+      const response = await axios.post(`${getApiBaseUrl()}/save-event`, {
         userId,
         eventId: e._id,
         title: e.title,
@@ -127,41 +128,41 @@ const ExploreDetails = ({userId, user}) => {
       console.error("Organizer profile is not available.");
       return;
     }
-  
+
     const contactInfo = organizerProfile.getContactInfo();
     if (!contactInfo) {
       console.error("Contact information is missing.");
       return;
     }
-  
+
     const phoneNumber = contactInfo.mobileNumber || contactInfo.contactPhone || "+94718005396"; // Fallback
-  
+
     // Format phone number - remove spaces, dashes, parentheses, and other non-numeric characters
     const formattedNumber = phoneNumber.replace(/[^\d]/g, '');
-  
+
     if (!formattedNumber) {
       console.error("Invalid phone number.");
       return;
     }
-  
+
     const message = encodeURIComponent(`Hi, I'm interested in the event "${event.title}". Could you please provide more information?`);
     const whatsappUrl = `https://wa.me/${formattedNumber}?text=${message}`;
-    
+
     window.open(whatsappUrl, '_blank');
   };
-  
+
   useEffect(() => {
     const fetchEventDetails = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:5000/Details/${id}`);
+        const response = await axios.get(`${getStaticUrl()}/Details/${id}`);
         setEvent(response.data);
-        
+
         // Set organizer ID when event data is loaded
         if (response.data && response.data.userId) {
           setOrganizerId(response.data.userId);
         }
-        
+
         if (response.data.location) {
           const encodedLocation = encodeURIComponent(response.data.location);
           setMapUrl(`https://www.google.com/maps?q=${encodedLocation}&output=embed`);
@@ -172,7 +173,7 @@ const ExploreDetails = ({userId, user}) => {
         setLoading(false);
       }
     };
-    
+
     fetchEventDetails();
   }, [id]);
 
@@ -180,7 +181,7 @@ const ExploreDetails = ({userId, user}) => {
   useEffect(() => {
     const fetchSavedEvents = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/saved-events/${userId}`);
+        const response = await axios.get(`${getApiBaseUrl()}/saved-events/${userId}`);
         setSavedEvents(response.data);
       } catch (error) {
         console.error("Error fetching saved events:", error);
@@ -189,7 +190,7 @@ const ExploreDetails = ({userId, user}) => {
 
     fetchSavedEvents();
   }, [savedEvents,userId]);
-  
+
   // Create a function to render organizer info
   const renderOrganizerInfo = () => {
     if (organizerProfile.loading) {
@@ -210,15 +211,15 @@ const ExploreDetails = ({userId, user}) => {
     // Get contact info with fallback
     const contactInfo = organizerProfile.getContactInfo();
     const phoneNumber = contactInfo.mobileNumber || contactInfo.contactPhone || "";
-    
+
     return (
       <div className="mt-6 pt-5 border-t border-gray-200">
         <h4 className="text-sm font-medium text-gray-500 mb-3">Organized by</h4>
         <div className="flex items-center">
           <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
             {organizerProfile.getProfileImage() ? (
-              <img 
-                src={organizerProfile.getProfileImage()} 
+              <img
+                src={organizerProfile.getProfileImage()}
                 alt={organizerProfile.fullName}
                 className="w-full h-full object-cover"
               />
@@ -258,7 +259,7 @@ const ExploreDetails = ({userId, user}) => {
       </div>
     );
   }
-  
+
   if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -281,10 +282,10 @@ const ExploreDetails = ({userId, user}) => {
   }
 
   // Calculate percentage of spots filled
-  const percentageFilled = event.max_participation > 0 
-    ? Math.min(Math.round((event.current_participants || 0) / event.max_participation * 100), 100) 
+  const percentageFilled = event.max_participation > 0
+    ? Math.min(Math.round((event.current_participants || 0) / event.max_participation * 100), 100)
     : 0;
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
@@ -293,7 +294,7 @@ const ExploreDetails = ({userId, user}) => {
           <FaArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
           Back to Events
         </Link>
-        
+
         {/* Main Content Container */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Hero Section with Image and Title Overlay */}
@@ -301,7 +302,7 @@ const ExploreDetails = ({userId, user}) => {
             {event.image ? (
               <div className="h-72 sm:h-96 w-full">
                 <img
-                  src={`http://localhost:5000/${event.image}`}
+                  src={`${getStaticUrl()}/${event.image}`}
                   alt={event.title}
                   className="w-full h-full object-cover"
                 />
@@ -310,7 +311,7 @@ const ExploreDetails = ({userId, user}) => {
             ) : (
               <div className="h-72 sm:h-96 w-full bg-gradient-to-r from-indigo-600 to-purple-600"></div>
             )}
-            
+
             {/* Event Title and Quick Actions */}
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
               <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -322,7 +323,7 @@ const ExploreDetails = ({userId, user}) => {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 drop-shadow-sm">{event.title}</h1>
             </div>
           </div>
-          
+
           {/* Content Area */}
           <div className="p-6 md:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -337,7 +338,7 @@ const ExploreDetails = ({userId, user}) => {
                     <p className="whitespace-pre-line">{event.description}</p>
                   </div>
                 </section>
-                
+
                 {/* Rules Section */}
                 <section className="mb-10 bg-indigo-50 p-6 rounded-xl border border-indigo-100">
                   <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
@@ -347,18 +348,18 @@ const ExploreDetails = ({userId, user}) => {
                     <p className="whitespace-pre-line">{event.rules}</p>
                   </div>
                 </section>
-                
+
                 {/* Map Section */}
                 <section className="mb-8">
                   <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
                     <FaMapMarkerAlt className="text-red-600 mr-3" /> Location
                   </h2>
                   <div className="rounded-xl overflow-hidden border border-gray-200 h-64 sm:h-80 shadow-sm">
-                    <iframe 
+                    <iframe
                       title="Event Location"
-                      width="100%" 
-                      height="100%" 
-                      frameBorder="0" 
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
                       src={mapUrl || "https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=default+location"}
                       allowFullScreen>
                     </iframe>
@@ -369,7 +370,7 @@ const ExploreDetails = ({userId, user}) => {
                   </p>
                 </section>
               </div>
-              
+
               {/* Right Column - Summary Card */}
               <div>
                 <div className="bg-white rounded-xl border border-gray-200 shadow-md sticky top-6">
@@ -378,7 +379,7 @@ const ExploreDetails = ({userId, user}) => {
                     <h3 className="text-xl font-semibold text-gray-800 mb-5 pb-3 border-b border-gray-200">
                       Event Details
                     </h3>
-                    
+
                     <div className="space-y-5">
                       <div className="flex items-center">
                         <div className="bg-indigo-100 p-3 rounded-full mr-4">
@@ -389,7 +390,7 @@ const ExploreDetails = ({userId, user}) => {
                           <p className="font-medium">{formatDate(event.date)}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <div className="bg-green-100 p-3 rounded-full mr-4">
                           <FaClock className="text-green-600" />
@@ -399,7 +400,7 @@ const ExploreDetails = ({userId, user}) => {
                           <p className="font-medium">{event.time}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <div className="bg-red-100 p-3 rounded-full mr-4">
                           <FaMapMarkerAlt className="text-red-600" />
@@ -409,7 +410,7 @@ const ExploreDetails = ({userId, user}) => {
                           <p className="font-medium truncate max-w-xs">{event.location}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center">
                         <div className="bg-yellow-100 p-3 rounded-full mr-4">
                           <FaTrophy className="text-yellow-600" />
@@ -419,7 +420,7 @@ const ExploreDetails = ({userId, user}) => {
                           <p className="font-medium text-yellow-600">${Number(event.win_price).toLocaleString()}</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-start">
                         <div className="bg-orange-100 p-3 rounded-full mr-4">
                           <FaUsers className="text-orange-600" />
@@ -427,13 +428,13 @@ const ExploreDetails = ({userId, user}) => {
                         <div className="flex-1">
                           <p className="text-sm text-gray-500">Capacity</p>
                           <p className="font-medium">{event.current_participants || 0} / {event.max_participation} participants</p>
-                          
+
                           {/* Progress bar */}
                           <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                            <div 
+                            <div
                               className={`h-2.5 rounded-full ${
-                                percentageFilled >= 90 ? 'bg-red-600' : 
-                                percentageFilled >= 70 ? 'bg-orange-500' : 
+                                percentageFilled >= 90 ? 'bg-red-600' :
+                                percentageFilled >= 70 ? 'bg-orange-500' :
                                 'bg-green-600'
                               }`}
                               style={{ width: `${percentageFilled}%` }}
@@ -445,19 +446,19 @@ const ExploreDetails = ({userId, user}) => {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Register Button */}
                     {isStudent && (
-                    <button 
+                    <button
                     className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition-colors duration-300 flex items-center justify-center shadow-sm"
-                    onClick={handleRegister} 
+                    onClick={handleRegister}
                     disabled={regloading}
                   >
                     <FaTicketAlt className="mr-2" />  {regloading ? "Registering..." : "Register"}
-                  </button>  
+                  </button>
                     )}
-                    
-                     
+
+
                     {/* Action Buttons */}
                     <div className="flex mt-4 space-x-2">
                       <button
@@ -467,7 +468,7 @@ const ExploreDetails = ({userId, user}) => {
                         <FaRegBookmark className="mr-2" /> Save
                       </button>
 
-                      <button 
+                      <button
                         className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center"
                         onClick={() => setShowModal(true)}
                       >
@@ -475,18 +476,18 @@ const ExploreDetails = ({userId, user}) => {
                       </button>
 
                     {isStudent && (
-                      <button 
+                      <button
                       onClick={handleWhatsapp}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center"
                     >
                       <FaWhatsapp className="mr-2" /> Contact
                     </button>)}
-                      
+
                     </div>
 
                     {/* Display saved events */}
                     <SaveEvents cart={savedEvents} setCart={setSavedEvents} userId={userId} />
-                    
+
                     {/* Organizer Info - using the renderOrganizerInfo function */}
                     {renderOrganizerInfo()}
 

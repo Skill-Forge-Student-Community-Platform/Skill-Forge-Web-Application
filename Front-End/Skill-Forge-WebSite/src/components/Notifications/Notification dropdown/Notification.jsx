@@ -3,6 +3,7 @@ import { Bell, CheckCheck, Clock, ArrowRight, UserPlus, UserCheck, X } from "luc
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { toast } from "react-hot-toast";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import "./Notification.css";
 
 // Import services
@@ -19,6 +20,9 @@ import {
 import socketService from "../../../services/socket";
 import friendService from "../../../services/friendService";
 
+// Import ProfileAvatar
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+
 const Notification = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -28,6 +32,7 @@ const Notification = () => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { isDarkMode } = useThemeToggle();
 
   // Notification animation timing
   const notificationEntryDelay = 100; // Milliseconds between each notification animation
@@ -327,7 +332,7 @@ const Notification = () => {
 
   const unreadCount = notifications.filter((notif) => !notif.read).length;
 
-  // Update the renderNotificationList function for better empty state display
+  // Update the renderNotificationList function for better layout
   const renderNotificationList = () => {
     if (loading) {
       return <div className="notification-item loading">Loading notifications...</div>;
@@ -359,17 +364,31 @@ const Notification = () => {
         }}
       >
         {!notification.read && <span className="blue-circle"></span>}
-        <img
-          src={notification.from?.profilePicture || "https://i.pravatar.cc/100"}
-          alt={notification.from?.Username || "User"}
-          className="avatar"
+
+        <ProfileAvatar
+          userId={notification.from?._id}
+          staticImageUrl={notification.from?.profilePicture}
+          customAltText={notification.from?.Username || "User"}
+          size="small"
+          showLevel={false}
+          showMembershipTag={false}
+          className="notification-avatar"
         />
+
         <div className="notification-content">
-          <div className="notification-header">
-            <p>
-              <strong>{notification.from?.Username || "User"}</strong>{" "}
-              {formatNotificationMessage(notification)}
-            </p>
+          <div className="notification-main">
+            <div className="notification-message">
+              <p>
+                <strong>{notification.from?.Username || "User"}</strong>{" "}
+                {formatNotificationMessage(notification)}
+              </p>
+
+              <span className="time">
+                <Clock size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
+                {timeAgo(notification.createdAt)}
+              </span>
+            </div>
+
             <button
               className="delete-notification"
               onClick={(e) => handleDeleteNotification(notification._id, e)}
@@ -378,10 +397,6 @@ const Notification = () => {
               <X size={14} />
             </button>
           </div>
-          <span className="time">
-            <Clock size={12} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
-            {timeAgo(notification.createdAt)}
-          </span>
 
           {notification.type === 'friend_request' && !notification.status && (
             <div className="notification-buttons">
@@ -450,7 +465,7 @@ const Notification = () => {
   };
 
   return (
-    <div className="notification-bar" ref={dropdownRef}>
+    <div className={`notification-bar ${isDarkMode ? 'dark' : 'light'}`} ref={dropdownRef}>
       <button className="notification-icon notification-button" onClick={handleIconClick} aria-label="Notifications">
         <Bell size={20} strokeWidth={1.5} />
         {unreadCount > 0 && (

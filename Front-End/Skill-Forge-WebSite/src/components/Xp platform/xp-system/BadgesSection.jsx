@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  Grid, 
-  Card, 
-  CardContent, 
+import {
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  Card,
+  CardContent,
   Chip,
   Tooltip,
   Modal,
@@ -17,28 +17,28 @@ import {
 } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { badges } from '../../utils/mockData';
+import { badges } from '../utils/mockData';
 
 const BadgesSection = () => {
   const theme = useTheme();
   const [selectedBadge, setSelectedBadge] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [filterCategory, setFilterCategory] = useState('all');
-  
+
   // Filter badges by category and unlock status
-  const filteredBadges = badges.filter(badge => 
+  const filteredBadges = badges.filter(badge =>
     (filterCategory === 'all' || badge.category === filterCategory)
   );
-  
+
   const earnedBadges = filteredBadges.filter(badge => badge.unlocked);
   const lockedBadges = filteredBadges.filter(badge => !badge.unlocked);
-  
+
   // Handle badge click
   const handleBadgeClick = (badge) => {
     setSelectedBadge(badge);
     setModalOpen(true);
   };
-  
+
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -49,16 +49,16 @@ const BadgesSection = () => {
       day: 'numeric'
     }).format(date);
   };
-  
+
   // Get all unique categories
   const categories = ['all', ...new Set(badges.map(badge => badge.category))];
 
   return (
-    <Paper 
-      elevation={3} 
-      sx={{ 
-        p: 3, 
-        borderRadius: 2, 
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3,
+        borderRadius: 2,
         mb: 4,
         background: theme.palette.background.paper
       }}
@@ -66,11 +66,11 @@ const BadgesSection = () => {
       <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
         Badges & Achievements
       </Typography>
-      
+
       {/* Category Filter */}
       <Box sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs 
-          value={filterCategory} 
+        <Tabs
+          value={filterCategory}
           onChange={(e, newValue) => setFilterCategory(newValue)}
           variant="scrollable"
           scrollButtons="auto"
@@ -78,29 +78,29 @@ const BadgesSection = () => {
           indicatorColor="primary"
         >
           {categories.map(category => (
-            <Tab 
-              key={category} 
-              label={category.charAt(0).toUpperCase() + category.slice(1)} 
+            <Tab
+              key={category}
+              label={category.charAt(0).toUpperCase() + category.slice(1)}
               value={category}
             />
           ))}
         </Tabs>
       </Box>
-      
+
       {/* Earned Badges Section */}
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Typography variant="h6" component="h3" fontWeight="bold">
             🛡️ Earned Badges
           </Typography>
-          <Chip 
-            label={`${earnedBadges.length} badges`} 
-            size="small" 
-            color="primary" 
+          <Chip
+            label={`${earnedBadges.length} badges`}
+            size="small"
+            color="primary"
             sx={{ ml: 2 }}
           />
         </Box>
-        
+
         <Grid container spacing={2}>
           {earnedBadges.map((badge, index) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={badge.id}>
@@ -111,9 +111,9 @@ const BadgesSection = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Card 
+                <Card
                   onClick={() => handleBadgeClick(badge)}
-                  sx={{ 
+                  sx={{
                     height: '100%',
                     cursor: 'pointer',
                     display: 'flex',
@@ -122,8 +122,8 @@ const BadgesSection = () => {
                     justifyContent: 'center',
                     p: 2,
                     textAlign: 'center',
-                    background: theme.palette.mode === 'dark' 
-                      ? 'linear-gradient(135deg, #303f9f 0%, #1a237e 100%)' 
+                    background: theme.palette.mode === 'dark'
+                      ? 'linear-gradient(135deg, #303f9f 0%, #1a237e 100%)'
                       : 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                     position: 'relative',
@@ -140,9 +140,9 @@ const BadgesSection = () => {
                     }
                   }}
                 >
-                  <Box 
-                    sx={{ 
-                      fontSize: '3rem', 
+                  <Box
+                    sx={{
+                      fontSize: '3rem',
                       mb: 1,
                       filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))'
                     }}
@@ -161,21 +161,21 @@ const BadgesSection = () => {
           ))}
         </Grid>
       </Box>
-      
+
       {/* Locked Badges Section */}
       <Box>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Typography variant="h6" component="h3" fontWeight="bold">
             🔒 Locked Badges
           </Typography>
-          <Chip 
-            label={`${lockedBadges.length} badges`} 
-            size="small" 
-            color="default" 
+          <Chip
+            label={`${lockedBadges.length} badges`}
+            size="small"
+            color="default"
             sx={{ ml: 2 }}
           />
         </Box>
-        
+
         <Grid container spacing={2}>
           {lockedBadges.map((badge, index) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={badge.id}>
@@ -187,9 +187,9 @@ const BadgesSection = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Tooltip title={`How to unlock: ${badge.unlockRequirement}`} arrow>
-                  <Card 
+                  <Card
                     onClick={() => handleBadgeClick(badge)}
-                    sx={{ 
+                    sx={{
                       height: '100%',
                       cursor: 'pointer',
                       display: 'flex',
@@ -200,16 +200,16 @@ const BadgesSection = () => {
                       textAlign: 'center',
                       filter: 'grayscale(1)',
                       opacity: 0.7,
-                      background: theme.palette.mode === 'dark' 
-                        ? 'linear-gradient(135deg, #424242 0%, #212121 100%)' 
+                      background: theme.palette.mode === 'dark'
+                        ? 'linear-gradient(135deg, #424242 0%, #212121 100%)'
                         : 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)',
                       boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
                       position: 'relative'
                     }}
                   >
-                    <Box 
-                      sx={{ 
-                        fontSize: '3rem', 
+                    <Box
+                      sx={{
+                        fontSize: '3rem',
                         mb: 1,
                         filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.1))'
                       }}
@@ -222,10 +222,10 @@ const BadgesSection = () => {
                     <Typography variant="caption" color="text.secondary" noWrap>
                       {badge.category}
                     </Typography>
-                    <Box 
-                      sx={{ 
-                        position: 'absolute', 
-                        top: 8, 
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
                         right: 8,
                         color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'
                       }}
@@ -239,7 +239,7 @@ const BadgesSection = () => {
           ))}
         </Grid>
       </Box>
-      
+
       {/* Badge Detail Modal */}
       <Modal
         open={modalOpen}
@@ -274,14 +274,14 @@ const BadgesSection = () => {
               >
                 <Close />
               </IconButton>
-              
+
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <Box 
-                  sx={{ 
-                    fontSize: '4rem', 
+                <Box
+                  sx={{
+                    fontSize: '4rem',
                     mr: 3,
-                    filter: selectedBadge.unlocked 
-                      ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))' 
+                    filter: selectedBadge.unlocked
+                      ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))'
                       : 'grayscale(1) drop-shadow(0 2px 3px rgba(0,0,0,0.1))',
                     opacity: selectedBadge.unlocked ? 1 : 0.7
                   }}
@@ -292,19 +292,19 @@ const BadgesSection = () => {
                   <Typography variant="h5" fontWeight="bold">
                     {selectedBadge.name}
                   </Typography>
-                  <Chip 
-                    label={selectedBadge.category} 
-                    size="small" 
+                  <Chip
+                    label={selectedBadge.category}
+                    size="small"
                     color={selectedBadge.unlocked ? "primary" : "default"}
                     sx={{ mt: 1 }}
                   />
                 </Box>
               </Box>
-              
+
               <Typography variant="body1" paragraph>
                 {selectedBadge.description}
               </Typography>
-              
+
               {selectedBadge.unlocked ? (
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="subtitle2" color="text.secondary">
@@ -315,12 +315,12 @@ const BadgesSection = () => {
                   </Typography>
                 </Box>
               ) : (
-                <Box 
-                  sx={{ 
-                    mt: 2, 
-                    p: 2, 
-                    borderRadius: 2, 
-                    bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' 
+                <Box
+                  sx={{
+                    mt: 2,
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'
                   }}
                 >
                   <Typography variant="subtitle2" color="text.secondary">
@@ -331,10 +331,10 @@ const BadgesSection = () => {
                   </Typography>
                 </Box>
               )}
-              
+
               <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   onClick={() => setModalOpen(false)}
                   sx={{ borderRadius: 8 }}
                 >
@@ -349,4 +349,4 @@ const BadgesSection = () => {
   );
 };
 
-export default BadgesSection; 
+export default BadgesSection;

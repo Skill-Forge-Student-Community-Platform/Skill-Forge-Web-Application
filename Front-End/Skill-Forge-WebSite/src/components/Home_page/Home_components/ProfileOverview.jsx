@@ -200,29 +200,29 @@ const ProfileOverview = () => {
 
   // Skeleton loading component
   const renderSkeleton = () => (
-    <div className="profile-container">
-      <div className="profile-card skeleton">
-        <div className="profile-header-actions">
-          <div className="skeleton-share-button"></div>
+    <div className="profileOW-container">
+      <div className="profileOW-card profileOW-skeleton">
+        <div className="profileOW-header-actions">
+          <div className="profileOW-skeleton-share-button"></div>
         </div>
 
-        <div className="profile-avatar-section">
-          <div className="skeleton-avatar"></div>
+        <div className="profileOW-avatar-section">
+          <div className="profileOW-skeleton-avatar"></div>
         </div>
 
-        <div className="profile-info-section">
-          <div className="skeleton-name"></div>
-          <div className="skeleton-profession"></div>
-          <div className="skeleton-detail"></div>
+        <div className="profileOW-info-section">
+          <div className="profileOW-skeleton-name"></div>
+          <div className="profileOW-skeleton-profession"></div>
+          <div className="profileOW-skeleton-detail"></div>
         </div>
 
-        <div className="level-progress-section">
-          <div className="level-info">
-            <div className="skeleton-level"></div>
-            <div className="skeleton-xp"></div>
+        <div className="profileOW-level-progress-section">
+          <div className="profileOW-level-info">
+            <div className="profileOW-skeleton-level"></div>
+            <div className="profileOW-skeleton-xp"></div>
           </div>
-          <div className="progress-bar">
-            <div className="progress-fill skeleton-progress"></div>
+          <div className="profileOW-progress-bar">
+            <div className="profileOW-progress-fill profileOW-skeleton-progress"></div>
           </div>
         </div>
       </div>
@@ -243,10 +243,10 @@ const ProfileOverview = () => {
 
   if (error) {
     return (
-      <div className="profile-container error">
-        <div className="error-message">
+      <div className="profileOW-container profileOW-error">
+        <div className="profileOW-error-message">
           <span>Failed to load profile</span>
-          <button onClick={() => window.location.reload()} className="retry-button">
+          <button onClick={() => window.location.reload()} className="profileOW-retry-button">
             Retry
           </button>
         </div>
@@ -255,21 +255,20 @@ const ProfileOverview = () => {
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
+    <div className="profileOW-container">
+      <div className="profileOW-card">
         {/* Share Button */}
-        <div className="profile-header-actions">
-
-          <button className="share-button" onClick={handleShareProfile} title="Share profile">
-            <MdShare className="share-button-icon" size={18} />
+        <div className="profileOW-header-actions">
+          <button className="profileOW-share-button" onClick={handleShareProfile} title="Share profile">
+            <MdShare className="profileOW-share-button-icon" size={18} />
             {showShareTooltip && (
-              <span className="share-tooltip">Link copied!</span>
+              <span className="profileOW-share-tooltip">Link copied!</span>
             )}
           </button>
         </div>
 
         {/* Profile Avatar Section */}
-        <div className="profile-avatar-section">
+        <div className="profileOW-avatar-section">
           <ProfileAvatar
             userId={userId}
             size="medium"
@@ -279,19 +278,19 @@ const ProfileOverview = () => {
         </div>
 
         {/* Profile Info Section - Use the immediate display states */}
-        <div className="profile-info-section">
-          <h2 className="profile-Name">{displayName || (isLoading ? "Loading..." : "User")}</h2>
+        <div className="profileOW-info-section">
+          <h2 className="profileOW-Name">{displayName || (isLoading ? "Loading..." : "User")}</h2>
 
           {displayOccupation && (
-            <p className="profile-profession">{displayOccupation}</p>
+            <p className="profileOW-profession">{displayOccupation}</p>
           )}
 
           {displayInstitution && (
-            <div className="profile-detail">
+            <div className="profileOW-detail">
               {displayRole === 'student' ? (
-                <FaUniversity className="profile-detail-icon" />
+                <FaUniversity className="profileOW-detail-icon" />
               ) : (
-                <FaBuilding className="profile-detail-icon" />
+                <FaBuilding className="profileOW-detail-icon" />
               )}
               <span>{displayInstitution}</span>
             </div>
@@ -299,14 +298,14 @@ const ProfileOverview = () => {
         </div>
 
         {/* Level Progress Bar */}
-        <div className="level-progress-section">
-          <div className="level-info">
+        <div className="profileOW-level-progress-section">
+          <div className="profileOW-level-info">
             <span>Level {userData.level}</span>
             <span>{userData.xp}/{userData.xpToNextLevel} XP</span>
           </div>
-          <div className="progress-bar">
+          <div className="profileOW-progress-bar">
             <div
-              className={`progress-fill ${animateProgress ? 'animate' : ''}`}
+              className={`profileOW-progress-fill ${animateProgress ? 'animate' : ''}`}
               style={{ width: `${progressWidth}%` }}
             ></div>
           </div>
