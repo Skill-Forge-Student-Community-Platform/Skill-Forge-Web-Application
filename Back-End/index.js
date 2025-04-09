@@ -8,8 +8,10 @@ import fs from 'fs';
 import {v2 as cloudinary } from 'cloudinary';
 import http from 'http'; // Import HTTP
 import { Server } from 'socket.io'; // Import Socket.IO
-import fileUpload from 'express-fileupload'; // Add this import
 
+
+
+import fileUpload from 'express-fileupload'; // Add this import
 
 import { connectDB } from "../Back-End/DataBase/DBconnector.js";
 
@@ -164,6 +166,7 @@ if (!fs.existsSync(uploadDir)) {
   console.log('Created upload directories at:', uploadDir);
 }
 
+
 // Configure CORS with dynamic origins
 app.use(cors({
   origin: function(origin, callback) {
@@ -182,7 +185,9 @@ app.use(cors({
 
 app.use(express.json({ limit: '50mb' })); // Increased payload limit for base64 images
 app.use(express.urlencoded({ limit: '50mb', extended: true })); // Increased payload limit
+
 app.use(cookieParser()); // to allow us parse incoming cookies
+
 
 
 

@@ -28,6 +28,7 @@ import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
 import ExploreDetails from '../Events/Student/ExploreDetails';
 import RegisterEvents from '../Events/Student/RegisterEvents';
+import OrganizerProfilePage from '../OrganizerProfile/OrganizerProfilePage';
 
 import CreateTeam from '../Team_Collaboration/sub components for teams/CreateTeam.js';
 import ReceivedInvites from '../Team_Collaboration/sub components for teams/ReceivedInvites.js';
@@ -151,7 +152,9 @@ const MyEventsPage = ({ userId }) => (
   <PlaceholderPage title={`My Registered Events for user ${userId}`} />
 );
 
+
 const MainLayout = ({ roleType }) => {
+
   const { user, logout } = useAuthStore();
   const { isDarkMode, toggleTheme } = useThemeToggle();
   const { userId } = useParams();
