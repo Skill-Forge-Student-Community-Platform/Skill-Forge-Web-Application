@@ -356,8 +356,6 @@
 .connect-btn {
   background-color: var(--hover-bg);
   border: none;
-  border-radius: 50%;
-  width: 30px;
   height: 30px;
   display: flex;
   align-items: center;

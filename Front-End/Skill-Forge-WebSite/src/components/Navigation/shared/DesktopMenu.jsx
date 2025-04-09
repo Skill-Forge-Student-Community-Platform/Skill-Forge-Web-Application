@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
@@ -6,10 +6,35 @@ import "./DesktopMenu.css";
 
 const DesktopMenu = ({ menu }) => {
   const [isHover, setIsHover] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const menuRef = useRef(null);
 
   const toggleHoverMenu = () => {
     setIsHover(!isHover);
   };
+
+  const handleMenuClick = () => {
+    if (menu?.subMenu?.length) {
+      setIsClicked(!isClicked);
+    }
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsClicked(false);
+      }
+    };
+
+    if (isClicked) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isClicked]);
 
   const subMenuAnimate = {
     enter: {
@@ -27,19 +52,24 @@ const DesktopMenu = ({ menu }) => {
   };
 
   const hasSubMenu = menu?.subMenu?.length;
+  const isMenuOpen = isHover || isClicked;
 
   return (
     <motion.li
+      ref={menuRef}
       className="nav-item relative"
       onHoverStart={toggleHoverMenu}
-      onHoverEnd={toggleHoverMenu}
+      onHoverEnd={() => !isClicked && setIsHover(false)}
     >
-      <span className="flex items-center gap-1">
+      <span
+        className="flex items-center gap-1 cursor-pointer"
+        onClick={handleMenuClick}
+      >
         {menu.name}
         {hasSubMenu && (
           <ChevronDown
             size={16}
-            className={`transition-transform duration-200 ${isHover ? 'rotate-180' : ''}`}
+            className={`transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`}
           />
         )}
       </span>
@@ -49,7 +79,7 @@ const DesktopMenu = ({ menu }) => {
           className="desktop-submenu absolute top-full left-0 mt-1 p-4 z-50"
           style={{ transformOrigin: "top center", minWidth: "240px" }}
           initial="exit"
-          animate={isHover ? "enter" : "exit"}
+          animate={isMenuOpen ? "enter" : "exit"}
           variants={subMenuAnimate}
         >
           <div

@@ -18,13 +18,11 @@ import OrganizerEventList from '../Events/Organizer/OrganizerEventList';
 // Import XP System Page
 import XPSystemPage from '../Xp platform/pages/XPSystemPage';
 
+import { Teams } from '../Team_Collaboration/sub components for teams/Teams.jsx';
+import { Inbox } from '../Team_Collaboration/sub-components/Inbox.jsx';
+
 import Friendspage from '../Network/Friendspage';
 import AchievementCenter from '../Achievementcenter/AchievementCenter';
-
-
-import Friendspage from "../Network/Friendspage";
-import AchievementCenter from "../Achievementcenter/AchievementCenter";
-
 
 import NotificationPage from '../Notifications/NotificationPage';
 import OrganizerEventDetails from '../Events/Organizer/OrganizerEventDetails';
