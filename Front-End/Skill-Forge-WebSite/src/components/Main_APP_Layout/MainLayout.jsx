@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
@@ -37,7 +36,6 @@ import FindTeamsByTechnology from '../Team_Collaboration/sub components for team
 import Dashbord from '../Portfolio_Builder/Dashbord';
 import ResumePreview from '../Portfolio_Builder/ResumePreview.js';
 
-
 // Import Student Profile components
 import StudentProfilePage from "../StudentProfile/StudentProfilePage";
 // Import student profile related components from correct location
@@ -46,9 +44,6 @@ import ViewAllPosts from "../StudentProfile/student_layout_pages/ViewAllPosts";
 
 // Import the SavedPostsList component
 import SavedPostsList from '../Saved-Items/SavedPostsList';
-
-// Import OrganizerProfilePage
-import OrganizerProfilePage from '../OrganizerProfile/OrganizerProfilePage';
 
 // Placeholder for components to be implemented later
 const AddCertificateForm = () => (
