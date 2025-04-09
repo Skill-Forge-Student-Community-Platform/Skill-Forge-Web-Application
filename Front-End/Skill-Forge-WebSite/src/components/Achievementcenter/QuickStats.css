@@ -1,0 +1,176 @@
+.quick-stats {
+  width: 100%;
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.stats-icon {
+  margin-right: 8px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  background: #f9fafb; /* Very light gray */
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: none; /* Removed transition */
+}
+
+.stat-item:hover {
+  background: #f9fafb; /* Same as normal state */
+}
+
+.stat-icon {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: var(--blue-primary);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--blue-primary);
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+
+.activity-summary {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 8px;
+  box-shadow: none; /* Removed shadow if any */
+}
+
+.activity-summary h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-day {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.activity-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--blue-primary);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .quick-stats {
+    background-color: #FFFFFF;
+  }
+
+  .stats-header {
+    color: var(--text-dark);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .stat-item {
+    background: #f9fafb;
+  }
+
+  .stat-item:hover {
+    background: #f9fafb; /* No hover effect */
+  }
+
+  .stat-icon {
+    color: var(--blue-primary);
+  }
+
+  .stat-value {
+    color: var(--text-dark);
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+  }
+
+  .progress-bar {
+    background: #e5e7eb;
+  }
+
+  .progress-fill {
+    background: var(--blue-primary);
+  }
+
+  .activity-summary {
+    background: #f9fafb;
+  }
+
+  .activity-summary h4 {
+    color: var(--text-dark);
+  }
+
+  .activity-item {
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .activity-day {
+    color: var(--text-secondary);
+  }
+
+  .activity-value {
+    color: var(--blue-primary);
+  }
+}

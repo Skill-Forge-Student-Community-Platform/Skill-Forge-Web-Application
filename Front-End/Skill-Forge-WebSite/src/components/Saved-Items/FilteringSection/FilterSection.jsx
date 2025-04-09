@@ -1,34 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { FaLayerGroup, FaVideo, FaImage, FaCalendarAlt } from 'react-icons/fa';
 import './FilterSection.css';
 
-const FilterSection = ({ onFilterChange }) => {
-  const [selectedFilter, setSelectedFilter] = useState('all');
-
+const FilterSection = ({ onFilterChange, currentFilter, theme }) => {
   const filters = [
-    { id: 'all', label: 'All' },
-    { id: 'videos', label: 'Videos' },
-    { id: 'photos', label: 'Photos' },
-    { id: 'events', label: 'Events' }
+    { id: 'all', label: 'All Items', icon: <FaLayerGroup /> },
+    { id: 'videos', label: 'Videos', icon: <FaVideo /> },
+    { id: 'photos', label: 'Photos', icon: <FaImage /> },
+    { id: 'events', label: 'Events', icon: <FaCalendarAlt /> }
   ];
 
   const handleFilterClick = (filterId) => {
-    setSelectedFilter(filterId);
-    onFilterChange(filterId);
+    if (filterId !== currentFilter) {
+      onFilterChange(filterId);
+    }
   };
 
   return (
-    <div className="filter-section">
+    <div className={`filter-section ${theme || ''}`}>
       {filters.map((filter) => (
         <button
           key={filter.id}
-          className={`filter-button ${selectedFilter === filter.id ? 'active' : ''}`}
+          className={`filter-button ${currentFilter === filter.id ? 'active' : ''}`}
           onClick={() => handleFilterClick(filter.id)}
+          aria-label={`Filter by ${filter.label}`}
+          title={`Show ${filter.label.toLowerCase()}`}
         >
-          {filter.label}
+          <span className="filter-icon">{filter.icon}</span>
+          <span className="filter-label">{filter.label}</span>
         </button>
       ))}
     </div>
   );
 };
 
-export default FilterSection; 
+export default FilterSection;

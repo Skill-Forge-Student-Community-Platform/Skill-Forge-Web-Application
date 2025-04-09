@@ -12,11 +12,12 @@
 }
 
 .main-comment {
-  background-color: var(--linkedin-ultra-light);
+  background-color: var(--card-bg);
   border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px var(--modal-shadow);
   padding: 12px 16px;
   position: relative;
+  border: 1px solid var(--card-border);
 }
 
 .comment {
@@ -55,13 +56,13 @@
 .comment-author {
   font-weight: 600;
   font-size: 14px;
-  color: #050505;
+  color: var(--text-color);
   margin-right: 6px;
 }
 
 .author-badge {
-  background-color: #f0f2f5;
-  color: #65676B;
+  background-color: var(--hover-bg);
+  color: var(--text-secondary);
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 10px;
@@ -69,7 +70,7 @@
 }
 
 .user-profession {
-  color: #65676B;
+  color: var(--text-secondary);
   font-size: 12px;
   margin-top: 1px;
 }
@@ -80,7 +81,7 @@
 }
 
 .comment-time {
-  color: #65676B;
+  color: var(--text-secondary);
   font-size: 12px;
   margin-right: 12px;
 }
@@ -92,27 +93,28 @@
 .comment-options-btn {
   background: none;
   border: none;
-  color: #65676B;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 4px;
   border-radius: 50%;
 }
 
 .comment-options-btn:hover {
-  background-color: #f2f3f5;
+  background-color: var(--hover-bg);
 }
 
 .comment-options-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  background: white;
+  background: var(--container-bg);
   border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 12px var(--modal-shadow);
   z-index: 10;
   min-width: 180px;
   margin-top: 4px;
   overflow: hidden;
+  border: 1px solid var(--card-border);
 }
 
 .comment-option-item {
@@ -126,6 +128,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   font-size: 14px;
+  color: var(--text-color);
 }
 
 .comment-option-item svg {
@@ -134,22 +137,22 @@
 }
 
 .comment-option-item:hover {
-  background-color: #f2f3f5;
+  background-color: var(--hover-bg);
 }
 
 .comment-option-item.text-danger {
-  color: #e41e3f;
+  color: var(--accent-red);
 }
 
 .comment-option-item.text-danger:hover {
-  background-color: #ffebee;
+  background-color: rgba(231, 76, 60, 0.1);
 }
 
 .comment-text {
   font-size: 15px;
   line-height: 1.4;
   margin: 0;
-  color: #050505;
+  color: var(--text-color);
   white-space: pre-wrap;
 }
 
@@ -163,7 +166,7 @@
 .comment-action-btn {
   background: none;
   border: none;
-  color: #65676B;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0;
   font-size: 13px;
@@ -174,10 +177,11 @@
 
 .comment-action-btn:hover {
   text-decoration: underline;
+  color: var(--text-color);
 }
 
 .comment-action-btn.liked {
-  color: #1877f2;
+  color: var(--accent-blue);
 }
 
 .like-count {
@@ -187,7 +191,7 @@
 .reply-count {
   margin-left: 2px;
   font-size: 12px;
-  color: var(--linkedin-light-text);
+  color: var(--text-secondary);
 }
 
 /* Edit form */
@@ -198,17 +202,19 @@
 
 .edit-input {
   width: 100%;
-  border: 1px solid #dddfe2;
+  border: 1px solid var(--input-border);
   border-radius: 4px;
   padding: 8px 12px;
   font-size: 15px;
   resize: vertical;
   min-height: 60px;
   outline: none;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 .edit-input:focus {
-  border-color: #1877f2;
+  border-color: var(--accent-blue);
   box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
 }
 
@@ -229,19 +235,20 @@
 
 .cancel-edit-btn {
   background: none;
-  border: 1px solid var(--linkedin-border);
-  color: var(--linkedin-light-text);
+  border: 1px solid var(--button-secondary);
+  color: var(--text-secondary);
 }
 
 .save-edit-btn {
-  background-color: var(--linkedin-blue);
+  background-color: var(--button-primary);
   border: none;
-  color: white;
+  color: var(--button-primary-text);
 }
 
 .save-edit-btn:disabled {
-  background-color: #cccccc;
+  background-color: var(--button-secondary);
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* Reply form */
@@ -252,10 +259,11 @@
 .reply-input-container {
   display: flex;
   flex-direction: column;
-  background-color: #f0f2f5;
+  background-color: var(--input-bg);
   border-radius: 18px;
   padding: 8px 12px;
   transition: all 0.3s ease;
+  border: 1px solid var(--input-border);
 }
 
 .reply-input-container.expanded {
@@ -268,7 +276,7 @@
   background: transparent;
   outline: none;
   font-size: 14px;
-  color: #050505;
+  color: var(--input-text);
 }
 
 .reply-actions {
@@ -279,8 +287,8 @@
 }
 
 .reply-submit-btn {
-  background-color: #1877f2;
-  color: white;
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
   border: none;
   border-radius: 4px;
   padding: 4px 12px;
@@ -290,10 +298,15 @@
   transition: background-color 0.2s;
 }
 
+.reply-submit-btn:hover {
+  background-color: var(--button-primary-hover);
+}
+
 .reply-submit-btn:disabled {
-  background-color: #e4e6eb;
-  color: #bec3c9;
+  background-color: var(--button-secondary);
+  color: var(--text-secondary);
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* Comment replies section with proper connector styling */
@@ -312,7 +325,7 @@
   left: 20px;
   height: calc(100% - 4px);
   width: 2px;
-  background-color: var(--linkedin-border);
+  background-color: var(--divider-color);
   z-index: 1;
 }
 
@@ -324,7 +337,7 @@
   gap: 4px;
   background: none;
   border: none;
-  color: var(--linkedin-blue);
+  color: var(--accent-blue);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -338,7 +351,44 @@
 .show-previous-replies:hover,
 .show-less-replies:hover {
   text-decoration: underline;
-  color: var(--linkedin-hover-blue);
+  color: var(--button-primary-hover);
+}
+
+/* Menu divider for options dropdown */
+.menu-divider {
+  height: 1px;
+  background-color: var(--divider-color);
+  margin: 4px 0;
+}
+
+/* Emoji picker container */
+.emoji-picker-container {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px var(--modal-shadow);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.emoji-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-btn:hover {
+  background-color: var(--hover-bg);
+  color: var(--accent-yellow);
 }
 
 /* Responsive adjustments */

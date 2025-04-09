@@ -259,6 +259,20 @@ const CommentSection = ({
     // Could update a user preferences store or filter comments locally
   };
 
+  // Update the comment like handler to ensure proper API call
+  const handleLikeComment = async (commentId, isLiked) => {
+    try {
+      // Call the onLikeComment handler passed through props with proper parameters
+      const response = await onLikeComment(postId, commentId, isLiked);
+
+      if (response && response.success) {
+        console.log(`Comment ${isLiked ? 'liked' : 'unliked'} successfully`);
+      }
+    } catch (error) {
+      console.error("Error liking/unliking comment:", error);
+    }
+  };
+
   return (
     <div className="comment-section">
       {/* Filter section - simplified and positioned left */}
@@ -350,7 +364,7 @@ const CommentSection = ({
               comment={comment}
               postId={postId}
               onReply={handleReplyToComment}
-              onLike={onLikeComment}
+              onLike={handleLikeComment} // This should use our updated handler
               onDelete={onDeleteComment}
               onEdit={onEditComment}
               onHideComment={handleHideComment}

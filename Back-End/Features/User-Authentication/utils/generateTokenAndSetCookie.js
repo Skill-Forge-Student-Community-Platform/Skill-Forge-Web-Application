@@ -5,12 +5,12 @@ export const generateTokenAndSetCookie = (res, userId) => {
     expiresIn: "7d",
   });
 
-
   res.cookie("AuthenticationToken", Token, {
-    httpOnly: true, // to prevent XSS attacks
-    secure: process.env.NODE_ENV === "production", // to only allow https
-    sameSite: "strict", // to prevent CSRF attacks
-    maxAge: 14 * 24* 60 * 60 * 1000, // 14 days
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Only use HTTPS in production
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Critical for cross-domain cookies
+    domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined
   });
 
   return Token;

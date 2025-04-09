@@ -1,7 +1,7 @@
 
 
 import express from "express";
-import{ registerUser,getRegisteredUsersByEvent,removeUserFromEvent,getRegisteredUser,getRegisteredEventList } from "../controllers/registerController.js";
+import{ registerUser,getRegisteredUsersByEvent,removeUserFromEvent,getRegisteredUser,getRegisteredEventList } from "../Controllers/RegisterController.js";
 
 const router = express.Router();
 // Register User Route
@@ -13,7 +13,7 @@ router.get("/registered-users/:eventId", getRegisteredUsersByEvent);
 
 router.delete("/remove-user/:registrationId", removeUserFromEvent);
 
-//router.patch("/update-points/:userId", updateUserPoints);
+
 
 
 

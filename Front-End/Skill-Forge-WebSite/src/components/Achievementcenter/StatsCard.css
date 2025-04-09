@@ -1,0 +1,136 @@
+.stats-card {
+  width: 100%;
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+}
+
+.stats-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.stats-title {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quick-stat {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: all 0.3s ease;
+}
+
+.quick-stat:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  background-color: var(--blue-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-right: 12px;
+  color: var(--blue-primary);
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.stat-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-change {
+  font-size: 12px;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+}
+
+.stat-change::before {
+  content: "↑";
+  margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+  .stats-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .stats-card {
+    background-color: #FFFFFF;
+  }
+
+  .stats-header {
+    color: #000000;
+  }
+
+  .quick-stat {
+    background-color: #2d3748;
+  }
+
+  .quick-stat:hover {
+    background-color: #3a4759;
+  }
+
+  .stat-icon {
+    background-color: rgba(112, 181, 249, 0.08);
+    color: #70b5f9;
+  }
+
+  .stat-value {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .stat-label {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .stat-change {
+    color: #70b5f9;
+  }
+}

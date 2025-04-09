@@ -1,36 +1,57 @@
 import React from 'react';
-
-import { FaTimes } from 'react-icons/fa';
 import './UploadProgressBar.css';
 
-const UploadProgressBar = ({ progress, isUploading, onCancel, error }) => {
-  // Don't render if not uploading and no error
+const UploadProgressBar = ({
+  progress = 0,
+  isUploading = false,
+  onCancel,
+  error = null,
+  isDarkMode = false
+}) => {
   if (!isUploading && !error) return null;
 
+  const progressText = progress < 100
+    ? `Uploading... ${Math.round(progress)}%`
+    : 'Processing...';
+
   return (
-    <div className={`upload-progress-container ${error ? 'error' : ''}`}>
-      <div className="upload-progress-content">
-        <div className="upload-progress-info">
-          <span className="upload-status">
-            {error ? 'Upload failed' :
-             progress >= 100 ? 'Post created successfully!' :
-             `Uploading post... ${Math.round(progress)}%`}
-          </span>
-          {isUploading && (
-            <button className="upload-cancel-btn" onClick={onCancel} aria-label="Cancel upload">
-              <FaTimes />
+    <div className={`upload-progress-container ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+      {isUploading && (
+        <>
+          <div className="upload-info">
+            <span className="progress-value">{progressText}</span>
+            <button
+              className="cancel-upload"
+              onClick={onCancel}
+              aria-label="Cancel upload"
+            >
+              Cancel
             </button>
-          )}
-        </div>
-        {!error && isUploading && (
-          <div className="upload-progress-bar-container">
+          </div>
+          <div className="progress-bar-outer">
             <div
-              className="upload-progress-bar"
+              className="progress-bar-inner"
               style={{ width: `${progress}%` }}
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin="0"
+              aria-valuemax="100"
             ></div>
           </div>
-        )}
-      </div>
+        </>
+      )}
+
+      {error && (
+        <div className="upload-error" role="alert">
+          Error: {error}
+        </div>
+      )}
+
+      {progress === 100 && !error && (
+        <div className="upload-success" role="status">
+          Upload complete! Processing your post...
+        </div>
+      )}
     </div>
   );
 };

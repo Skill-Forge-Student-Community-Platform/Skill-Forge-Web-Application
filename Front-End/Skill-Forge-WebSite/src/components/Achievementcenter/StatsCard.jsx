@@ -1,7 +1,10 @@
 import React from 'react';
-import './StatsCard.css'; // You'll need to create this CSS file
+import useThemeToggle from '../../hooks/useThemeToggle';
+import './StatsCard.css';
 
 const StatsCard = () => {
+  const { isDarkMode } = useThemeToggle();
+
   const stats = [
     {
       icon: "🏆",
@@ -30,10 +33,10 @@ const StatsCard = () => {
   ];
 
   return (
-    <div className="stats-card">
+    <div className={`stats-card ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="stats-header">
-        <span className="stats-icon">🏅</span>
-        <h3 className="stats-title">Quick Stats</h3>
+        <span className="stats-icon">📊</span>
+        <h3 className="stats-title">Platform Insights</h3>
       </div>
       <div className="stats-list">
         {stats.map((stat, index) => (

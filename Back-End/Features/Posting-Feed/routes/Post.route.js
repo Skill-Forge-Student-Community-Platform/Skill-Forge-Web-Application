@@ -12,7 +12,11 @@ import {
   // New controller imports
   getAllPosts,
   getLikedPosts,
-  getFollowingPosts
+  getFollowingPosts,
+  updatePost,
+  updatePostPrivacy,
+  savePost,
+  getSavedPosts
 } from '../controllers/Post.controller.js';
 import { verifyToken, checkUserRole, checkProfileComplete } from '../../User-Authentication/middleware/auth.middleware.js';
 
@@ -36,5 +40,10 @@ router.get('/all', verifyToken, checkUserRole, getAllPosts); // Admin access
 router.get('/likes/:userId', verifyToken, getLikedPosts);
 router.get('/following', verifyToken, getFollowingPosts);
 
+// New routes for post management
+router.put('/:postId', verifyToken, checkUserRole, checkProfileComplete, updatePost);
+router.put('/:postId/privacy', verifyToken, checkUserRole, checkProfileComplete, updatePostPrivacy);
+router.post('/:postId/save', verifyToken, savePost);
+router.get('/saved', verifyToken, getSavedPosts);
 
 export default router;

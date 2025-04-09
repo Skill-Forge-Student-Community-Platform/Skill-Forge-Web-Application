@@ -1,10 +1,14 @@
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../store/authStore';
+import { getSocketUrl } from '../utils/environment';
 
 // Create socket instance with authentication
-const socket = io('http://localhost:5000', {
+const socket = io(getSocketUrl(), {
   autoConnect: false,
   withCredentials: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
+  timeout: 10000
 });
 
 // Connection management
@@ -26,6 +30,10 @@ const connectSocket = () => {
     socket.on('connect_error', (error) => {
       console.error('Socket connection error:', error);
     });
+
+    socket.io.on("reconnect_attempt", (attempt) => {
+      console.log(`Socket reconnection attempt: ${attempt}`);
+    });
   }
 };
 
@@ -40,6 +48,7 @@ const disconnectSocket = () => {
 // Listen for new notifications
 const subscribeToNotifications = (callback) => {
   socket.on('new_notification', (notification) => {
+    console.log('New notification received:', notification);
     callback(notification);
   });
 };
@@ -70,6 +79,14 @@ const subscribeToFriendRequests = (callbacks) => {
     }
   });
 
+  // Friend request cancelled
+  socket.on('friend_request_cancelled', (data) => {
+    console.log('Friend request cancelled socket event:', data);
+    if (callbacks.onRequestCancelled) {
+      callbacks.onRequestCancelled(data);
+    }
+  });
+
   // Friend removed
   socket.on('friend_removed', (data) => {
     console.log('Friend removed socket event:', data);
@@ -89,6 +106,7 @@ const unsubscribeFromFriendRequests = () => {
   socket.off('friend_request_received');
   socket.off('friend_request_accepted');
   socket.off('friend_request_rejected');
+  socket.off('friend_request_cancelled');
   socket.off('friend_removed');
 };
 
@@ -107,7 +125,8 @@ const emitTyping = (conversationId, isTyping) => {
 // Get connection status
 const isConnected = () => socket.connected;
 
-export default {
+// Assign to a variable before exporting (to fix ESLint warning)
+const socketService = {
   socket,
   connectSocket,
   disconnectSocket,
@@ -119,3 +138,5 @@ export default {
   emitTyping,
   isConnected
 };
+
+export default socketService;

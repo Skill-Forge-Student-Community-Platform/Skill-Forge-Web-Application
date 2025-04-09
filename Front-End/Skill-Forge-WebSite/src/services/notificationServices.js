@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { getApiBaseUrl } from '../utils/environment';
 
-const API_URL = 'http://localhost:5000/api/notifications';
+const API_URL = `${getApiBaseUrl()}/notifications`;
 
 // Configure axios with credentials for auth cookies
 const api = axios.create({
@@ -28,10 +29,18 @@ export const getNotifications = async () => {
  */
 export const markAsRead = async (notificationId) => {
   try {
+    console.log(`Marking notification as read: ${notificationId}`);
+    console.log(`Request URL: ${API_URL}/read/${notificationId}`);
+
     const response = await api.patch(`${API_URL}/read/${notificationId}`);
     return response.data;
   } catch (error) {
     console.error('Error marking notification as read:', error);
+    // Log more details about the error
+    if (error.response) {
+      console.error('Response data:', error.response.data);
+      console.error('Response status:', error.response.status);
+    }
     throw error;
   }
 };
@@ -54,10 +63,18 @@ export const markAllAsRead = async () => {
  */
 export const deleteNotification = async (notificationId) => {
   try {
+    console.log(`Deleting notification: ${notificationId}`);
+    console.log(`Request URL: ${API_URL}/${notificationId}`);
+
     const response = await api.delete(`${API_URL}/${notificationId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting notification:', error);
+    // Log more details about the error
+    if (error.response) {
+      console.error('Response data:', error.response.data);
+      console.error('Response status:', error.response.status);
+    }
     throw error;
   }
 };

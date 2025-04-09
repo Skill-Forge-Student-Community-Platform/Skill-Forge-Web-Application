@@ -26,3 +26,27 @@ export const formatPostTime = (timestamp) => {
     });
   }
 };
+
+/**
+ * Format a date in the style "March 27 at 6:16 PM"
+ * @param {string|Date} dateString - The date to format
+ * @returns {string} - Formatted date string
+ */
+export const formatFullPostDate = (dateString) => {
+  const date = new Date(dateString);
+
+  // Return if invalid date
+  if (isNaN(date.getTime())) {
+    return 'Invalid date';
+  }
+
+  // Format as "Month Day at Hour:Minute AM/PM"
+  return date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+  }) + ' at ' + date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+};

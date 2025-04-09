@@ -18,10 +18,11 @@
   padding: 8px;
   border-radius: 50%;
   transition: background-color 0.2s ease;
+  color: var(--text-color);
 }
 
 .notification-icon:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--hover-bg);
 }
 
 /* Badge styling */
@@ -29,7 +30,7 @@
   position: absolute;
   top: -2px;
   right: -2px;
-  background: #e63946;
+  background: var(--accent-red);
   color: white;
   font-size: 10px;
   font-weight: 600;
@@ -39,8 +40,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid white;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--bg-color);
+  box-shadow: 0 1px 2px var(--modal-shadow);
 }
 
 /* Notification panel styling */
@@ -50,12 +51,12 @@
   right: 50%;
   transform: translateX(50%); /* Center horizontally to the notification icon */
   width: 360px;
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: var(--card-bg);
+  box-shadow: 0 4px 20px var(--modal-shadow);
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--card-border);
   max-height: 70vh;
   display: flex;
   flex-direction: column;
@@ -71,9 +72,9 @@
   transform: translateX(50%);
   width: 16px;
   height: 16px;
-  background: white;
-  border-top: 1px solid #f0f0f0;
-  border-left: 1px solid #f0f0f0;
+  background: var(--card-bg);
+  border-top: 1px solid var(--card-border);
+  border-left: 1px solid var(--card-border);
   transform-origin: center;
   transform: translateX(50%) rotate(45deg);
   z-index: -1;
@@ -96,15 +97,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background: white;
-  border-bottom: 1px solid #f5f5f5;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .notifications-header h4 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
 }
 
 .mark-read {
@@ -112,7 +113,7 @@
   align-items: center;
   background: none;
   border: none;
-  color: #0a66c2;
+  color: var(--accent-blue);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -123,7 +124,7 @@
 }
 
 .mark-read:hover {
-  background-color: rgba(10, 102, 194, 0.05);
+  background-color: var(--hover-bg);
   text-decoration: none;
 }
 
@@ -144,11 +145,11 @@
 }
 
 .notifications-list::-webkit-scrollbar-track {
-  background: #f5f5f5;
+  background: var(--hover-bg);
 }
 
 .notifications-list::-webkit-scrollbar-thumb {
-  background-color: #ddd;
+  background-color: var(--card-border);
   border-radius: 6px;
 }
 
@@ -157,7 +158,7 @@
   justify-content: space-around;
   padding: 32px 16px;
   text-align: center;
-  color: #777;
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -171,93 +172,130 @@
 }
 
 .empty-state svg {
-  color: #ccc;
+  color: var(--text-secondary);
+  opacity: 0.5;
 }
 
 .empty-state p {
   margin: 0;
-  color: #777;
+  color: var(--text-secondary);
 }
 
 .notification-item.error {
   padding: 16px;
-  color: #e63946;
-  background-color: rgba(230, 57, 70, 0.05);
+  color: var(--accent-red);
+  background-color: rgba(231, 76, 60, 0.1);
   text-align: center;
 }
 
 /* Notification item styling */
 .notification-item {
   display: flex;
-  align-items: flex-start;
   padding: 12px 16px;
-  border-bottom: 1px solid #f5f5f5;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--card-border);
+  position: relative;
+  transition: background-color 0.2s;
+  animation: fadeIn 0.3s ease forwards;
+  opacity: 0;
 }
 
 .notification-item:hover {
-  background-color: #f9fafb;
+  background-color: var(--hover-bg);
 }
 
 .notification-item.unread {
-  background-color: rgba(10, 102, 194, 0.05);
+  background-color: var(--notification-unread);
 }
 
-.notification-item.unread .notification-content p {
+/* Improved content organization */
+.notification-content {
+  flex: 1;
+  min-width: 0; /* Ensures text truncation works properly */
+}
+
+/* New main content section for better alignment */
+.notification-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.notification-message {
+  flex: 1;
+  min-width: 0;
+  margin-right: 8px;
+}
+
+.notification-message p {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-color);
+  overflow-wrap: break-word;
+}
+
+.notification-item.unread .notification-message p {
   font-weight: 500;
 }
 
-/* Unread indicator */
+.notification-message p strong {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Better time display */
+.time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Improved delete button */
+.delete-notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 4px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.delete-notification:hover {
+  background-color: var(--hover-bg);
+  color: var(--accent-red);
+}
+
+/* Updated unread indicator */
 .blue-circle {
   width: 8px;
   height: 8px;
   min-width: 8px;
-  background: #0a66c2;
+  background: var(--accent-blue);
   border-radius: 50%;
   margin-right: 12px;
   margin-top: 16px;
 }
 
-/* User avatar */
-.avatar {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 50%;
+/* Improved avatar placement */
+.notification-avatar {
+  flex-shrink: 0;
   margin-right: 12px;
-  object-fit: cover;
-  border: 1px solid #f0f0f0;
 }
 
-/* Content area */
-.notification-content {
-  flex-grow: 1;
-  overflow: hidden;
+.notification-item .avatar-container {
+  width: 36px;
+  height: 36px;
 }
 
-.notification-content p {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #333;
-  overflow-wrap: break-word;
-}
-
-.notification-content p strong {
-  font-weight: 600;
-  color: #222;
-}
-
-/* Timestamp */
-.time {
-  font-size: 12px;
-  color: #777;
-  margin-top: 2px;
-  display: block;
-}
-
-/* Action buttons */
+/* Action buttons improvements */
 .notification-buttons {
   display: flex;
   gap: 8px;
@@ -274,37 +312,61 @@
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .accept-btn {
-  background-color: #0a66c2;
+  background: var(--accent-green);
   color: white;
 }
 
 .accept-btn:hover {
-  background-color: #0a59a9;
+  background: var(--accent-green);
+  opacity: 0.9;
 }
 
 .decline-btn {
-  background-color: white;
-  color: #666;
-  border: 1px solid #ddd;
+  background: var(--button-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--card-border);
 }
 
 .decline-btn:hover {
-  background-color: #f5f5f5;
+  background: var(--button-secondary-hover);
+}
 
-  border-color: #ccc;
+/* Status indicators */
+.notification-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.notification-status.accepted {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: var(--accent-green);
+}
+
+.notification-status.rejected {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--accent-red);
 }
 
 /* View all button */
 .view-all {
   width: 100%;
   padding: 12px 16px;
-  background-color: white;
-  color: #0a66c2;
+  background-color: var(--card-bg);
+  color: var(--accent-blue);
   border: none;
-  border-top: 1px solid #f5f5f5;
+  border-top: 1px solid var(--card-border);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -316,14 +378,14 @@
 }
 
 .view-all:hover {
-  background-color: #f9fafb;
+  background-color: var(--hover-bg);
 }
 
 /* Loading state */
 .notification-item.loading {
   justify-content: center;
   padding: 20px;
-  color: #777;
+  color: var(--text-secondary);
 }
 
 /* Responsive adjustments */

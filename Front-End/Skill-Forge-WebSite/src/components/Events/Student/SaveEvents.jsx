@@ -1,18 +1,18 @@
 import React from 'react';
 import { FaCalendarAlt, FaMapMarkerAlt, FaTrash } from 'react-icons/fa';
-import axios from 'axios'; 
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
-
+import { getApiBaseUrl } from "../../../utils/environment";
 
 const SaveEvents = ({ cart, userId, setCart }) => {
   const navigate = useNavigate();  // Initialize navigation
 
   const handleDelete = async (_id) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/delete-saved-event/${_id}`);
-  
+      const response = await axios.delete(`${getApiBaseUrl()}/delete-saved-event/${_id}`);
+
       console.log("Response from server:", response); // Log response
-  
+
       if (response.status === 200) {
         const updatedCart = cart.filter(event => event._id !== _id);
         setCart(updatedCart);
@@ -20,22 +20,22 @@ const SaveEvents = ({ cart, userId, setCart }) => {
       }
     } catch (error) {
       console.error("Error deleting event:", error);
-  
+
       // Log the actual error response
       if (error.response) {
         console.error("Error Response Data:", error.response.data);
         console.error("Error Response Status:", error.response.status);
       }
-  
+
       alert('There was an error deleting the event.');
     }
   };
-  
-  
 
-  
-  
-  
+
+
+
+
+
 
   if (!cart || cart.length === 0) {
     return (
@@ -51,7 +51,7 @@ const SaveEvents = ({ cart, userId, setCart }) => {
   return (
     <div className="mt-6 pt-5 border-t border-gray-200">
       <h3 className="text-lg font-semibold text-gray-800 mb-4">Saved Events ({cart.length})</h3>
-      
+
       <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
         {cart.map((event, index) => (
           <div
@@ -67,16 +67,16 @@ const SaveEvents = ({ cart, userId, setCart }) => {
               </div>
               <div className="flex items-center text-gray-600">
                 <FaCalendarAlt className="text-indigo-500 mr-2 flex-shrink-0" />
-                <span>{new Date(event.date).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'short', 
-                  day: 'numeric' 
+                <span>{new Date(event.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
                 })}</span>
               </div>
             </div>
             <div className="mt-3 flex justify-end">
-              <button 
-                onClick={(e) => { 
+              <button
+                onClick={(e) => {
                   e.stopPropagation(); // Prevent click from triggering navigation
                   handleDelete(event._id);
                 }}
@@ -88,7 +88,7 @@ const SaveEvents = ({ cart, userId, setCart }) => {
           </div>
         ))}
       </div>
-      
+
       {cart.length > 0 && (
         <div className="mt-3 flex justify-end">
           <button className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">

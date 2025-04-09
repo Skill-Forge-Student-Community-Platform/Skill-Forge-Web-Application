@@ -1,119 +1,212 @@
 .repost-content {
-  padding: 0;
-  background: var(--bg-secondary);
+  padding: 12px;
+  background: var(--bg-secondary, #f9f9f9);
   border-radius: 8px;
-  margin: 4px 1rem 1rem;
-  border: 1px solid var(--border-color);
+  margin: 4px 0 1rem;
+  border: 1px solid var(--border-color, #e0e0e0);
 }
 
-.repost-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.repost-user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-.repost-user-info {
-  font-size: 0.9rem;
+.repost-text-container {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color, rgba(0,0,0,0.1));
 }
 
 .repost-text {
-  font-size: 14px;
-  line-height: 1.4;
-  color: rgba(0, 0, 0, 0.9);
-  margin: 0 0 8px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-color, rgba(0, 0, 0, 0.9));
+  margin: 0;
+  font-weight: normal;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-.original-post {
-  border: 1px solid rgba(0, 0, 0, 0.08);
+.repost-original-post {
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
   border-radius: 8px;
   padding: 12px;
-  background-color: #f3f2ef;
-  margin-top: 8px;
+  background-color: var(--bg-color, #ffffff);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.original-poster-info {
+.repost-poster-info {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-.user-avatar-small {
-  width: 32px;
-  height: 32px;
+.repost-avatar-small {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
 }
 
-.original-post-meta {
+.repost-post-meta {
   display: flex;
   flex-direction: column;
 }
 
-.original-user-name {
-  font-size: 14px;
+.repost-user-name {
+  font-size: 15px;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.9);
+  color: var(--text-color, rgba(0, 0, 0, 0.9));
   line-height: 1.4;
 }
 
-.original-content {
+.repost-post-details {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+}
+
+.repost-post-time {
+  white-space: nowrap;
+}
+
+.repost-privacy-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.repost-original-content {
   font-size: 14px;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
-.original-content.collapsed {
-  max-height: 80px;
-  overflow: hidden;
-  position: relative;
-}
-
-.original-text {
-  margin: 0;
-  line-height: 1.4;
-  color: rgba(0, 0, 0, 0.9);
-}
-
-.see-more {
-  background: none;
-  border: none;
-  color: rgba(0, 0, 0, 0.6);
-  font-weight: 600;
-  padding: 8px 0 0 0;
-  cursor: pointer;
-  font-size: 14px;
-  display: block;
-  width: 100%;
-  text-align: left;
-}
-
-.see-more:hover {
-  color: #0a66c2;
-  text-decoration: underline;
-}
-
-.media-grid {
+.repost-original-media {
   margin-top: 12px;
-  border-radius: 4px;
+  max-height: 400px;
   overflow: hidden;
 }
 
-.media-item {
-  overflow: hidden;
+.repost-original-text {
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+  color: var(--text-color, rgba(0, 0, 0, 0.9));
 }
 
-.media-item img,
-.media-item video {
-  width: 100%;
-  max-height: 350px;
-  object-fit: contain;
-  background-color: #f3f2ef;
+/* Error states for missing original post */
+.repost-error {
+  padding: 15px;
+  color: var(--text-color, rgba(0, 0, 0, 0.7));
+  text-align: center;
+  background-color: var(--bg-secondary, #f9f9f9);
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e0e0e0);
+}
+
+.repost-error-container {
+  opacity: 0.9;
+}
+
+.repost-missing {
+  padding: 15px;
+  text-align: center;
+  background-color: var(--bg-secondary, #f5f5f5);
+}
+
+.repost-error-message {
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  font-style: italic;
+  margin: 10px 0;
+}
+
+/* Add styling for no content message */
+.repost-no-content-message {
+  font-style: italic;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Enhanced fallback content styling */
+.repost-fallback-content {
+  padding: 16px;
+  background-color: var(--bg-secondary, #f5f5f5);
+  border-radius: 8px;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.repost-fallback-message {
+  font-style: italic;
+  color: var(--text-secondary, rgba(0, 0, 0, 0.6));
+  margin-bottom: 8px;
+}
+
+.repost-fallback-attribution {
+  font-size: 13px;
+  color: var(--text-color, rgba(0, 0, 0, 0.8));
+  font-weight: 500;
+}
+
+/* Dark mode support */
+:root[data-theme="dark"] .repost-content {
+  background: var(--bg-secondary-dark, #282828);
+  border-color: var(--border-color-dark, #444);
+}
+
+:root[data-theme="dark"] .repost-original-post {
+  background: var(--bg-dark, #1e1e1e);
+  border-color: var(--border-color-dark, #444);
+}
+
+:root[data-theme="dark"] .repost-user-name {
+  color: var(--text-color-dark, #e0e0e0);
+}
+
+:root[data-theme="dark"] .repost-original-text {
+  color: var(--text-color-dark, #e0e0e0);
+}
+
+:root[data-theme="dark"] .repost-text {
+  color: var(--text-color-dark, #e0e0e0);
+}
+
+:root[data-theme="dark"] .repost-post-details {
+  color: var(--text-secondary-dark, #a0a0a0);
+}
+
+:root[data-theme="dark"] .repost-text-container {
+  border-color: var(--border-color-dark, #444);
+}
+
+/* Dark mode support for error states */
+:root[data-theme="dark"] .repost-error {
+  background-color: var(--bg-secondary-dark, #2a2a2a);
+  border-color: var(--border-color-dark, #444);
+  color: var(--text-color-dark, #d0d0d0);
+}
+
+:root[data-theme="dark"] .repost-missing {
+  background-color: var(--bg-secondary-dark, #252525);
+}
+
+:root[data-theme="dark"] .repost-error-message {
+  color: var(--text-secondary-dark, #a0a0a0);
+}
+
+/* Ensure dark mode support */
+:root[data-theme="dark"] .repost-no-content-message {
+  color: var(--text-secondary-dark, #a0a0a0);
+}
+
+/* Dark mode support for fallback content */
+:root[data-theme="dark"] .repost-fallback-content {
+  background-color: var(--bg-secondary-dark, #282828);
+}
+
+:root[data-theme="dark"] .repost-fallback-message {
+  color: var(--text-secondary-dark, #a0a0a0);
+}
+
+:root[data-theme="dark"] .repost-fallback-attribution {
+  color: var(--text-color-dark, #d0d0d0);
 }

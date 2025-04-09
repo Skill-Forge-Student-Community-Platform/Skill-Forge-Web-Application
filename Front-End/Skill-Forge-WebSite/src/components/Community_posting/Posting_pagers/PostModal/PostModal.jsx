@@ -24,9 +24,15 @@ const PostModal = ({
   user,
   media,
   openMediaModal,
-  onPost
+  onPost,
+  isEditing,
+  existingPost,
+  postToEdit
 }) => {
   const textareaRef = useRef(null);
+
+  // Determine if we're in edit mode
+  const isEditMode = !!postToEdit;
 
   const handleTextAreaChange = (e) => {
     handleTextChange(e);
@@ -133,7 +139,7 @@ const PostModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Call the parent's onPost function to handle post creation
+    // Call the parent's onPost function to handle post creation or editing
     onPost();
 
     // Note: Don't call closeWindow() here anymore - it's handled in the parent component
@@ -142,7 +148,7 @@ const PostModal = ({
   return (
     <div className="modal-content" data-modal="post">
       <div className="modal-header">
-        <h1>Create a Post</h1>
+        <h1>{isEditMode ? 'Edit Post' : 'Create a Post'}</h1>
         <button className="close-btn" onClick={closeWindow}><FaTimes /></button>
       </div>
 
@@ -169,7 +175,7 @@ const PostModal = ({
         <div className="post-content-scrollable">
           <textarea
             ref={textareaRef}
-            placeholder="What's on your mind..? lakshan"
+            placeholder={isEditMode ? "Edit your post..." : "What's on your mind?"}
             value={text}
             onChange={handleTextAreaChange}
             rows={1}
@@ -198,7 +204,7 @@ const PostModal = ({
           disabled={isDisabled}
           onClick={handleSubmit}
         >
-          Post
+          {isEditMode ? 'Save Changes' : 'Post'}
         </button>
       </div>
     </div>
