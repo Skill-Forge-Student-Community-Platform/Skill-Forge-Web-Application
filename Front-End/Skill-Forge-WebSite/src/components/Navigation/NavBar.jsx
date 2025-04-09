@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -12,9 +13,11 @@ import Notification from '../Notifications/Notification dropdown/Notification';
 import SkillForgeBlackLogo from '../../Assets/Skill Forge black.svg';
 import SkillForgeWhiteLogo from '../../Assets/Skill Forge white.svg';
 import useThemeToggle from '../../hooks/useThemeToggle';
+import UserSearch from "./shared/UserSearch";
 import './NavBar.css';
 
 const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
@@ -23,7 +26,9 @@ const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
   const { isDarkMode, toggleTheme } = useThemeToggle();
 
   // Base URL for role-based navigation
-  const baseUrl = `/${roleType.charAt(0).toUpperCase() + roleType.slice(1)}/${userId}`;
+  const baseUrl = `/${
+    roleType.charAt(0).toUpperCase() + roleType.slice(1)
+  }/${userId}`;
 
   // Get menus based on current role and userId
   const Menus = getMenus(roleType, userId);
@@ -34,8 +39,8 @@ const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleToggleSidebar = () => {
@@ -58,7 +63,7 @@ const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
   }
 
   return (
-    <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+    <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       <div className="navbar-container">
         {/* Left Section - Logo */}
         <div className="navbar-left">
@@ -84,15 +89,21 @@ const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
           </div>
 
           {/* Search Bar */}
+
           <div className="search-wrapper lg:block md:hidden">
-            <SearchBar placeholder="Search courses, events, teams..." />
+            {/* <SearchBar placeholder="Search courses, events, teams..." /> */}
+            <UserSearch placeholder="Search users..." />
+
           </div>
         </div>
 
         {/* Right Section */}
         <div className="navbar-right">
           {/* Theme Toggle */}
-          <div className="theme-toggle-wrapper" title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+          <div
+            className="theme-toggle-wrapper"
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
             <Theme isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
           </div>
 
