@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ImageRender from '../ImageRendering/ImageRender';
 import './PostContent.css';
 
-const PostContent = ({ post }) => {
+const PostContent = ({ post, onMediaClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const renderText = () => {
@@ -25,7 +25,10 @@ const PostContent = ({ post }) => {
           {shouldShowMore && (
             <button
               className="toggle-text-btn"
-              onClick={() => setIsExpanded(!isExpanded)}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent double-click propagation
+                setIsExpanded(!isExpanded);
+              }}
             >
               {isExpanded ? ' Show less' : '... See more'}
             </button>
@@ -35,10 +38,26 @@ const PostContent = ({ post }) => {
     );
   };
 
+  // Pass onMediaClick to ImageRender component
   return (
-    <div className="post-content">
+    <div
+      className="post-content"
+      onDoubleClick={(e) => {
+        if (post.media && post.media.files && post.media.files.length > 0) {
+          e.stopPropagation();
+          console.log("Double click on post content");
+          onMediaClick && onMediaClick(0, true);
+        }
+      }}
+    >
       {renderText()}
-      <ImageRender media={post.media} />
+      <ImageRender
+        media={post.media}
+        onDoubleClick={(index) => {
+          console.log("Double click on image", index);
+          onMediaClick && onMediaClick(index, true);
+        }}
+      />
     </div>
   );
 };

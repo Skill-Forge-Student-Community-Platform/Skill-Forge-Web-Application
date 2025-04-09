@@ -15,9 +15,13 @@ import postServices from '../../services/postServices';
 import { compressImage, processVideo } from '../../utils/imageCompression';
 import useUserProfile from '../../hooks/useUserProfile.js'; // Add .js extension
 import ProfileAvatar from '../../components/Home_page/Home_components/ProfileAvatar';
+import useThemeToggle from '../../hooks/useThemeToggle'; // Import theme toggle hook
 
 // Add user as a prop to your component
 function Posting({ user }) {
+  // Get the current theme state
+  const { isDarkMode } = useThemeToggle();
+
   // Get profile data using our custom hook
   const { getProfileImage, fullName } = useUserProfile(user?._id);
 
@@ -59,6 +63,9 @@ function Posting({ user }) {
 
   // State for share modal
   const [postToShare, setPostToShare] = useState(null);
+
+  // State for editing posts
+  const [postToEdit, setPostToEdit] = useState(null);
 
   // Last post ref for infinite scrolling
   const lastPostRef = useRef(null);
@@ -208,6 +215,7 @@ function Posting({ user }) {
     setIsDisabled(true);
     setEventDetails(null);
     setTempMedia([]);
+    setPostToEdit(null); // Reset editing state when closing window
   };
 
   const handleTextChange = (e) => {
@@ -265,11 +273,74 @@ function Posting({ user }) {
     }
   };
 
+  // Handle editing a post
+  const handleEditPost = (post) => {
+    // Set the post being edited
+    setPostToEdit(post);
+
+    // Pre-fill the form with existing data
+    setText(post.text || "");
+    setPrivacy(post.privacy || "Friends");
+
+    // If the post has media, set it
+    if (post.media && post.media.files && post.media.files.length > 0) {
+      setMedia({
+        layout: post.media.layout || "single",
+        media: post.media.files
+      });
+    } else {
+      setMedia([]);
+    }
+
+    // Open the post modal
+    setActiveModal("post");
+  };
+
+  // Handle changing post privacy
+  const handleChangePrivacy = async (postId, privacy) => {
+    try {
+      const response = await postServices.updatePostPrivacy(postId, privacy);
+
+      // Update post in state
+      setPosts(prevPosts => prevPosts.map(post =>
+        post._id === postId ? { ...post, privacy: response.privacy } : post
+      ));
+
+      toast.success("Privacy settings updated");
+    } catch (error) {
+      toast.error("Failed to update privacy settings");
+      console.error("Privacy update error:", error);
+    }
+  };
+
+  // Handle save/unsave post
+  const handleSavePost = async (postId, isSaved) => {
+    try {
+      const response = await postServices.savePost(postId);
+
+      // Update posts with optimistic UI update
+      setPosts(prevPosts => prevPosts.map(post =>
+        post._id === postId ? {
+          ...post,
+          isSaved: response.saved
+        } : post
+      ));
+
+      toast.success(response.saved ? "Post saved" : "Post unsaved");
+    } catch (error) {
+      toast.error("Failed to save post");
+      console.error("Save post error:", error);
+    }
+  };
+
   // Create new post using API - optimized version with progress
   const handleCreatePost = async () => {
     try {
       // Reset cancel flag
       cancelUploadRef.current = false;
+
+      // Check if we're editing
+      const isEditing = !!postToEdit;
 
       // Skip if no content
       if (!text.trim() && (!media || media.length === 0) && !eventDetails) {
@@ -277,13 +348,56 @@ function Posting({ user }) {
         return;
       }
 
-      // *** Important: Close modal immediately when starting upload ***
+      // Close modal immediately when starting upload
       closeWindow();
 
       // Indicate upload starting
       setIsUploading(true);
       setUploadProgress(0);
       setUploadError(null);
+
+      // If editing, handle post update with simplified approach
+      if (isEditing) {
+        setUploadProgress(20);
+
+        // Prepare data for editing
+        const postData = {
+          text: text.trim(),
+          privacy
+        };
+
+        // For editing, we'll keep the media handling simpler initially
+        if (media && media.media && Array.isArray(media.media) && media.media.length > 0) {
+          postData.media = {
+            layout: media.layout || "single",
+            files: media.media
+          };
+        }
+
+        setUploadProgress(50);
+
+        // Call API to update post
+        const response = await postServices.editPost(postToEdit._id, postData);
+
+        // Update post in state
+        setPosts(prevPosts => prevPosts.map(post =>
+          post._id === postToEdit._id ? response.post : post
+        ));
+
+        setUploadProgress(100);
+
+        // Show success message
+        toast.success("Post updated successfully!");
+
+        // Hide progress after delay
+        setTimeout(() => {
+          if (!cancelUploadRef.current) {
+            setIsUploading(false);
+          }
+        }, 1500);
+
+        return;
+      }
 
       // Initialize mediaData to null
       let mediaData = null;
@@ -622,7 +736,7 @@ function Posting({ user }) {
   };
 
   return (
-    <div className="community-posting">
+    <div className={`community-posting ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <div className="post-input-container">
 
         <div className="input-row">
@@ -689,6 +803,7 @@ function Posting({ user }) {
               media={{ ...media, onClear: handleClearMedia }}
               openMediaModal={openMediaModal}
               onPost={handleCreatePost}
+              postToEdit={postToEdit}
             />
           ) : activeModal === "event" ? (
             <EventModal
@@ -702,7 +817,6 @@ function Posting({ user }) {
             <ShareModal
               closeWindow={closeWindow}
               postToShare={postToShare}
-
               onShare={finalizeShare}
               user={userData}
             />
@@ -729,13 +843,21 @@ function Posting({ user }) {
             onComment={handleAddComment}
             onShare={handleSharePost}
             onDelete={handleDeletePost}
+            onEdit={handleEditPost}
+            onSavePost={handleSavePost}
+            onChangePrivacy={handleChangePrivacy}
             onDeleteComment={handleDeleteComment} // Pass the deletion handler
             lastPostRef={lastPostRef} // Pass the ref for the last post
-            currentUserId={user?._id} // Pass the current user ID
-            uploadProgress={uploadProgress}
+            currentUserId={user?._id} // Pass the current
             isUploading={isUploading}
+            uploadProgress={uploadProgress}
             uploadError={uploadError}
             onCancelUpload={handleCancelUpload}
+            onUnfollow={(userId) => console.log("Unfollow user:", userId)}
+            onNotInterested={(postId) => console.log("Not interested in post:", postId)}
+            onInterested={(postId) => console.log("Interested in post:", postId)}
+            onReportPost={(postId) => console.log("Report post:", postId)}
+            isDarkMode={isDarkMode} // Pass theme state to Feed
           />
 
           {/* Load more button */}

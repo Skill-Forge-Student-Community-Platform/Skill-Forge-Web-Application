@@ -1,65 +1,121 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ProjectsSection = () => {
+const ProjectsSection = ({ userId, projects = [], isEditable = false }) => {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState([]);
+  const [displayProjects, setDisplayProjects] = useState([]);
 
   useEffect(() => {
-    // ✅ Default Project (Image Only Initially)
+    // If we have projects from props, use them
+    if (projects && projects.length > 0) {
+      setDisplayProjects(projects);
+      return;
+    }
+
+    // ✅ Default Projects when none are available
     const defaultProjects = [
       {
-        title: "Enjoy the beauty of the Floating Islands",
-        location: "Maldives Islands",
-        rating: 5.0,
-        price: "$1270",
-        image: process.env.PUBLIC_URL + "/images/maldives.jpg",
-      },
+        id: '1',
+        title: 'E-commerce Website',
+        description: 'A responsive online store built with React and Node.js',
+        image: 'https://via.placeholder.com/600x400?text=E-commerce+Project',
+        link: 'https://example.com/project'
+      }
     ];
 
     // ✅ Get Saved Projects from localStorage
     const savedProjects = JSON.parse(localStorage.getItem("projects")) || [];
 
-    // ✅ Show the first project as default
-    const combinedProjects = savedProjects.length > 0 ? savedProjects : defaultProjects;
-    setProjects(combinedProjects);
-  }, []);
+    // ✅ Show saved or default projects
+    const projectsToShow = savedProjects.length > 0 ? savedProjects : defaultProjects;
+    setDisplayProjects(projectsToShow);
+  }, [projects]);
+
+  const handleViewAll = () => {
+    navigate("/profile/projects");
+  };
+
+  const handleAddProject = () => {
+    navigate("/add-project");
+  };
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 mb-6">
-      <h2 className="text-xl font-bold mb-4 text-gray-800">Projects</h2>
-
-      <div className="flex flex-wrap gap-4">
-        {/* ✅ Show Only the Image Initially */}
-        {projects.length > 0 && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden w-64 h-48">
-            <img
-              src={projects[0].image}
-              alt={projects[0].title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
-
-        {/* ✅ "Add More" Section */}
-        <div
-          className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center w-64 h-48 cursor-pointer hover:bg-gray-50 transition-colors"
-          onClick={() => navigate("/profile/add-project")}
-        >
-          <p className="text-gray-500 font-medium">+ Add More</p>
+    <>
+      {displayProjects.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500 mb-4">No projects added yet</p>
+          {isEditable && (
+            <button
+              onClick={handleAddProject}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
+            >
+              Add Your First Project
+            </button>
+          )}
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {displayProjects.slice(0, 2).map((project) => (
+              <div key={project.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                {project.image && (
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={project.image}
 
-      {/* ✅ View All Projects Button */}
-      <div className="mt-4 flex justify-end">
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
-          onClick={() => navigate("/profile/view-projects")}
-        >
-          View All Projects
-        </button>
-      </div>
-    </div>
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg text-gray-800">{project.title}</h3>
+                  {project.description && (
+                    <p className="text-gray-600 text-sm mt-1 line-clamp-2">{project.description}</p>
+                  )}
+
+                  <div className="mt-4 flex justify-between">
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-700 text-sm font-medium"
+                      >
+                        View Project
+                      </a>
+                    )}
+                    {isEditable && (
+                      <button className="text-gray-500 hover:text-gray-700 text-sm font-medium">
+                        Edit
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 flex justify-between">
+            <button
+              className="text-blue-500 hover:text-blue-700 font-medium"
+              onClick={handleViewAll}
+            >
+              View All Projects
+            </button>
+
+            {isEditable && (
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
+                onClick={handleAddProject}
+              >
+                Add New
+              </button>
+            )}
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

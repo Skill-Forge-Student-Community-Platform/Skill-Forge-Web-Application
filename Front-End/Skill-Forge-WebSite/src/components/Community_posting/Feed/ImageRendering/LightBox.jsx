@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaTimes, FaChevronLeft, FaChevronRight, FaThumbsUp, FaComment, FaShare, FaTrash } from 'react-icons/fa';
 import CommentSection from '../CommentsSection/CommentSection';
+import ProfileAvatar from '../../../Home_page/Home_components/ProfileAvatar';
 import './LightBox.css';
 
 const LightBox = ({
@@ -14,10 +15,14 @@ const LightBox = ({
   onComment,
   onShare,
   onDelete,
+  onLikeComment,
+  onDeleteComment,
   currentUserId
 }) => {
   const currentMedia = media[currentIndex];
-  const containerRef = useRef(null);
+  const mediaContainerRef = useRef(null);
+  const detailsContainerRef = useRef(null);
+  const lightboxContainerRef = useRef(null);
   const [showComments, setShowComments] = useState(true);
 
   // Check if current user is the post owner
@@ -47,19 +52,13 @@ const LightBox = ({
     };
   }, [onClose, onPrev, onNext]);
 
-  // Detect clicks outside the lightbox content to close
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, [onClose]);
+  // Critical: Only close when clicking on the actual overlay background
+  const handleOverlayClick = (e) => {
+    // Only close if the click is directly on the overlay element
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   // Prevent scrolling when lightbox is open
   useEffect(() => {
@@ -71,37 +70,63 @@ const LightBox = ({
 
   const isImage = currentMedia.type === 'image' || currentMedia.type?.startsWith('image/');
 
-  const handleAddComment = async (postId, text) => {
+  const handleAddComment = async (postId, text, parentId = null) => {
     try {
-      await onComment(postId, text);
+      console.log("Adding comment from lightbox:", text, "parent:", parentId);
+      await onComment(postId, text, parentId);
     } catch (error) {
       console.error('Failed to add comment:', error);
     }
   };
 
+  // Handle comment like from the lightbox
+  const handleLikeComment = async (postId, commentId, isLiked) => {
+    try {
+      await onLikeComment(postId, commentId, isLiked);
+    } catch (error) {
+      console.error('Failed to like/unlike comment:', error);
+    }
+  };
+
   return (
-    <div className="lightbox-overlay">
-      <button className="lightbox-close" onClick={onClose}>
+    <div className="lightbox-overlay" onClick={handleOverlayClick}>
+      <button
+        className="lightbox-close"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+      >
         <FaTimes />
       </button>
 
-      <div className="lightbox-container">
+      <div
+        className="lightbox-container"
+        ref={lightboxContainerRef}
+        onClick={(e) => e.stopPropagation()} // Stop propagation for all container clicks
+      >
         {/* Left side - Media */}
-        <div className="lightbox-media-container" ref={containerRef}>
+        <div className="lightbox-media-container" ref={mediaContainerRef}>
           <div className="media-counter">{currentIndex + 1} / {media.length}</div>
 
           {media.length > 1 && (
             <>
               <button
                 className="lightbox-nav lightbox-prev"
-                onClick={onPrev}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPrev();
+                }}
                 aria-label="Previous image"
               >
                 <FaChevronLeft />
               </button>
               <button
                 className="lightbox-nav lightbox-next"
-                onClick={onNext}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNext();
+                }}
                 aria-label="Next image"
               >
                 <FaChevronRight />
@@ -121,19 +146,28 @@ const LightBox = ({
               controls
               autoPlay
               className="lightbox-media video"
+              onClick={(e) => e.stopPropagation()} // Stop propagation for video controls
             />
           )}
         </div>
 
         {/* Right side - Post details and comments */}
         {post && (
-          <div className="lightbox-details">
+          <div
+            className="lightbox-details"
+            ref={detailsContainerRef}
+            onClick={(e) => e.stopPropagation()} // Stop propagation for all details clicks
+          >
             {/* Post header */}
             <div className="lightbox-post-header">
               <div className="lightbox-user-info">
-                <img
-                  src={post.user?.profilePicture || "/default-avatar.png"}
-                  alt={post.user?.Username || "User"}
+                <ProfileAvatar
+                  userId={post.user?._id}
+                  staticImageUrl={post.user?.profilePicture}
+                  customAltText={post.user?.Username || "User"}
+                  size="small"
+                  showLevel={false}
+                  showMembershipTag={false}
                   className="lightbox-avatar"
                 />
                 <div>
@@ -146,7 +180,11 @@ const LightBox = ({
               {isPostOwner && onDelete && (
                 <button
                   className="lightbox-delete-btn"
-                  onClick={() => onDelete(post._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(post._id);
+                    onClose(); // Close lightbox after deletion
+                  }}
                   title="Delete post"
                 >
                   <FaTrash />
@@ -164,21 +202,30 @@ const LightBox = ({
               <div className="lightbox-post-actions">
                 <button
                   className={`lightbox-action-btn ${post.isLikedByUser ? 'active' : ''}`}
-                  onClick={() => onLike && onLike(post._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onLike && onLike(post._id);
+                  }}
                 >
                   <FaThumbsUp />
                   <span>Like{post.likes?.length > 0 ? ` (${post.likes.length})` : ''}</span>
                 </button>
                 <button
                   className="lightbox-action-btn"
-                  onClick={() => setShowComments(!showComments)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowComments(!showComments);
+                  }}
                 >
                   <FaComment />
                   <span>Comment{post.comments?.length > 0 ? ` (${post.comments.length})` : ''}</span>
                 </button>
                 <button
                   className="lightbox-action-btn"
-                  onClick={() => onShare && onShare(post._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onShare && onShare(post._id);
+                  }}
                 >
                   <FaShare />
                   <span>Share</span>
@@ -188,12 +235,18 @@ const LightBox = ({
 
             {/* Comments section */}
             {showComments && (
-              <div className="lightbox-comments">
+              <div
+                className="lightbox-comments"
+                onClick={(e) => e.stopPropagation()} // Extra protection for comments area
+              >
                 <CommentSection
                   postId={post._id}
                   comments={post.comments || []}
                   onAddComment={handleAddComment}
+                  onLikeComment={handleLikeComment}
+                  onDeleteComment={onDeleteComment}
                   currentUserId={currentUserId}
+                  postAuthorId={post.user?._id}
                 />
               </div>
             )}

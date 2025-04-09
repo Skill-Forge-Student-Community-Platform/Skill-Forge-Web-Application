@@ -1,11 +1,14 @@
 // components/BadgeList.js
 import React from 'react';
 import Badge from './Badge';
+import useThemeToggle from '../../hooks/useThemeToggle';
 import './BadgeList.css';
 
 const BadgeList = ({ achievedBadges, nextBadges }) => {
+  const { isDarkMode } = useThemeToggle();
+
   return (
-    <div className="badge-list-container">
+    <div className={`badge-list-container ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="badge-sections">
         <div className="badge-section">
           <div className="section-header">

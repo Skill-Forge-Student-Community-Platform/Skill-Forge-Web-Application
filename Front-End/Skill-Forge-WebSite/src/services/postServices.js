@@ -255,6 +255,63 @@ const postServices = {
       console.error(`Error sharing post ${postId}:`, error);
       throw error.response?.data || { message: 'Failed to share post' };
     }
+  },
+
+  /**
+   * Edit an existing post
+   */
+  editPost: async (postId, updatedData) => {
+
+    try {
+      const response = await axios.put(`${BASE_URL}/posts/${postId}`, updatedData);
+      return response.data;
+    } catch (error) {
+      console.error(`Error editing post ${postId}:`, error);
+      throw error.response?.data || { message: 'Failed to edit post' };
+    }
+  },
+
+  /**
+   * Update post privacy settings
+   */
+  updatePostPrivacy: async (postId, privacy) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/posts/${postId}/privacy`, {
+        privacy
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating privacy for post ${postId}:`, error);
+      throw error.response?.data || { message: 'Failed to update privacy settings' };
+    }
+  },
+
+  /**
+   * Save or unsave a post
+   */
+  savePost: async (postId) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/posts/${postId}/save`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error saving/unsaving post ${postId}:`, error);
+      throw error.response?.data || { message: 'Failed to save/unsave post' };
+    }
+  },
+
+  /**
+   * Get saved posts with optional filtering
+   */
+  getSavedPosts: async (page = 1, limit = 10, filter = 'all') => {
+    try {
+      const response = await axios.get(`${BASE_URL}/posts/saved`, {
+        params: { page, limit, filter }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching saved posts:', error);
+      throw error.response?.data || { message: 'Failed to load saved posts' };
+    }
   }
 };
 

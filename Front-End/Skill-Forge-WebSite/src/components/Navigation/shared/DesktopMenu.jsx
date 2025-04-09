@@ -1,14 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import "./DesktopMenu.css";
 
 const DesktopMenu = ({ menu }) => {
   const [isHover, setIsHover] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const menuRef = useRef(null);
 
   const toggleHoverMenu = () => {
     setIsHover(!isHover);
   };
+
+  const handleMenuClick = () => {
+    if (menu?.subMenu?.length) {
+      setIsClicked(!isClicked);
+    }
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsClicked(false);
+      }
+    };
+
+    if (isClicked) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isClicked]);
 
   const subMenuAnimate = {
     enter: {
@@ -26,29 +52,34 @@ const DesktopMenu = ({ menu }) => {
   };
 
   const hasSubMenu = menu?.subMenu?.length;
+  const isMenuOpen = isHover || isClicked;
 
   return (
     <motion.li
+      ref={menuRef}
       className="nav-item relative"
       onHoverStart={toggleHoverMenu}
-      onHoverEnd={toggleHoverMenu}
+      onHoverEnd={() => !isClicked && setIsHover(false)}
     >
-      <span className="flex items-center gap-1">
+      <span
+        className="flex items-center gap-1 cursor-pointer"
+        onClick={handleMenuClick}
+      >
         {menu.name}
         {hasSubMenu && (
           <ChevronDown
             size={16}
-            className={`transition-transform duration-200 ${isHover ? 'rotate-180' : ''}`}
+            className={`transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`}
           />
         )}
       </span>
 
       {hasSubMenu && (
         <motion.div
-          className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 z-50"
+          className="desktop-submenu absolute top-full left-0 mt-1 p-4 z-50"
           style={{ transformOrigin: "top center", minWidth: "240px" }}
           initial="exit"
-          animate={isHover ? "enter" : "exit"}
+          animate={isMenuOpen ? "enter" : "exit"}
           variants={subMenuAnimate}
         >
           <div
@@ -64,7 +95,7 @@ const DesktopMenu = ({ menu }) => {
             {/* Group submenu items by heading */}
             {menu.subMenuHeading?.map((heading, headingIndex) => (
               <div className="submenu-group" key={`heading-${headingIndex}`}>
-                <p className="text-sm mb-2 text-gray-500">{heading}</p>
+                <p className="text-sm mb-2">{heading}</p>
                 {menu.subMenu
                   .filter((_, itemIndex) => {
                     // This is a simple way to group items - can be made more sophisticated
@@ -78,18 +109,17 @@ const DesktopMenu = ({ menu }) => {
                       to={submenu.path || "#"}
                       key={i}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md mb-2 ${
-                          isActive ? "bg-blue-50 dark:bg-blue-900" : ""
+                        `submenu-link flex items-center gap-3 p-2 rounded-md mb-2 ${
+                          isActive ? "active" : ""
                         }`
                       }
                     >
-                      <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
+                      <div className="submenu-icon-container p-2 rounded-md">
                         {submenu.icon && <submenu.icon size={18} />}
                       </div>
                       <div>
-                        <h6 className="font-medium">{submenu.name}</h6>
-
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{submenu.desc}</p>
+                        <h6 className="submenu-title font-medium">{submenu.name}</h6>
+                        <p className="submenu-description text-xs">{submenu.desc}</p>
                       </div>
                     </NavLink>
                   ))
@@ -103,17 +133,17 @@ const DesktopMenu = ({ menu }) => {
                 to={submenu.path || "#"}
                 key={i}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md mb-2 ${
-                    isActive ? "bg-blue-50 dark:bg-blue-900" : ""
+                  `submenu-link flex items-center gap-3 p-2 rounded-md mb-2 ${
+                    isActive ? "active" : ""
                   }`
                 }
               >
-                <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
+                <div className="submenu-icon-container p-2 rounded-md">
                   {submenu.icon && <submenu.icon size={18} />}
                 </div>
                 <div>
-                  <h6 className="font-medium">{submenu.name}</h6>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{submenu.desc}</p>
+                  <h6 className="submenu-title font-medium">{submenu.name}</h6>
+                  <p className="submenu-description text-xs">{submenu.desc}</p>
                 </div>
               </NavLink>
             ))}

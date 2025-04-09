@@ -1,15 +1,15 @@
-/* LinkedIn-style post template */
+/* LinkedIn-style post template with theme variables */
 .post-wrapper {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 8px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0 1px var(--card-border);
   transition: box-shadow 0.2s;
 }
 
 .post-wrapper:hover {
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 1px var(--hover-bg);
 }
 
 .post-header {
@@ -31,7 +31,7 @@
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--card-border);
 }
 
 .post-meta {
@@ -43,7 +43,7 @@
   font-size: 14px;
   font-weight: 600;
   margin: 0;
-  color: rgba(0, 0, 0, 0.9);
+  color: var(--text-color);
   line-height: 1.4;
 }
 
@@ -52,7 +52,7 @@
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
   line-height: 1.33;
 }
 
@@ -79,7 +79,7 @@
 .more-options {
   background: none;
   border: none;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 4px;
   border-radius: 50%;
@@ -89,8 +89,8 @@
 }
 
 .more-options:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.75);
+  background-color: var(--hover-bg);
+  color: var(--text-color);
 }
 
 .Post-action-content {
@@ -101,9 +101,9 @@
   display: flex;
   justify-content: space-between;
   padding: 4px 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid var(--card-border);
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
 }
 
 .left-stats, .right-stats {
@@ -125,7 +125,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #0a66c2;
+  background-color: var(--accent-blue);
   color: white;
 }
 
@@ -134,14 +134,14 @@
 }
 
 .stat-item {
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
 }
 
 .action-bar {
   display: flex;
   justify-content: space-between;
   padding: 2px 8px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid var(--card-border);
   margin-top: 4px;
 }
 
@@ -154,7 +154,7 @@
   padding: 8px 0;
   background: none;
   border: none;
-  color: rgba(0, 0, 0, 0.75); /* Darker gray for better visibility */
+  color: var(--text-color);
   cursor: pointer;
   border-radius: 4px;
   font-weight: 600;
@@ -163,12 +163,12 @@
 }
 
 .action-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.9); /* Darker on hover */
+  background-color: var(--hover-bg);
+  color: var(--text-color);
 }
 
 .action-btn.liked {
-  color: #0a66c2; /* Keep LinkedIn blue for liked state */
+  color: var(--accent-blue);
 }
 
 .action-icon-wrapper {
@@ -177,13 +177,12 @@
   justify-content: center;
 }
 
-
 .action-text {
   font-size: 13px;
 }
 
 .action-icon.filled {
-  color: #0a66c2;
+  color: var(--accent-blue);
 }
 
 /* Post content styling */
@@ -198,7 +197,7 @@
 .post-text {
   font-size: 14px;
   line-height: 1.4;
-  color: rgba(0, 0, 0, 0.9);
+  color: var(--text-color);
   margin: 0 0 8px 0;
   white-space: pre-wrap;
   word-break: break-word;
@@ -207,7 +206,7 @@
 .toggle-text-btn {
   background: none;
   border: none;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
   font-weight: 600;
   padding: 0;
   cursor: pointer;
@@ -215,15 +214,15 @@
 }
 
 .toggle-text-btn:hover {
-  color: #0a66c2;
+  color: var(--accent-blue);
   text-decoration: underline;
 }
 
 /* Comment section styling */
 .comments-section {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid var(--card-border);
   padding: 8px 16px;
-  background-color: #f3f2ef;
+  background-color: var(--bg-color);
 }
 
 .comment-form {
@@ -241,26 +240,27 @@
 .comment-input {
   width: 100%;
   border-radius: 35px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--card-border);
   padding: 8px 16px;
   font-size: 14px;
-  background-color: white;
+  background-color: var(--input-bg);
+  color: var(--input-text);
 }
 
 .comment-input:focus {
   outline: none;
-  border-color: #0a66c2;
+  border-color: var(--accent-blue);
 }
 
 .send-comment-btn {
   background: none;
   border: none;
-  color: #0a66c2;
+  color: var(--accent-blue);
   cursor: pointer;
 }
 
 .send-comment-btn:disabled {
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -273,15 +273,15 @@
 .repost-text {
   font-size: 14px;
   line-height: 1.4;
-  color: rgba(0, 0, 0, 0.9);
+  color: var(--text-color);
   margin: 0 0 8px 0;
 }
 
 .original-post {
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 12px;
-  background-color: #f3f2ef;
+  background-color: var(--bg-color);
   margin-top: 8px;
 }
 
@@ -307,7 +307,7 @@
 .original-user-name {
   font-size: 14px;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.9);
+  color: var(--text-color);
 }
 
 .original-content {
@@ -328,7 +328,7 @@
 .see-more {
   background: none;
   border: none;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--text-secondary);
   font-weight: 600;
   padding: 8px 0 0 0;
   cursor: pointer;
@@ -339,7 +339,7 @@
 }
 
 .see-more:hover {
-  color: #0a66c2;
+  color: var(--accent-blue);
   text-decoration: underline;
 }
 
@@ -355,7 +355,7 @@
   width: 100%;
   max-height: 500px;
   object-fit: contain;
-  background-color: #000;
+  background-color: var(--dark-bg);
 }
 
 .media-item {
@@ -365,7 +365,7 @@
 /* Critical icon styles with increased specificity */
 .post-wrapper .action-bar .action-btn .action-icon-wrapper .action-icon {
   font-size: 24px !important;
-  color: rgba(0, 0, 0, 0.9) !important;
+  color: var(--text-color) !important;
   display: inline-block !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -373,13 +373,13 @@
 }
 
 .post-wrapper .action-bar .action-btn.liked .action-icon-wrapper .action-icon.filled {
-  color: #0a66c2 !important;
+  color: var(--accent-blue) !important;
 }
 
 .post-wrapper .action-bar .action-btn .action-text {
   font-size: 13px !important;
   font-weight: 600 !important;
-  color: rgba(0, 0, 0, 0.75) !important;
+  color: var(--text-color) !important;
   display: inline-block !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -393,7 +393,7 @@
   width: 16px !important;
   height: 16px !important;
   border-radius: 50% !important;
-  background-color: #0a66c2 !important;
+  background-color: var(--accent-blue) !important;
   color: white !important;
 }
 
@@ -407,7 +407,7 @@
   display: inline-flex !important;
   align-items: center !important;
   font-size: 12px !important;
-  color: rgba(0, 0, 0, 0.6) !important;
+  color: var(--text-secondary) !important;
 }
 
 .post-wrapper .post-header .post-details .privacy-icon svg {
@@ -421,7 +421,7 @@
   display: flex !important;
   justify-content: space-between !important;
   padding: 4px 8px !important;
-  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-top: 1px solid var(--card-border) !important;
   margin-top: 0 !important;
 }
 
@@ -434,19 +434,19 @@
   padding: 8px 0 !important;
   background: none !important;
   border: none !important;
-  color: rgba(0, 0, 0, 0.75) !important;
+  color: var(--text-color) !important;
   cursor: pointer !important;
   border-radius: 4px !important;
   transition: all 0.2s !important;
 }
 
 .post-wrapper .action-bar .action-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05) !important;
-  color: rgba(0, 0, 0, 0.9) !important;
+  background-color: var(--hover-bg) !important;
+  color: var(--text-color) !important;
 }
 
 .post-wrapper .action-bar .action-btn.liked {
-  color: #0a66c2 !important;
+  color: var(--accent-blue) !important;
 }
 
 /* General icon display fixes */
@@ -466,14 +466,3 @@
   align-items: flex-start !important;
   gap: 8px !important;
 }
-
-/* You can either keep or remove the old user-avatar style since we're not using it directly anymore */
-/*
-.user-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-*/

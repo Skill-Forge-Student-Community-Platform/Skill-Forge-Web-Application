@@ -19,16 +19,16 @@
 /* Base styling for all menus */
 .post-options-menu {
   position: absolute;
-  top: 0;
+  top: 36px;
   right: 0;
-  width: 280px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 50;
-  animation: menuFadeIn 0.2s ease-out;
+  width: 240px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px var(--modal-shadow);
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 /* Dark theme support */
@@ -70,18 +70,21 @@
 
 /* Back button in submenu header */
 .back-button {
-  margin-right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
   padding: 6px;
   border-radius: 9999px;
   transition: background-color 0.2s;
 }
 
 .back-button:hover {
-  background-color: #f3f4f6;
+  background-color: var(--hover-bg);
 }
 
 .dark .back-button:hover {
-  background-color: #374151;
+  background-color: var(--hover-bg);
 }
 
 /* Menu item styling */
@@ -92,33 +95,37 @@
   padding: 12px 16px;
   text-align: left;
   transition: background-color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
 }
 
 .menu-item:hover {
-  background-color: #f3f4f6;
+  background-color: var(--hover-bg);
 }
 
 .dark .menu-item:hover {
-  background-color: #374151;
+  background-color: var(--hover-bg);
 }
 
 /* Active menu item */
 .menu-item.active {
-  background-color: #e6f7ff;
-  color: #0078d4;
+  background-color: var(--nav-item-active);
+  color: var(--accent-blue);
 }
 
 .dark .menu-item.active {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: var(--nav-item-active);
 }
 
 /* Items with danger text (red) */
 .text-danger {
-  color: #dc2626;
+  color: var(--accent-red);
 }
 
 .dark .text-danger {
-  color: #f87171;
+  color: var(--accent-red);
 }
 
 /* Menu content wrapper */
@@ -133,15 +140,16 @@
   flex-shrink: 0;
   margin-right: 12px;
   font-size: 1.125rem;
+  color: var(--text-secondary);
 }
 
 /* Active blue color for icons */
 .menu-icon.active {
-  color: #0078d4;
+  color: var(--accent-blue);
 }
 
 .dark .menu-icon.active {
-  color: #3b82f6;
+  color: var(--accent-blue);
 }
 
 /* Text container for items with description */
@@ -151,22 +159,22 @@
 }
 
 .menu-text small {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 0.75rem;
 }
 
 .dark .menu-text small {
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* Arrow icon for items with submenu */
 .arrow-icon {
   margin-left: auto;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .dark .arrow-icon {
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* Divider line between menu sections */
@@ -215,4 +223,77 @@
   .menu-item {
     padding: 16px;
   }
+}
+
+/* Menu header */
+.menu-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+/* Menu title */
+.menu-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+  flex-grow: 1;
+}
+
+/* Active text color for menu-text */
+.menu-item.active .menu-text span {
+  color: var(--accent-blue);
+}
+
+.dark .menu-item.active .menu-text span {
+  color: var(--accent-blue);
+}
+
+/* Submenu styling */
+.submenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--card-bg);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.submenu.active {
+  transform: translateX(0);
+}
+
+/* Privacy option styles */
+.privacy-description {
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 0 16px 12px;
+}
+
+.privacy-submenu .menu-item .menu-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Loading state inside menu items */
+.menu-item-loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--card-border);
+  border-radius: 50%;
+  border-top-color: var(--accent-blue);
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
