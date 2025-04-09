@@ -1,8 +1,25 @@
 import React from 'react';
-import { FaChevronRight, FaUserPlus, FaCalendarAlt, FaUsers } from 'react-icons/fa';
+import { FaChevronRight, FaUserPlus, FaUsers } from 'react-icons/fa';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Trending_Data.css';
 
 const Trending_Data = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleViewAllEvents = () => {
+    // Extract the base path (e.g., /Student/67ea8e1551c9a3f0fa4dad0d)
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length >= 3) {
+      // Construct the correct path preserving the role and userId
+      const basePath = `/${pathParts[1]}/${pathParts[2]}`; // e.g., /Student/67ea8e1551c9a3f0fa4dad0d
+      navigate(`${basePath}/view-events`);
+    } else {
+      // Fallback in case the path structure is different
+      navigate('view-events');
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Trending events section */}
@@ -43,10 +60,13 @@ const Trending_Data = () => {
             </div>
           </div>
 
-          <a href="/events" className="view-more">
+          <button
+            onClick={handleViewAllEvents}
+            className="view-more"
+          >
             View all events
             <FaChevronRight size={12} className="ml-1" />
-          </a>
+          </button>
         </div>
       </div>
 
