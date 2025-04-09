@@ -30,12 +30,12 @@ const ContentList = () => {
       // Simulated API call - replace with actual backend call
       // const response = await fetch(`/api/content?type=${filter}`);
       // const data = await response.json();
-      
+
       // For now, filter the dummy content
-      const filtered = filter === 'all' 
-        ? dummyContent 
+      const filtered = filter === 'all'
+        ? dummyContent
         : dummyContent.filter(item => item.type === filter);
-      
+
       setFilteredContent(filtered);
     } catch (error) {
       console.error('Error filtering content:', error);

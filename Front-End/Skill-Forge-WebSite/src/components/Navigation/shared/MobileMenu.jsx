@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import "./MobileMenu.css";
 
 const MobileMenu = ({ Menus }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +23,9 @@ const MobileMenu = ({ Menus }) => {
   };
 
   return (
-    <div>
+    <div className="mobile-menu-container">
       <button
-        className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="mobile-menu-button"
         onClick={toggleDrawer}
         aria-label="Toggle menu"
       >
@@ -32,17 +33,17 @@ const MobileMenu = ({ Menus }) => {
       </button>
 
       <motion.div
-        className="fixed left-0 right-0 top-[70px] bg-white dark:bg-gray-800 shadow-lg z-50"
+        className="mobile-menu-dropdown"
         initial={{ height: 0, opacity: 0 }}
         animate={isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
         style={{ overflow: isOpen ? "auto" : "hidden" }}
       >
-        <div className="max-h-[calc(100vh-70px)] overflow-y-auto p-4">
+        <div className="mobile-menu-content">
           <ul>
             {Menus.map((menu, idx) => (
-              <li key={menu.name} className="border-b border-gray-100 dark:border-gray-700 py-2">
+              <li key={menu.name} className="mobile-menu-item">
                 <div
-                  className="flex justify-between items-center p-2 cursor-pointer"
+                  className="mobile-menu-header"
                   onClick={() => toggleSubmenu(idx)}
                 >
                   <span>{menu.name}</span>
@@ -56,12 +57,12 @@ const MobileMenu = ({ Menus }) => {
                     initial="exit"
                     animate={activeMenu === idx ? "enter" : "exit"}
                     variants={subMenuAnimate}
-                    className="overflow-hidden"
+                    className="mobile-submenu-content"
                   >
-                    <div className="pl-4 pt-2">
+                    <div>
                       {menu.subMenuHeading && menu.subMenuHeading.map((heading, hIdx) => (
                         <div key={heading} className="mb-3">
-                          <h3 className="text-xs uppercase text-gray-500 font-semibold mb-2">{heading}</h3>
+                          <h3 className="mobile-section-heading">{heading}</h3>
                           {/* Group items by heading - simplified for mobile */}
                           {menu.subMenu
                             .filter((_, i) => Math.floor(i / (menu.subMenu.length / menu.subMenuHeading.length)) === hIdx)
@@ -69,15 +70,15 @@ const MobileMenu = ({ Menus }) => {
                               <Link
                                 key={item.name}
                                 to={item.path || "#"}
-                                className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md my-1"
+                                className="mobile-menu-link"
                                 onClick={toggleDrawer} // Close drawer on navigation
                               >
-                                <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
+                                <div className="mobile-menu-icon">
                                   {item.icon && <item.icon size={16} />}
                                 </div>
-                                <div>
-                                  <div className="font-medium">{item.name}</div>
-                                  <div className="text-xs text-gray-500">{item.desc}</div>
+                                <div className="mobile-menu-text-container">
+                                  <div className="mobile-menu-title">{item.name}</div>
+                                  <div className="mobile-menu-description">{item.desc}</div>
                                 </div>
                               </Link>
                             ))}
@@ -89,15 +90,15 @@ const MobileMenu = ({ Menus }) => {
                         <Link
                           key={item.name}
                           to={item.path || "#"}
-                          className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md my-1"
+                          className="mobile-menu-link"
                           onClick={toggleDrawer} // Close drawer on navigation
                         >
-                          <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
+                          <div className="mobile-menu-icon">
                             {item.icon && <item.icon size={16} />}
                           </div>
-                          <div>
-                            <div className="font-medium">{item.name}</div>
-                            <div className="text-xs text-gray-500">{item.desc}</div>
+                          <div className="mobile-menu-text-container">
+                            <div className="mobile-menu-title">{item.name}</div>
+                            <div className="mobile-menu-description">{item.desc}</div>
                           </div>
                         </Link>
                       ))}

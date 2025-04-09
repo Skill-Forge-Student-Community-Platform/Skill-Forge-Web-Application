@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
+import useThemeToggle from "../../hooks/useThemeToggle"; // Import theme hook
 import Badge from "./Badge";
 import BadgeList from "./BadgeList";
 import ProfileCard from "./ProfileCard";
@@ -9,6 +10,7 @@ import "./AchievementCenter.css";
 
 const AchievementCenter = () => {
   const { user } = useAuthStore();
+  const { isDarkMode } = useThemeToggle(); // Use the theme hook
   const [activeTab, setActiveTab] = useState('badges');
 
   // Mock user data for demonstration
@@ -73,7 +75,7 @@ const AchievementCenter = () => {
   ];
 
   return (
-    <div className="achievement-center">
+    <div className={`achievement-center ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="main-content">
         {/* Left column - Profile info - similar to Home.jsx */}
         <div className="side-content">

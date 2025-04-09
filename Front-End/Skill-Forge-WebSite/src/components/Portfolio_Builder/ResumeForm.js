@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import ResumePreview from "./ResumePreview";
 import axios from "axios";
 import { AiOutlineClose } from 'react-icons/ai';
+import { getApiBaseUrl } from '../../utils/environment';
 
 function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
   const { id } = useParams(); // Get resume ID from URL if editing
@@ -10,7 +11,7 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [resumeTitle, setResumeTitle] = useState(initialTitle);
-  
+
   // Initial empty form structure
   const [formData, setFormData] = useState({
     title: initialTitle,
@@ -31,12 +32,12 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
     if (id) {
       setIsLoading(true);
       setError(null);
-      
-      axios.get(`http://localhost:5000/api/resumes/${id}`)
+
+      axios.get(`${getApiBaseUrl()}/resumes/${id}`)
         .then((response) => {
           const data = response.data;
           setFormData(data);
-          
+
           // Set the resume title from the fetched data
           if (data.title) {
             setResumeTitle(data.title);
@@ -50,12 +51,12 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
           setIsLoading(false);
         });
     }
-  }, [id,userId]);//see this################################################
+  }, [id,userId]);
 
   // Handle form field changes
   const handleChange = (e, section, index = null) => {
     const { name, value } = e.target;
-    
+
     if (index !== null) {
       // For array fields (experience, education, projects)
       setFormData((prev) => ({
@@ -107,10 +108,10 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Prepare complete data with title
-    const completeData = { 
-      ...formData, 
+    const completeData = {
+      ...formData,
       userId: userId,
       title: resumeTitle || "Untitled Resume",
       lastUpdated: new Date().toISOString()
@@ -121,18 +122,18 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
 
     try {
       let response;
-      
+
       if (id) {
         // Update existing resume
-        response = await axios.put(`http://localhost:5000/api/resumes/${id}`, completeData);
+        response = await axios.put(`${getApiBaseUrl()}/resumes/${id}`, completeData);
       } else {
         // Create new resume
-        response = await axios.post("http://localhost:5000/api/resumes", completeData);
+        response = await axios.post(`${getApiBaseUrl()}/resumes`, completeData);
       }
-      
+
       // Handle successful save
       alert(`Resume ${id ? 'updated' : 'created'} successfully! ${userId}`);
-      
+
       // Call the onSave callback with the saved data
       if (onSave && typeof onSave === 'function') {
         onSave(response.data || completeData);
@@ -147,7 +148,7 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
       setIsLoading(false);
     }
 
-    
+
   };
 
   // Show loading state
@@ -173,15 +174,15 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
             required
           />
         </div>
-        
+
         <h2 className="font-bold text-2xl mb-4">{id ? `Edit Resume` : `Create New Resume`}</h2>
-        
+
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
           <div className="space-y-3">
@@ -390,8 +391,8 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
               + Add Project
             </button>
           </div>
-          
-       
+
+
         <div className="flex justify-end gap-4 pt-4">
           <button
             type="button"
@@ -416,7 +417,7 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
         </div>
 
 
-         
+
         </form>
       </div>
 
@@ -432,18 +433,3 @@ function ResumeForm({ initialTitle = "", onSave, onCancel,userId }) {
 }
 
 export default ResumeForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,0 +1,234 @@
+.organizer-past-events-container {
+  width: 100%;
+}
+
+.organizer-past-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.organizer-past-event-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.organizer-past-event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.organizer-past-event-image-container {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+
+.organizer-past-event-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.organizer-past-event-card:hover .organizer-past-event-image {
+  transform: scale(1.05);
+}
+
+.organizer-past-event-rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.organizer-past-event-star {
+  color: #FFC107;
+}
+
+.organizer-past-event-content {
+  padding: 16px;
+  display: flex;
+
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.organizer-past-event-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.organizer-past-event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.organizer-past-event-date,
+.organizer-past-event-participants {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #4a5568;
+}
+
+.organizer-past-event-icon {
+  color: #4299e1;
+  font-size: 14px;
+}
+
+.organizer-past-event-testimonial {
+  background-color: #f8fafc;
+  border-left: 3px solid #4299e1;
+  padding: 10px 12px;
+  margin: 12px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.organizer-past-event-testimonial blockquote {
+  font-size: 13px;
+  color: #4a5568;
+  font-style: italic;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.organizer-past-event-testimonial cite {
+  font-size: 12px;
+  color: #718096;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.organizer-past-event-button {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.organizer-past-event-button:hover {
+  background-color: #e5e7eb;
+}
+
+.organizer-past-event-link-icon {
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+.organizer-past-event-button:hover .organizer-past-event-link-icon {
+  transform: translateX(2px);
+}
+
+/* Loading state */
+.organizer-past-events-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.organizer-past-events-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid #4299e1;
+  animation: organizer-past-events-spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes organizer-past-events-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.organizer-past-events-error {
+  text-align: center;
+  padding: 24px;
+  background-color: #fff5f5;
+  border-radius: 8px;
+  color: #c53030;
+}
+
+.organizer-past-events-retry {
+  margin-top: 12px;
+  padding: 6px 12px;
+  background-color: #c53030;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.organizer-past-events-retry:hover {
+  background-color: #9b2c2c;
+}
+
+/* Empty state */
+.organizer-past-events-empty {
+  text-align: center;
+  padding: 30px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.organizer-past-events-icon {
+  font-size: 32px;
+  color: #a0aec0;
+  margin-bottom: 16px;
+}
+
+.organizer-past-events-empty h3 {
+  font-size: 18px;
+  color: #2d3748;
+  margin: 0 0 8px 0;
+}
+
+.organizer-past-events-empty p {
+  color: #718096;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .organizer-past-events-grid {
+    grid-template-columns: 1fr;
+  }
+}

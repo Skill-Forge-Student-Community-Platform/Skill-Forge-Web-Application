@@ -1,0 +1,45 @@
+/* Desktop Menu styling with theme variables */
+.nav-item {
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.nav-item:hover {
+  color: var(--primary-color);
+}
+
+.desktop-submenu {
+  background-color: var(--bg-color);
+  box-shadow: 0 4px 12px var(--modal-shadow);
+  border: 1px solid var(--card-border);
+  border-radius: 0.5rem;
+}
+
+.submenu-group p {
+  color: var(--text-secondary);
+}
+
+.submenu-link {
+  color: var(--text-color);
+}
+
+.submenu-link:hover {
+  background-color: var(--hover-bg);
+}
+
+.submenu-link.active {
+  background-color: var(--nav-item-active);
+}
+
+.submenu-icon-container {
+  background-color: var(--hover-bg);
+  color: var(--text-color);
+}
+
+.submenu-title {
+  color: var(--text-color);
+}
+
+.submenu-description {
+  color: var(--text-secondary);
+}

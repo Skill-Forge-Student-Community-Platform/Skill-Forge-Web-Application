@@ -1,5 +1,5 @@
 import React from 'react';
-import SingleLayout from '../../Posting_pagers/MediaUploadModal/Stages/Grid_Layouts/SingleLayout';  
+import SingleLayout from '../../Posting_pagers/MediaUploadModal/Stages/Grid_Layouts/SingleLayout';
 import TwoGridVertical from '../../Posting_pagers/MediaUploadModal/Stages/Grid_Layouts/TwoGridVertical';
 import TwoGridHorizontal from '../../Posting_pagers/MediaUploadModal/Stages/Grid_Layouts/TwoGridHorizontal';
 import ThreeGridVertical from '../../Posting_pagers/MediaUploadModal/Stages/Grid_Layouts/ThreeGridVertical';

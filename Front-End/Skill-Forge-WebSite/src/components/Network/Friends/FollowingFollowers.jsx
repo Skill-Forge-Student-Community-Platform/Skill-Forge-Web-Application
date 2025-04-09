@@ -4,6 +4,8 @@ import { UserPlus, UserMinus, Search, Loader, UserCheck } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import friendService from '../../../services/friendService';
 import { toast } from 'react-hot-toast';
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
+import useThemeToggle from "../../../hooks/useThemeToggle";
 import './FollowingFollowers.css';
 
 const FollowingFollowers = () => {
@@ -17,6 +19,7 @@ const FollowingFollowers = () => {
   const [errorFollowers, setErrorFollowers] = useState(null);
   const [processingUsers, setProcessingUsers] = useState({});
   const { user } = useAuthStore();
+  const { isDarkMode } = useThemeToggle();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -166,7 +169,7 @@ const FollowingFollowers = () => {
   };
 
   return (
-    <div className="following-followers-container">
+    <div className={`following-followers-container ${isDarkMode ? 'dark' : 'light'}`}>
       <div className="tabs">
         <button
           className={`tab ${activeTab === 'following' ? 'active' : ''}`}
@@ -208,14 +211,14 @@ const FollowingFollowers = () => {
           filteredUsers.map((user) => (
             <div key={user._id} className="user-card">
               <div className="user-info" onClick={() => goToProfile(user._id)}>
-                <img
-                  src={user.profilePicture || "/assets/default-avatar.png"}
-                  alt={user.Username}
+                <ProfileAvatar
+                  userId={user._id}
+                  staticImageUrl={user.profilePicture}
+                  customAltText={user.Username}
+                  size="small"
+                  showLevel={false}
+                  showMembershipTag={false}
                   className="user-avatar"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/assets/default-avatar.png";
-                  }}
                 />
                 <div className="user-details">
                   <h3 className="user-name">{user.Username}</h3>

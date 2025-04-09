@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Users, UserPlus, UserCheck, UsersRound, Calendar, Home } from 'lucide-react';
+import useThemeToggle from "../../hooks/useThemeToggle";
+import './NetworkSidebar.css';
 
 const NetworkSidebar = ({ connectionCount = 0, pendingCount = 0, currentPath, userId, roleType }) => {
+  const { isDarkMode } = useThemeToggle();
+
   // Construct the base path for network routes
   const getBasePath = () => {
     if (!userId || !roleType) return "/network";
@@ -22,93 +26,69 @@ const NetworkSidebar = ({ connectionCount = 0, pendingCount = 0, currentPath, us
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-5">
-      <h2 className="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Manage My Network</h2>
+    <div className={`network-sidebar ${isDarkMode ? 'dark' : 'light'}`}>
+      <h2 className="sidebar-title">Manage My Network</h2>
 
-      <nav className="space-y-2">
+      <ul className="sidebar-menu">
         {/* Home/Default page */}
-        <Link
-          to={basePath}
-          className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-            isActive('') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-          }`}
-        >
-          <Home size={20} />
-          <span>Home</span>
-        </Link>
+        <li className={`sidebar-item ${isActive('') ? 'active' : ''}`}>
+          <Link to={basePath} className="sidebar-link">
+            <Home size={20} />
+            <span className="item-name">Home</span>
+          </Link>
+        </li>
 
-        <Link
-          to={`${basePath}/connections`}
-          className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-            isActive('/connections') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-          }`}
-        >
-          <Users size={20} />
-          <span>Connections</span>
-          {connectionCount > 0 && (
-            <span className="ml-auto bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full text-xs">
-              {connectionCount}
-            </span>
-          )}
-        </Link>
+        <li className={`sidebar-item ${isActive('/connections') ? 'active' : ''}`}>
+          <Link to={`${basePath}/connections`} className="sidebar-link">
+            <Users size={20} />
+            <span className="item-name">Connections</span>
+            {connectionCount > 0 && (
+              <span className="item-count">{connectionCount}</span>
+            )}
+          </Link>
+        </li>
 
         {pendingCount > 0 && (
-          <Link
-            to={`${basePath}/requests`}
-            className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-              isActive('/requests') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-            }`}
-          >
-            <UserPlus size={20} />
-            <span>Invitations</span>
-            <span className="ml-auto bg-red-500 text-white px-2 py-1 rounded-full text-xs">
-              {pendingCount}
-            </span>
-          </Link>
+          <li className={`sidebar-item ${isActive('/requests') ? 'active' : ''}`}>
+            <Link to={`${basePath}/requests`} className="sidebar-link">
+              <UserPlus size={20} />
+              <span className="item-name">Invitations</span>
+              <span className="item-count" style={{ backgroundColor: 'var(--accent-red)' }}>
+                {pendingCount}
+              </span>
+            </Link>
+          </li>
         )}
 
-        <Link
-          to={`${basePath}/following`}
-          className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-            isActive('/following') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-          }`}
-        >
-          <UserCheck size={20} />
-          <span>Following & Followers</span>
-        </Link>
+        <li className={`sidebar-item ${isActive('/following') ? 'active' : ''}`}>
+          <Link to={`${basePath}/following`} className="sidebar-link">
+            <UserCheck size={20} />
+            <span className="item-name">Following & Followers</span>
+          </Link>
+        </li>
 
-        <Link
-          to={`${basePath}/groups`}
-          className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-            isActive('/groups') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-          }`}
-        >
-          <UsersRound size={20} />
-          <span>Groups</span>
-          <span className="ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-            Soon
-          </span>
-        </Link>
+        <div className="sidebar-divider"></div>
 
-        <Link
-          to={`${basePath}/events`}
-          className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-            isActive('/events') ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-          }`}
-        >
-          <Calendar size={20} />
-          <span>Events</span>
-          <span className="ml-auto text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-            Soon
-          </span>
-        </Link>
-      </nav>
+        <li className={`sidebar-item ${isActive('/groups') ? 'active' : ''}`}>
+          <Link to={`${basePath}/groups`} className="sidebar-link">
+            <UsersRound size={20} />
+            <span className="item-name">Groups</span>
+            <span className="item-badge soon">Soon</span>
+          </Link>
+        </li>
 
-      <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
-          Grow Your Network
-        </h3>
-        <p className="text-xs text-blue-600 dark:text-blue-400">
+        <li className={`sidebar-item ${isActive('/events') ? 'active' : ''}`}>
+          <Link to={`${basePath}/events`} className="sidebar-link">
+            <Calendar size={20} />
+            <span className="item-name">Events</span>
+            <span className="item-badge soon">Soon</span>
+          </Link>
+        </li>
+      </ul>
+
+      <div className="network-tip">
+        <h3 className="tip-title">Grow Your Network</h3>
+        <p className="tip-text">
           Connect with peers and professionals to expand your learning opportunities and career prospects.
         </p>
       </div>

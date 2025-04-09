@@ -1,8 +1,9 @@
 import { io } from 'socket.io-client';
 import { useAuthStore } from '../store/authStore';
+import { getSocketUrl } from '../utils/environment';
 
 // Create socket instance with authentication
-const socket = io('http://localhost:5000', {
+const socket = io(getSocketUrl(), {
   autoConnect: false,
   withCredentials: true,
   reconnectionAttempts: 5,
@@ -124,7 +125,8 @@ const emitTyping = (conversationId, isTyping) => {
 // Get connection status
 const isConnected = () => socket.connected;
 
-export default {
+// Assign to a variable before exporting (to fix ESLint warning)
+const socketService = {
   socket,
   connectSocket,
   disconnectSocket,
@@ -136,3 +138,5 @@ export default {
   emitTyping,
   isConnected
 };
+
+export default socketService;
