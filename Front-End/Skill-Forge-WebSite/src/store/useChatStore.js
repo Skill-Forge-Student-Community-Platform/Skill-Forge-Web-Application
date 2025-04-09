@@ -1,55 +1,56 @@
 import { create } from "zustand";
-import axios from "axios";
-import { getApiBaseUrl } from "../utils/environment";
+import toast from "react-hot-toast";
+import { axiosIntance } from ".././utils/axios.js";
 
-const api = axios.create({
-  baseURL: getApiBaseUrl(),
-  withCredentials: true
-});
-
-// Change from default export to named export
-export const useChatStore = create((set) => ({
+export const useChatStore = create((set, get) => ({
+  messages: [],
   users: [],
   selectedUser: null,
-  messages: [],
-  loading: false,
-  isUsersLoading: false,
+  isUsersLoding: false,
+  isMessagesLoding: false,
 
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {
-      const res = await api.get("/messages/users");
-      set({ users: res.data, isUsersLoading: false });
+      // endpoint
+
+      const res = await axiosIntance.get("/messages/users");
+      set({ users: res.data });
     } catch (error) {
-      console.error("Error fetching users:", error);
+      toast.error(error.response.data.message);
+    } finally {
       set({ isUsersLoading: false });
     }
   },
 
-  setSelectedUser: (user) => set({ selectedUser: user }),
-
-  getMessages: async (selectedUserId) => {
-    if (!selectedUserId) return;
-
-    set({ loading: true });
+  //fetches the specfic chat using userId
+  getMessages: async (userId) => {
+    set({ isMessagesLoading: true });
     try {
-      const res = await api.get(`/messages/${selectedUserId}`);
-      set({ messages: res.data, loading: false });
+      const res = await axiosIntance.get(`/messages/${userId}`);
+
+      //   update state
+      set({ messages: res.data });
     } catch (error) {
-      console.error("Error fetching messages:", error);
-      set({ loading: false });
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isMessagesLoading: false });
     }
   },
 
-  sendMessage: async (message, recipientId) => {
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get();
     try {
-      await api.post(`/messages/send/${recipientId}`, { message });
-      await useChatStore.getState().getMessages(recipientId);
+      const res = await axiosIntance.post(
+        `/messages/send/${selectedUser._id}`,
+        messageData
+      );
+      // keep the previous messages and add the very last one to the end
+      set({ messages: [...messages, res.data] });
     } catch (error) {
-      console.error("Error sending message:", error);
+      toast.error(error.response.data.message);
     }
-  }
-}));
+  },
 
-// You can keep the default export for backward compatibility
-export default useChatStore;
+  setSelectedUser: (selectedUser) => set({ selectedUser }),
+}));
