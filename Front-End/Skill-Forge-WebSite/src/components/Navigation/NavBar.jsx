@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -77,7 +76,7 @@ const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
           </Link>
         </div>
 
-        {/* Middle Section - Nav Links and Search */}
+        {/* Middle Section - Nav Links */}
         <div className="navbar-middle">
           {/* Main navigation */}
           <div className="nav-menu-container">
@@ -87,18 +86,15 @@ const NavBar = ({ user, logout, toggleSidebar, userId, roleType }) => {
               ))}
             </ul>
           </div>
-
-          {/* Search Bar */}
-
-          <div className="search-wrapper lg:block md:hidden">
-            {/* <SearchBar placeholder="Search courses, events, teams..." /> */}
-            <UserSearch placeholder="Search users..." />
-
-          </div>
         </div>
 
-        {/* Right Section */}
+        {/* Right Section - Search, Theme, Notifications, Profile */}
         <div className="navbar-right">
+          {/* Search Bar - Now in the right section */}
+          <div className="search-wrapper lg:block md:hidden">
+            <SearchBar placeholder="Search friends, events, teams..." />
+          </div>
+
           {/* Theme Toggle */}
           <div
             className="theme-toggle-wrapper"
