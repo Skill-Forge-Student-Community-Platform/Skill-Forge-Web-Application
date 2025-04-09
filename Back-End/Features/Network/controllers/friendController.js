@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { User } from '../../User-Authentication/models/User.js';
+import Student from '../../User-Authentication/models/Student.js'; // Add Student model import
 import Notification from '../../Notifications/models/Notification.js';
 import { io } from '../../../index.js'; // Import the socket.io instance
 
@@ -446,7 +447,6 @@ export const getSuggestedFriends = async (req, res) => {
         const sameSchoolUsers = [];
         if (user.role === 'student' && user.profile) {
             try {
-                const Student = mongoose.model('Student');
                 const studentProfile = await Student.findById(user.profile);
 
                 if (studentProfile && studentProfile.school) {
@@ -567,7 +567,6 @@ export const getSuggestedFriends = async (req, res) => {
         // Combine results from all categories
         const suggestions = [
             ...sameSchoolUsers,
-
             ...friendsOfFriends,
             ...randomUsers
         ];

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosIntance } from ".././utils/axios.js";
+import { axiosIntance as axiosInstance } from ".././utils/axios.js";
 
 const useUserSearchStore = create((set, get) => ({
   users: [],
@@ -18,7 +18,7 @@ const useUserSearchStore = create((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      const res = await axiosIntance.get(`/teams/search?name=${query}`);
+      const res = await axiosInstance.get(`/teams/search?name=${query}`);
       set({ users: res.data, loading: false });
     } catch (err) {
       set({
@@ -43,7 +43,7 @@ const useUserSearchStore = create((set, get) => ({
     if (!selectedUser || !selectedTeamId) return;
 
     try {
-      const res = await axiosIntance.post("/teams/invite", {
+      const res = await axiosInstance.post("/teams/invite", {
         teamId: selectedTeamId,
         userId: selectedUser._id,
       });

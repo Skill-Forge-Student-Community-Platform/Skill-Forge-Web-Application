@@ -244,16 +244,50 @@ const postServices = {
   /**
    * Share/repost a post
    */
-  sharePost: async (postId, text, privacy = "Public") => {
+  sharePost: async (postId, text, privacy) => {
     try {
+      // Don't attempt to fetch the post first, just send the share request
+      // with the data we have
       const response = await axios.post(`${BASE_URL}/posts/${postId}/share`, {
         text,
-        privacy
+        privacy,
+        notificationType: "repost"
       });
+
       return response.data;
     } catch (error) {
-      console.error(`Error sharing post ${postId}:`, error);
-      throw error.response?.data || { message: 'Failed to share post' };
+      console.error("Error sharing post", postId, ":", error.response?.data || error);
+      throw error.response?.data || { message: "Server error while sharing post" };
+    }
+  },
+
+  /**
+   * Get a single post by ID
+   * Note: The direct GET /posts/:postId endpoint may not exist
+   * This is a fallback implementation
+   */
+  getPostById: async (postId) => {
+    try {
+      // Try using the feed endpoint with a filter for the specific post ID
+      // This is a workaround since we don't have a dedicated endpoint
+      const response = await axios.get(`${BASE_URL}/posts/feed`, {
+        params: { postId: postId, limit: 1 }
+      });
+
+      // Find the post in the response
+      const post = response.data.posts?.find(p => p._id === postId);
+
+      if (!post) {
+        throw new Error("Post not found");
+      }
+
+      return {
+        success: true,
+        post: post
+      };
+    } catch (error) {
+      console.error(`Error fetching post ${postId}:`, error);
+      throw error.response?.data || { message: 'Failed to load post' };
     }
   },
 

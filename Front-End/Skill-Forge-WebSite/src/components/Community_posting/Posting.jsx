@@ -33,6 +33,8 @@ function Posting({ user }) {
   const [privacy, setPrivacy] = useState("Friends");
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [tempMedia, setTempMedia] = useState([]);
+  // Add the missing isSubmitting state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Posts state with loading and error handling
   const [posts, setPosts] = useState([]);
@@ -669,24 +671,56 @@ function Posting({ user }) {
     }
   };
 
-  // Finalize share submission
+  // Update finalizeShare function to be more robust
   const finalizeShare = async (postId, text, privacy) => {
     try {
+      // Find the complete post to share (if it exists in our current state)
+      const postToShareObj = posts.find(p => p._id === postId);
+
+      // Set loading state
+      setIsSubmitting(true);
+
+      // Call the API directly without trying to get post details first
       const response = await postServices.sharePost(postId, text, privacy);
 
-      // Add new shared post to state
-      setPosts(prevPosts => [response.post, ...prevPosts]);
+      if (response && response.post) {
+        // Create a complete post object
+        const completePost = { ...response.post };
 
-      // Emit socket event if available
-      if (socket) {
-        socket.emit("sharePost", response.post);
+        // If we have the original post data in our current state, use it to enrich the response
+        if (postToShareObj && completePost.originalPost) {
+          // Only apply these enrichments if the response doesn't already have this data
+          if (!completePost.originalPost.text && !completePost.originalPost.content) {
+            completePost.originalPost.text = postToShareObj.text || "";
+            completePost.originalPost.content = postToShareObj.content || "";
+          }
+
+          if (postToShareObj.media && !completePost.originalPost.media) {
+            completePost.originalPost.media = postToShareObj.media;
+          }
+
+          if (!completePost.originalPost.user || !completePost.originalPost.user.Username) {
+            completePost.originalPost.user = postToShareObj.user;
+          }
+        }
+
+        // Add enriched post to state
+        setPosts(prevPosts => [completePost, ...prevPosts]);
+
+        // Emit socket event with complete data
+        if (socket && socket.connected) {
+          socket.emit("newPost", completePost);
+        }
+
+        toast.success("Post shared successfully!");
       }
 
-      toast.success("Post shared successfully!");
       closeWindow();
     } catch (error) {
-      toast.error("Failed to share post");
       console.error("Share error:", error);
+      toast.error(error.message || "Failed to share post");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
