@@ -132,11 +132,19 @@ const PostTemplate = ({
         </div>
       </header>
 
-      <div className="post-container" onClick={() => onMediaClick && onMediaClick(post)}>
+      <div className="post-container">
         {post.isRepost ? (
           <RepostContent post={post} />
         ) : (
-          <PostContent post={post} />
+          <PostContent
+            post={post}
+            onMediaClick={(mediaIndex, isDoubleClick) => {
+              if (isDoubleClick && onMediaClick) {
+                console.log("Forwarding double click event to Feed");
+                onMediaClick(post, mediaIndex, true);
+              }
+            }}
+          />
         )}
       </div>
 

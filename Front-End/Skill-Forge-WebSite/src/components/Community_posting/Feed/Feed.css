@@ -10,14 +10,15 @@
 
 /* Feed header with tabs */
 .feed-header {
-  background: white; /* Changed to white */
+  background: var(--container-bg); /* Use theme variable */
   border-radius: 8px; /* Smaller border radius */
   padding: 6px 12px; /* Reduced padding */
   margin-bottom: 2px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+  box-shadow: 0 1px 2px var(--modal-shadow); /* Use theme shadow */
   position: sticky;
   top: 70px;
   z-index: 10;
+  border: 1px solid var(--card-border);
 }
 
 .feed-tabs {
@@ -52,8 +53,8 @@
 }
 
 .tab-button.active {
-  background-color: var(--primary-color-light);
-  color: var(--primary-color);
+  background-color: var(--hover-bg);
+  color: var(--accent-blue);
   font-weight: 500; /* Less bold for active */
 }
 
@@ -68,23 +69,23 @@
   gap: 8px;
   justify-content: center;
   padding: 8px 16px;
-  background-color: var(--primary-color);
-  color: white;
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
   border: none;
   border-radius: 20px;
   font-weight: 500;
   cursor: pointer;
   margin: 0 auto 16px;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 2px 8px var(--modal-shadow);
   transition: all 0.2s ease;
   animation: pulse 2s infinite;
   max-width: 200px;
 }
 
 .new-posts-button:hover {
-  background-color: var(--primary-dark);
+  background-color: var(--button-primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 4px 12px var(--modal-shadow);
   animation: none;
 }
 
@@ -95,15 +96,15 @@
 @keyframes pulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 2px 8px var(--modal-shadow);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 4px 12px var(--modal-shadow);
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 2px 8px var(--modal-shadow);
   }
 }
 
@@ -126,8 +127,6 @@
   width: 100%;
 }
 
-
-
 /* Banner-style Empty feed state */
 .empty-feed {
   width: 100%;
@@ -136,15 +135,15 @@
 }
 
 .empty-feed-card {
-  background-color: #f3f6f8 !important; /* Light gray background like a notice */
+  background-color: var(--card-bg) !important; /* Use theme variable */
   border-radius: 8px;
   padding: 24px 20px; /* Reduced padding */
   text-align: center;
-  box-shadow: none; /* No shadow */
+  box-shadow: 0 1px 3px var(--modal-shadow); /* Light theme-aware shadow */
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: none; /* No border */
+  border: 1px solid var(--card-border); /* Theme border */
   transition: none; /* No transitions */
 }
 
@@ -164,39 +163,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 119, 181, 0.15); /* Lighter shadow */
+  box-shadow: 0 2px 4px var(--modal-shadow); /* Theme shadow */
 }
 
-/* LinkedIn colors for icons */
+/* Theme-aware colors for icons */
 .empty-feed-card[data-type="posts"] .empty-feed-icon {
-  background-color: #0077B5;
-  background-image: linear-gradient(135deg, #0077B5, #0a66c2);
+  background-color: var(--accent-blue);
+  background-image: linear-gradient(135deg, var(--accent-blue), var(--button-primary));
 }
 
 .empty-feed-card[data-type="events"] .empty-feed-icon {
-  background-color: #0073b1;
-  background-image: linear-gradient(135deg, #0073b1, #006097);
+  background-color: var(--accent-blue);
+  background-image: linear-gradient(135deg, var(--accent-blue), var(--button-primary));
 }
 
 .empty-feed h2 {
   font-size: 18px; /* Smaller heading */
   margin-bottom: 10px;
-  color: #000000;
+  color: var(--text-color);
   font-weight: 600;
 }
 
 .empty-feed p {
-  color: #666666;
+  color: var(--text-secondary);
   margin-bottom: 16px; /* Reduced margin when no button follows */
   max-width: 100%;
   font-size: 14px;
   line-height: 1.4;
 }
 
-/* LinkedIn-style button only for "Find People" */
+/* Theme-aware button style */
 .connect-btn {
   padding: 8px 20px;
-  color: white;
+  color: var(--button-primary-text);
   border: none;
   border-radius: 24px;
   font-weight: 600;
@@ -208,7 +207,7 @@
 
 /* Only for posts tab */
 .empty-feed-card[data-type="posts"] .connect-btn {
-  background-color: #0a66c2;
+  background-color: var(--button-primary);
 }
 
 /* Responsive adjustments */
@@ -243,30 +242,10 @@
     font-size: 14px;
   }
 
-  .connect-btn {    padding: 12px 24px;    font-size: 14px;  }}
-
-/* Dark mode - keep white background even in dark mode */
-@media (prefers-color-scheme: dark) {
-  .empty-feed-card {
-    background-color: white !important; /* Keep white background in dark mode */
-    border-color: #e0e0e0; /* Light border in dark mode */
-  }
-
-  .empty-feed h2 {
-    color: #191919; /* Dark text for headings on white background */
-  }
-
-  .empty-feed p {
-    color: #4d4d4d; /* Medium gray text for body on white background */
-  }
-
-  .feed-loading {
-    background-color: white; /* Keep loading background white in dark mode */
-    color: #4d4d4d; /* Darker text for contrast */
-  }
-
-  .loading-spinner {
-    border-color: rgba(0, 0, 0, 0.1);
-    border-left-color: #0077B5; /* LinkedIn blue */
+  .connect-btn {
+    padding: 12px 24px;
+    font-size: 14px;
   }
 }
+
+/* Remove the media query for dark mode since we're using theme variables */

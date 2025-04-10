@@ -95,7 +95,8 @@ const studentSchema = new mongoose.Schema({
   isProfileComplete: {
     type: Boolean,
     default: false
-  }
+  },
+
 }, { timestamps: true });
 
 export default mongoose.model('student', studentSchema);

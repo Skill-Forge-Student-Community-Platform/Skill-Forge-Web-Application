@@ -5,7 +5,9 @@ import {
   followUnfollowUser,
   getSuggestedUsers,
   updateUser,
-  getCompleteUserProfile  // Add this new controller function
+  getCompleteUserProfile,
+  getUserFollowing,
+  getUserFollowers
 } from '../controllers/user.controller.js';
 
 const router = express.Router();
@@ -14,6 +16,8 @@ router.get("/profile/:username", verifyToken, getUserProfile);
 router.post("/follow/:id", verifyToken, followUnfollowUser);
 router.get("/suggested", verifyToken, getSuggestedUsers);
 router.put("/update", verifyToken, updateUser);
-router.get("/complete-profile/:userId", verifyToken, getCompleteUserProfile);  // Add new route
+router.get("/complete-profile/:userId", verifyToken, getCompleteUserProfile);
+router.get("/:userId/following", verifyToken, getUserFollowing);
+router.get("/:userId/followers", verifyToken, getUserFollowers);
 
 export default router;

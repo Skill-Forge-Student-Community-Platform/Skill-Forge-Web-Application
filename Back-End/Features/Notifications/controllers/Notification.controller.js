@@ -9,19 +9,24 @@ export const getNotifications = async (req, res) => {
   try {
     const userId = req.user.id;
 
+    // Use lean() for better performance and add proper error handling for population
     const notifications = await Notification.find({ to: userId })
       .sort({ createdAt: -1 })
       .populate("from", "Username profilePicture")
       .populate("post", "text")
-      .limit(50); // Limit to 50 most recent notifications
+      .limit(50)
+      .lean()
+      .exec();
 
-    res.status(200).json({
+    // Return a successful response
+    return res.status(200).json({
       success: true,
       notifications
     });
   } catch (error) {
     console.error("Error in getNotifications controller:", error);
-    res.status(500).json({
+    // Send a more specific error message back to client
+    return res.status(500).json({
       success: false,
       message: "Server error while fetching notifications",
       error: error.message
@@ -34,7 +39,6 @@ export const getNotifications = async (req, res) => {
  * @route DELETE /api/notifications
  * @access Private
  */
-
 export const deleteAllNotifications = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -64,6 +68,14 @@ export const deleteNotification = async (req, res) => {
   try {
     const userId = req.user.id;
     const { notificationId } = req.params;
+
+    // Validate notificationId is a valid ObjectId
+    if (!notificationId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid notification ID format"
+      });
+    }
 
     const notification = await Notification.findById(notificationId);
 
@@ -107,14 +119,15 @@ export const markAllAsRead = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    await Notification.updateMany(
+    const result = await Notification.updateMany(
       { to: userId },
       { $set: { read: true } }
     );
 
     res.status(200).json({
       success: true,
-      message: "All notifications marked as read"
+      message: "All notifications marked as read",
+      count: result.modifiedCount
     });
   } catch (error) {
     console.error("Error in markAllAsRead controller:", error);
@@ -135,6 +148,14 @@ export const markAsRead = async (req, res) => {
   try {
     const userId = req.user.id;
     const { notificationId } = req.params;
+
+    // Validate notificationId is a valid ObjectId
+    if (!notificationId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid notification ID format"
+      });
+    }
 
     const notification = await Notification.findById(notificationId);
 

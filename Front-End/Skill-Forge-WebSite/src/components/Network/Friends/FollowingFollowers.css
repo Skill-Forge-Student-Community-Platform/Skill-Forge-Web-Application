@@ -1,0 +1,266 @@
+/* Following/Followers styling */
+.following-followers-container {
+  background-color: var(--card-bg);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px var(--modal-shadow);
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  background: none;
+  border: none;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--accent-blue);
+  border-radius: 3px 3px 0 0;
+}
+
+.following-search-container {
+  padding: 1rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.following-search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--input-border);
+  background-color: var(--input-bg);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+  color: var(--input-text);
+}
+
+.following-search-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(0, 119, 181, 0.1);
+}
+
+.user-list {
+  padding: 1rem;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.375rem;
+  background-color: var(--bg-color);
+  border: 1px solid var(--card-border);
+  transition: all 0.2s ease;
+}
+
+.user-card:hover {
+  background-color: var(--hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px var(--modal-shadow);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--card-border);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.user-role {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.follow-btn, .unfollow-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.follow-btn {
+  background-color: var(--accent-blue);
+  color: white;
+  border: none;
+}
+
+.follow-btn:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.unfollow-btn {
+  background-color: var(--button-secondary);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--card-border);
+}
+
+.unfollow-btn:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.spinner-sm {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.error-container {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: var(--accent-red);
+  text-align: center;
+}
+
+.error-message {
+  margin-bottom: 0.75rem;
+}
+
+.retry-button {
+  background-color: var(--accent-red);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  opacity: 0.9;
+}
+
+.empty-state {
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.find-people-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  padding: 0.625rem 1.25rem;
+  background-color: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.find-people-btn:hover {
+  background-color: var(--button-primary-hover);
+}
+
+@media (max-width: 640px) {
+  .user-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .action-buttons {
+    width: 100%;
+  }
+
+  .follow-btn, .unfollow-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

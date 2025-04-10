@@ -92,7 +92,7 @@ const AccountSettings = () => {
             )}
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <h3 className="settings-user-name text-xl font-semibold text-gray-800 dark:text-white">
               {user?.fullName || user?.username || 'User'}
             </h3>
             <p className="text-gray-600 dark:text-gray-300">{user?.email || 'No email available'}</p>
@@ -129,4 +129,10 @@ const AccountSettings = () => {
           </div>
           <div className="ml-4">
             <h4 className="font-medium text-red-600 dark:text-red-400">Delete Account</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Permanently delete your account and all data</p>          </div>        </Link>      </div>    </div>  );};export default AccountSettings;
+            <p className="text-sm text-gray-600 dark:text-gray-400">Permanently delete your account and all data</p>
+          </div>
+        </Link>
+      </div>
+  </div>
+  );
+};export default AccountSettings;

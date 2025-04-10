@@ -18,6 +18,32 @@ main.overflow-y-auto {
   margin-left: 80px; /* Collapsed sidebar width (70px) + extra space */
 }
 
+/* Theme-based background and text colors */
+.home-container {
+  background-color: var(--sidebar-bg);
+}
+
+.main-content-wrapper {
+  background-color: var(--container-bg);
+}
+
+.feed-container {
+  color: var(--text-color);
+  width: 100% !important; 
+}
+
+/* Medium screens and up - use fixed width */
+@media (min-width: 768px) {
+  .feed-container {
+    width: 540px !important;
+  }
+}
+
+.home-sidebar {
+  background-color: var(--sidebar-bg);
+  color: var(--text-color);
+}
+
 /* Responsive styling for different screen sizes */
 @media (max-width: 768px) {
   /* For small screens, give the feed more breathing room */
@@ -47,6 +73,7 @@ main.overflow-y-auto {
   .sidebar-margin {
     margin-left: 80px;
   }
+
 }
 
 /* Large screen and up - no sidebar margin needed */
@@ -58,7 +85,7 @@ main.overflow-y-auto {
 
 /* Center the feed on small screens */
 @media (max-width: 640px) {
-  .bg-gray-100.dark\:bg-gray-900 > div {
+  .home-container > div {
     padding-left: 12px;
     padding-right: 12px;
   }
@@ -66,7 +93,7 @@ main.overflow-y-auto {
 
 /* For extra large screens, add some max-width constraint */
 @media (min-width: 1280px) {
-  .bg-gray-100.dark\:bg-gray-900 > div {
+  .home-container > div {
     max-width: 1128px;
   }
 }

@@ -4,11 +4,10 @@ import { Users, MessageSquare, Activity } from "lucide-react";
 import { BookOpenText } from "lucide-react";
 import { BellDot } from "lucide-react";
 import { CircleHelp } from "lucide-react";
-import { MessageCircle } from "lucide-react";
 import { BarChart } from "lucide-react";
-import { Play } from "lucide-react";
 import { MapPin } from "lucide-react";
 import { User } from "lucide-react";
+import { Bookmark, DollarSign } from "lucide-react";
 
 // Function to create the Menus array with role-specific items
 export const getMenus = (roleType, userId) => {
@@ -28,10 +27,16 @@ export const getMenus = (roleType, userId) => {
           path: `${baseUrl}/home`
         },
         {
-          name: "Dashboard",
-          desc: "Analytics & stats",
-          icon: BarChart2,
-          path: `${baseUrl}/dashboard`
+          name: "Network",
+          desc: "Your connections",
+          icon: Users,
+          path: `${baseUrl}/network`
+        },
+        {
+          name: "Bookmarks",
+          desc: "Saved content",
+          icon: Bookmark,
+          path: `${baseUrl}/bookmarks`
         },
         ...(isStudent ? [
           {
@@ -45,6 +50,12 @@ export const getMenus = (roleType, userId) => {
             desc: "Your progress",
             icon: Award,
             path: `${baseUrl}/achievements`
+          },
+          {
+            name: "Dashboard",
+            desc: "Analytics & stats",
+            icon: BarChart2,
+            path: `${baseUrl}/dashboard`
           }
         ] : [
           {
@@ -52,7 +63,13 @@ export const getMenus = (roleType, userId) => {
             desc: "Advanced statistics",
             icon: BarChart,
             path: `${baseUrl}/analytics`
-          }
+          },
+          // {
+          //   name: "Dashboard",
+          //   desc: "Analytics & stats",
+          //   icon: BarChart2,
+          //   path: `${baseUrl}/dashboard`
+          // }
         ])
       ],
       gridCols: 2
@@ -79,6 +96,12 @@ export const getMenus = (roleType, userId) => {
             desc: "Filter by type",
             icon: Filter,
             path: `${baseUrl}/view-events/categories`
+          },
+          {
+            name: "Saved Events",
+            desc: "Your bookmarked events",
+            icon: Bookmark,
+            path: `${baseUrl}/saved-events`
           }
         ] : [
           {
@@ -92,6 +115,12 @@ export const getMenus = (roleType, userId) => {
             desc: "Edit your events",
             icon: Settings,
             path: `${baseUrl}/manage-events`
+          },
+          {
+            name: "Saved Events",
+            desc: "Your bookmarked events",
+            icon: Bookmark,
+            path: `${baseUrl}/saved-events`
           }
         ]),
         {
@@ -105,25 +134,25 @@ export const getMenus = (roleType, userId) => {
           desc: "Recent changes",
           icon: BellDot,
           path: `${baseUrl}/view-events/updates`
-        },
+        }
       ],
       gridCols: 2
     },
     {
       name: "Teams",
-      subMenuHeading: ["My Teams", "Management"],
+      subMenuHeading: ["My Teams", "Communication"],
       subMenu: [
+        {
+          name: "Create Team",
+          desc: "Start a new team",
+          icon: PlusCircle,
+          path: `${baseUrl}/teams/create`
+        },
         {
           name: "My Teams",
           desc: "Team overview",
           icon: Users,
           path: `${baseUrl}/teams`
-        },
-        {
-          name: isStudent ? "Team Settings" : "Team Management",
-          desc: "Configure teams",
-          icon: Settings,
-          path: `${baseUrl}/teams/management`
         },
         {
           name: "Team Activity",
@@ -132,25 +161,24 @@ export const getMenus = (roleType, userId) => {
           path: `${baseUrl}/teams/activity`
         },
         {
+          name: "Find Teams",
+          desc: "Join new teams",
+          icon: MapPin,
+          path: `${baseUrl}/teams/find`
+        },
+        {
           name: "Team Inbox",
           desc: "Messages & notifications",
           icon: MessageSquare,
           path: `${baseUrl}/teams/inbox`
         },
-        ...(isStudent ? [
-          {
-            name: "Find Teams",
-            desc: "Join new teams",
-            icon: MapPin,
-            path: `${baseUrl}/teams/find`
-          }
-        ] : [
-          {
-            name: "Create Team",
-            desc: "Start a new team",
-            icon: PlusCircle,
-            path: `${baseUrl}/teams/create`
-          },
+        {
+          name: "Team Settings",
+          desc: "Configure teams",
+          icon: Settings,
+          path: `${baseUrl}/teams/management`
+        },
+        ...(isStudent ? [] : [
           {
             name: "Team Analytics",
             desc: "Performance metrics",
@@ -163,6 +191,7 @@ export const getMenus = (roleType, userId) => {
     },
     {
       name: "Profile",
+      subMenuHeading: ["Account", "Support"],
       subMenu: [
         {
           name: "My Profile",
@@ -177,13 +206,19 @@ export const getMenus = (roleType, userId) => {
           path: `${baseUrl}/settings`
         },
         {
+          name: "Pricing",
+          desc: "Subscription plans",
+          icon: DollarSign,
+          path: `${baseUrl}/pricing`
+        },
+        {
           name: "Help Center",
           desc: "Support & guides",
           icon: CircleHelp,
           path: `/help-center`
-        },
+        }
       ],
-      gridCols: 1
-    },
+      gridCols: 2
+    }
   ];
 };

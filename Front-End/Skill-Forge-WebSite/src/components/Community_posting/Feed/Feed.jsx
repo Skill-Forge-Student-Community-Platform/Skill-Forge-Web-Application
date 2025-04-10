@@ -32,7 +32,9 @@ const Feed = ({
   isLoading = false,
   // New props for refresh functionality
   onRefresh,
-  lastUpdated
+  lastUpdated,
+  // Theme prop
+  isDarkMode
 }) => {
   // Track media preview state
   const [mediaPreview, setMediaPreview] = useState({
@@ -86,14 +88,21 @@ const Feed = ({
   };
 
   // Handle media click to open lightbox
-  const handleMediaClick = (post, mediaIndex) => {
+  const handleMediaClick = (post, mediaIndex, isDoubleClick = false) => {
     if (post.media && post.media.files && post.media.files.length > 0) {
-      setMediaPreview({
-        open: true,
-        post: post,
-        mediaIndex: mediaIndex || 0,
-        media: post.media.files
-      });
+      // Always open on double click
+      if (isDoubleClick) {
+        console.log('Opening lightbox on double click', { post, mediaIndex });
+        setMediaPreview({
+          open: true,
+          post: post,
+          mediaIndex: mediaIndex || 0,
+          media: post.media.files
+        });
+      } else {
+        // For debugging - can remove later
+        console.log('Single click detected - ignoring');
+      }
     }
   };
 
@@ -133,22 +142,28 @@ const Feed = ({
     try {
       // Use the postServices to handle the API call
       const response = await postServices.likeComment(postId, commentId);
+      console.log("Like comment response:", response);
+
       toast.success(response.liked ? "Comment liked" : "Comment unliked");
+
+      // Return response for state updates
       return response;
     } catch (error) {
       toast.error("Failed to update comment like");
       console.error("Comment like error:", error);
+      throw error; // Re-throw to allow caller to handle
     }
   };
 
   return (
-    <div className="feed-container">
+    <div className={`feed-container ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       {/* Upload Progress Bar */}
       <UploadProgressBar
         progress={uploadProgress}
         isUploading={isUploading}
         onCancel={onCancelUpload}
         error={uploadError}
+        isDarkMode={isDarkMode}
       />
 
       {/* Feed Header with Tabs */}
@@ -221,6 +236,8 @@ const Feed = ({
             onReportPost={onReportPost}
             onDeleteComment={onDeleteComment}
             onMediaClick={handleMediaClick}
+            onLikeComment={handleLikeComment}
+            isDarkMode={isDarkMode}
           />
         ))}
       </div>
@@ -238,7 +255,10 @@ const Feed = ({
           onComment={onComment}
           onShare={onShare}
           onDelete={isPostOwner(mediaPreview.post) ? onDelete : null}
+          onLikeComment={handleLikeComment}
+          onDeleteComment={onDeleteComment}
           currentUserId={currentUserId}
+          isDarkMode={isDarkMode}
         />
       )}
     </div>

@@ -1,0 +1,145 @@
+.achievements-profile-card {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+/* Removed blue gradient background completely */
+.achievements-profile-bg {
+  display: none;
+}
+
+.achievements-profile-avatar-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 20px auto 10px;
+}
+
+.achievements-profile-avatar-component {
+  /* Override any ProfileAvatar styles if needed */
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.achievements-profile-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #0a66c2;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  border: 2px solid white;
+  color: white;
+  z-index: 2; /* Ensure badge appears above the avatar */
+}
+
+.achievements-profile-info {
+  text-align: center;
+  padding: 0 16px 16px;
+}
+
+.achievements-profile-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #000000;
+  margin-left: 5px !important;
+  text-align: center !important;
+}
+
+.achievements-profile-title {
+  font-size: 14px;
+  color: #666666;
+  margin: 0 0 12px 0;
+}
+
+.achievements-pro-badge {
+  display: inline-block;
+  background-color: rgba(10, 102, 194, 0.08);
+  color: #0a66c2;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.achievements-share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+  padding: 6px 16px;
+  background-color: #FFFFFF;
+  color: #666666;
+  border: 1px solid #666666;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.achievements-share-button:hover {
+  opacity: 0.9;
+  background-color: #FFFFFF;
+  border-color: #000000;
+  color: #000000;
+}
+
+.achievements-share-icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Override dark mode to maintain light theme */
+@media (prefers-color-scheme: dark) {
+  .achievements-profile-card {
+    background-color: #FFFFFF;
+  }
+
+  .achievements-profile-bg {
+    display: none;
+  }
+
+  .achievements-profile-avatar-container {
+    border-color: #FFFFFF;
+  }
+
+  .achievements-profile-name {
+    color: #000000;
+  }
+
+  .achievements-profile-title {
+    color: #666666;
+  }
+
+  .achievements-pro-badge {
+    background-color: rgba(10, 102, 194, 0.08);
+    color: #0a66c2;
+  }
+
+  .achievements-share-button {
+    background-color: #FFFFFF;
+    color: #666666;
+    border-color: #666666;
+  }
+
+  .achievements-share-button:hover {
+    opacity: 0.9;
+    background-color: #FFFFFF;
+    border-color: #000000;
+    color: #000000;
+  }
+}

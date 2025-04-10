@@ -69,10 +69,10 @@ export const followUnfollowUser = async (req, res) => {
       await User.findByIdAndUpdate(id, { $pull: { followers: currentUserId } });
       await User.findByIdAndUpdate(currentUserId, { $pull: { following: id } });
 
-      //TODO: return id of  the user as a response
       return res.status(200).json({
         success: true,
-        message: "User unfollowed successfully"
+        message: "User unfollowed successfully",
+        userId: id
       });
     } else {
       // Follow logic
@@ -84,18 +84,32 @@ export const followUnfollowUser = async (req, res) => {
         type: "follow",
         from: currentUserId,
         to: id,
+        message: "started following you",
         createdAt: Date.now()
       });
 
       await newNotification.save();
-      // TODO: Send notification to user
+
+      // Send real-time notification using socket.io
+      const currentUserData = {
+        _id: currentUser._id,
+        Username: currentUser.Username,
+        profilePicture: currentUser.profilePicture
+      };
+
+      // Emit socket event for the notification
+      io.to(`user:${id}`).emit('new_notification', {
+        ...newNotification.toObject(),
+        from: currentUserData
+      });
+
       return res.status(200).json({
         success: true,
-        message: "User followed successfully"
+        message: "User followed successfully",
+        userId: id
       });
     }
   } catch (error) {
-
     console.log("Error in followUnfollowUser: ", error.message);
     res.status(500).json({
       success: false,
@@ -240,6 +254,7 @@ export const updateUser = async (req, res) => {
     // Profile picture and cover image are already handled above
 
     // Save the updated user
+
     await user.save();
 
     // Update profile data based on role
@@ -363,5 +378,72 @@ export const getCompleteUserProfile = async (req, res) => {
       success: false,
       message: error.message
     });
+  }
+};
+
+export const getUserFollowing = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find user and populate following
+    const user = await User.findById(userId)
+      .select('following')
+      .populate('following', 'Username role profilePicture email');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // Check if current user follows each user in the following list
+    const currentUserId = req.user.id;
+    const currentUser = await User.findById(currentUserId).select('following');
+
+    const following = user.following.map(followedUser => {
+      return {
+        ...followedUser._doc,
+        isFollowedByMe: currentUser.following.includes(followedUser._id)
+      };
+    });
+
+    res.status(200).json(following);
+  } catch (error) {
+    console.error("Error in getUserFollowing:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserFollowers = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find users who follow the target user
+    const users = await User.find({ following: userId })
+      .select('_id Username role profilePicture email');
+
+    if (!users) {
+      return res.status(404).json({
+        success: false,
+        message: "No followers found"
+      });
+    }
+
+    // Check if current user follows each follower
+    const currentUserId = req.user.id;
+    const currentUser = await User.findById(currentUserId).select('following');
+
+    const followers = users.map(follower => {
+      return {
+        ...follower._doc,
+        isFollowedByMe: currentUser.following.includes(follower._id)
+      };
+    });
+
+    res.status(200).json(followers);
+  } catch (error) {
+    console.error("Error in getUserFollowers:", error);
+    res.status(500).json({ message: error.message });
   }
 };

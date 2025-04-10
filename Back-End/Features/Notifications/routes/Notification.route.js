@@ -18,4 +18,5 @@ router.delete('/:notificationId', verifyToken, deleteNotification);
 router.patch('/read/all', verifyToken, markAllAsRead);
 router.patch('/read/:notificationId', verifyToken, markAsRead);
 
+// Make sure this route is properly exported
 export default router;

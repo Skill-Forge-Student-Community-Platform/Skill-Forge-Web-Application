@@ -1,132 +1,211 @@
-import React from 'react';
-import { FaChevronRight, FaUserPlus, FaCalendarAlt, FaUsers } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaChevronRight, FaUserPlus, FaUsers, FaSpinner } from 'react-icons/fa';
+import { UserCheck } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import friendService from '../../../services/friendService';
+import ProfileAvatar from './ProfileAvatar';
+import './Trending_Data.css';
 
 const Trending_Data = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pendingRequests, setPendingRequests] = useState([]);
+
+  useEffect(() => {
+    loadSuggestedUsers();
+  }, []);
+
+  const loadSuggestedUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await friendService.getSuggestedFriends();
+      // Just get the top 3 for this compact widget
+      setSuggestedUsers(response.slice(0, 3));
+    } catch (error) {
+      console.error("Failed to load user suggestions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFriendRequest = async (userId) => {
+    try {
+      setPendingRequests(prev => [...prev, userId]);
+      await friendService.sendFriendRequest(userId);
+      toast.success("Friend request sent successfully!");
+    } catch (error) {
+      toast.error("Failed to send friend request");
+      // Remove from pending if it fails
+      setPendingRequests(prev => prev.filter(id => id !== userId));
+    }
+  };
+
+  const handleViewAllEvents = () => {
+    // Extract the base path (e.g., /Student/67ea8e1551c9a3f0fa4dad0d)
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length >= 3) {
+      // Construct the correct path preserving the role and userId
+      const basePath = `/${pathParts[1]}/${pathParts[2]}`; // e.g., /Student/67ea8e1551c9a3f0fa4dad0d
+      navigate(`${basePath}/view-events`);
+    } else {
+      // Fallback in case the path structure is different
+      navigate('view-events');
+    }
+  };
+
+  const goToNetworkPage = () => {
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length >= 3) {
+      const basePath = `/${pathParts[1]}/${pathParts[2]}`;
+      navigate(`${basePath}/network`);
+    } else {
+      navigate('/network');
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Trending events section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-        <h3 className="flex items-center text-gray-900 dark:text-gray-100 font-semibold text-lg mb-3">
+      <div className="trending-card">
+        <h3 className="trending-title">
           <span className="mr-2">🔥</span>
           Trending Events
         </h3>
-        <div className="space-y-3">
+        <div className="trending-list">
           {/* Event cards */}
-          <div className="flex items-start rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 p-2 transition-colors">
-            <div className="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300 p-2 rounded-md mr-3 min-w-[3rem] text-center">
+          <div className="trending-item">
+            <div className="date-badge">
               <span className="text-xs font-medium">JUL</span>
               <span className="text-lg font-bold">24</span>
             </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">Web Development Workshop</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">Learn the latest technologies in web development</p>
-              <div className="flex items-center mt-2">
-                <FaUsers className="text-gray-500 dark:text-gray-400 text-xs mr-1" />
-                <span className="text-gray-500 dark:text-gray-400 text-xs">120 attending</span>
+            <div className="trending-content">
+              <h4 className="trending-item-title">Web Development Workshop</h4>
+              <p className="trending-item-desc">Learn the latest technologies in web development</p>
+              <div className="trending-meta">
+                <FaUsers className="meta-text mr-1" />
+                <span className="meta-text">120 attending</span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-start rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 p-2 transition-colors">
-            <div className="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300 p-2 rounded-md mr-3 min-w-[3rem] text-center">
+          <div className="trending-item">
+            <div className="date-badge">
               <span className="text-xs font-medium">AUG</span>
               <span className="text-lg font-bold">05</span>
             </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">Data Science Summit</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">Explore the world of data analysis</p>
-              <div className="flex items-center mt-2">
-                <FaUsers className="text-gray-500 dark:text-gray-400 text-xs mr-1" />
-                <span className="text-gray-500 dark:text-gray-400 text-xs">85 attending</span>
+            <div className="trending-content">
+              <h4 className="trending-item-title">Data Science Summit</h4>
+              <p className="trending-item-desc">Explore the world of data analysis</p>
+              <div className="trending-meta">
+                <FaUsers className="meta-text mr-1" />
+                <span className="meta-text">85 attending</span>
               </div>
             </div>
           </div>
 
-          <a href="/events" className="flex items-center justify-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium pt-2 pb-1 border-t border-gray-100 dark:border-gray-700">
+          <button
+            onClick={handleViewAllEvents}
+            className="view-more"
+          >
             View all events
             <FaChevronRight size={12} className="ml-1" />
-          </a>
+          </button>
         </div>
       </div>
 
       {/* People you may know section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-        <h3 className="text-gray-900 dark:text-gray-100 font-semibold text-lg mb-3">
+      <div className="trending-card">
+        <h3 className="trending-title">
           People you may know
         </h3>
-        <div className="space-y-3">
-          <div className="flex items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white font-medium text-sm mr-3">
-              JS
+        <div className="trending-list">
+          {loading ? (
+            <div className="text-center py-4">
+              <FaSpinner className="animate-spin mx-auto text-gray-500" size={20} />
+              <p className="text-sm text-gray-500 mt-2">Loading suggestions...</p>
             </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">John Smith</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-xs">Software Engineer at Tech Co</p>
+          ) : suggestedUsers.length === 0 ? (
+            <div className="text-center py-4">
+              <p className="text-sm text-gray-500">No suggestions available right now.</p>
             </div>
-            <button className="ml-2 flex items-center text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-1 px-2 rounded transition-colors">
-              <FaUserPlus size={12} className="mr-1" />
-              Connect
-            </button>
-          </div>
+          ) : (
+            <>
+              {suggestedUsers.map(user => (
+                <div key={user._id} className="trending-item">
+                  <ProfileAvatar
+                    userId={user._id}
+                    staticImageUrl={user.profilePicture}
+                    customAltText={user.Username || "User"}
+                    size="tiny"
+                    showLevel={false}
+                    className="profile-img"
+                  />
+                  <div className="trending-content">
+                    <h4 className="trending-item-title">
+                      {user.FirstName && user.LastName
+                        ? `${user.FirstName} ${user.LastName}`
+                        : user.Username}
+                    </h4>
+                    <p className="trending-item-desc">
+                      {user.role || "Student"}
+                      {user.school && ` at ${user.school}`}
+                    </p>
+                  </div>
+                  <button
+                    className={`Trending-connect-btn ${pendingRequests.includes(user._id) ? 'pending' : ''}`}
+                    onClick={() => handleFriendRequest(user._id)}
+                    disabled={pendingRequests.includes(user._id)}
+                  >
+                    {pendingRequests.includes(user._id) ? (
+                      <>
+                        <UserCheck size={12} className="mr-1" />
+                        Sent
+                      </>
+                    ) : (
+                      <>
+                        <FaUserPlus size={12} className="mr-1" />
+                        Connect
+                      </>
+                    )}
+                  </button>
+                </div>
+              ))}
 
-          <div className="flex items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-white font-medium text-sm mr-3">
-              AD
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">Amy Davis</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-xs">UX Designer at Design Studio</p>
-            </div>
-            <button className="ml-2 flex items-center text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-1 px-2 rounded transition-colors">
-              <FaUserPlus size={12} className="mr-1" />
-              Connect
-            </button>
-          </div>
-
-          <div className="flex items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-teal-500 rounded-full flex items-center justify-center text-white font-medium text-sm mr-3">
-              MJ
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">Mark Johnson</h4>
-              <p className="text-gray-600 dark:text-gray-400 text-xs">Web Developer at Creative Inc</p>
-            </div>
-            <button className="ml-2 flex items-center text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-1 px-2 rounded transition-colors">
-              <FaUserPlus size={12} className="mr-1" />
-              Connect
-            </button>
-          </div>
-
-          <a href="/network" className="flex items-center justify-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium pt-2 pb-1 border-t border-gray-100 dark:border-gray-700">
-            View more
-            <FaChevronRight size={12} className="ml-1" />
-          </a>
+              <button onClick={goToNetworkPage} className="view-more">
+                View more
+                <FaChevronRight size={12} className="ml-1" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
       {/* Learning resources section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
-        <h3 className="text-gray-900 dark:text-gray-100 font-semibold text-lg mb-3">
+      <div className="trending-card">
+        <h3 className="trending-title">
           Learning Resources
         </h3>
-        <div className="space-y-2">
-          <a href="/courses" className="flex items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <div className="w-8 h-8 flex items-center justify-center bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-lg mr-3">
+        <div className="trending-list">
+          <a href="/courses" className="trending-item">
+            <div className="resource-icon bg-blue-50 text-blue-600">
               📚
             </div>
-            <span className="text-gray-700 dark:text-gray-300 text-sm">Explore Courses</span>
+            <span className="trending-item-title">Explore Courses</span>
           </a>
-          <a href="/webinars" className="flex items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <div className="w-8 h-8 flex items-center justify-center bg-purple-50 dark:bg-purple-900 text-purple-600 dark:text-purple-300 rounded-lg mr-3">
+          <a href="/webinars" className="trending-item">
+            <div className="resource-icon bg-purple-50 text-purple-600">
               🎥
             </div>
-            <span className="text-gray-700 dark:text-gray-300 text-sm">Upcoming Webinars</span>
+            <span className="trending-item-title">Upcoming Webinars</span>
           </a>
-          <a href="/articles" className="flex items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <div className="w-8 h-8 flex items-center justify-center bg-green-50 dark:bg-green-900 text-green-600 dark:text-green-300 rounded-lg mr-3">
+          <a href="/articles" className="trending-item">
+            <div className="resource-icon bg-green-50 text-green-600">
               📝
             </div>
-            <span className="text-gray-700 dark:text-gray-300 text-sm">Featured Articles</span>
+            <span className="trending-item-title">Featured Articles</span>
           </a>
         </div>
       </div>

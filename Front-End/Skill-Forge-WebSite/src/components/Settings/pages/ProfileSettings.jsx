@@ -177,7 +177,7 @@ const ProfileSettings = () => {
         )}
 
         <div className="flex flex-col items-center justify-center">
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-6">
+          <h3 className="settings-user-name text-xl font-semibold text-gray-800 dark:text-white mb-6">
             {fullName || user?.fullName || user?.Username || 'User Profile'}
           </h3>
 
@@ -187,7 +187,7 @@ const ProfileSettings = () => {
                 <ProfileAvatar
                   userId={userId}
                   size="large"
-                  showLevel={true}
+                  showLevel={false}
                   staticImageUrl={profileImageUrl || user?.profileImageUrl}
                   className="cursor-pointer transition-transform duration-300 hover:scale-105"
                   onClick={handleImageClick}
@@ -223,7 +223,7 @@ const ProfileSettings = () => {
           </div>
 
           <div className="text-center mb-6">
-            
+
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
               Max size: 5MB (JPEG, PNG, GIF, WEBP)
             </p>
