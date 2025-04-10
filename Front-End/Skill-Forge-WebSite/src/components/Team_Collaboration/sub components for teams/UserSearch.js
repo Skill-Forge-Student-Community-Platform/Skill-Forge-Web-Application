@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useUserSearchStore from "../../../store/userSearchStore";
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
 import Modal from "react-modal";
 
 const UserSearch = ({ teamId }) => {
@@ -130,10 +131,12 @@ const UserSearch = ({ teamId }) => {
             >
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <img
-                    src={user.profilePic || "/avatar.png"}
-                    alt={user.name}
-                    className="w-14 h-14 object-cover rounded-full border-2 border-gray-100 dark:border-gray-700 shadow-md"
+                  <ProfileAvatar
+                    userId={user._id}
+                    size="small"
+                    showLevel={false}
+                    showMembershipTag={false}
+                    className="w-12 h-12"
                   />
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
                 </div>

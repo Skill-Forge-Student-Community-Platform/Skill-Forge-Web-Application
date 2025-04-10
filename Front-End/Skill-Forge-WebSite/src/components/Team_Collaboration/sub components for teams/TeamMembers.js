@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTeamStore } from "../../../store/useTeamStore.js";
 import { useAuthStore } from "../../../store/authStore.js";
+import ProfileAvatar from "../../Home_page/Home_components/ProfileAvatar";
 import { UserMinus, Crown, LogOut, AlertTriangle } from "lucide-react";
 
 const TeamMembers = ({ team }) => {
@@ -86,17 +87,25 @@ const TeamMembers = ({ team }) => {
               >
                 <div className="flex items-center space-x-4">
                   <div className="relative">
-                    <img
-                      src={member.Profile || "/default-avatar.png"}
-                      alt={member.Username}
-                      className={`w-14 h-14 object-cover rounded-full shadow-md ${
+                    <div
+                      className={`${
                         isTeamCreator
-                          ? "border-2 border-amber-400 dark:border-amber-500"
-                          : "border-2 border-gray-200 dark:border-gray-600"
-                      }`}
-                    />
+                          ? "ring-2 ring-amber-400 dark:ring-amber-500"
+                          : "ring-2 ring-gray-200 dark:ring-gray-600"
+                      } rounded-full relative`}
+                    >
+                      <ProfileAvatar
+                        userId={member._id}
+                        size="small"
+                        showLevel={false}
+                        showMembershipTag={false}
+                        className="w-14 h-14"
+                        customAltText={`${member.Username}'s avatar`}
+                        disableBorder={true}
+                      />
+                    </div>
                     {isCurrentUser && (
-                      <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center border-2 border-white dark:border-gray-800">
+                      <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center border-2 border-white dark:border-gray-800 z-20">
                         <span>You</span>
                       </div>
                     )}
